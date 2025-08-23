@@ -7,11 +7,10 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 
-import { InputPanel } from './components/InputPanel';
-import { VariantCard } from './components/VariantCard';
-import { Scoreboard } from './components/Scoreboard';
-import { OptimizationMeter } from './components/OptimizationMeter';
-import { FinalPanel } from './components/FinalPanel';
+import { EnhancedInputPanel } from './components/EnhancedInputPanel';
+import { DSPyExplainer } from './components/DSPyExplainer';
+import { VariantShowcase } from './components/VariantShowcase';
+import { ResultsPanel } from './components/ResultsPanel';
 import { useOptimization } from './hooks/useOptimization';
 
 import './App.css';
@@ -53,9 +52,21 @@ function App() {
   const canReplay = state.status === 'complete' && !!state.currentRun;
   const completedVariants = state.variants.filter(v => v.state === 'scored' || v.state === 'error').length;
 
+  const getCurrentStep = () => {
+    if (state.status === 'idle') return 'idle';
+    if (state.status === 'compiling') return 'generating';
+    if (state.status === 'running') {
+      if (completedVariants === 0) return 'testing';
+      if (completedVariants < state.variants.length) return 'scoring';
+      return 'selecting';
+    }
+    if (state.status === 'complete') return 'complete';
+    return 'idle';
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-6 max-w-7xl">
         {/* Error Banner */}
         <AnimatePresence>
           {error && (
@@ -67,7 +78,7 @@ function App() {
             >
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
               <div>
-                <div className="font-medium text-red-800">Error</div>
+                <div className="font-medium text-red-800">Optimization Error</div>
                 <div className="text-red-700">{error}</div>
               </div>
               <button
@@ -81,11 +92,9 @@ function App() {
         </AnimatePresence>
 
         {/* Input Panel */}
-        <InputPanel
+        <EnhancedInputPanel
           onRun={startOptimization}
           onReplay={replay}
-          onToggleInternals={toggleInternals}
-          showInternals={state.showInternals}
           isRunning={isRunning}
           canReplay={canReplay}
           disabled={!!error}
@@ -101,13 +110,13 @@ function App() {
               exit={{ opacity: 0 }}
               className="text-center py-12"
             >
-              <div className="text-6xl mb-4">🚀</div>
+              <div className="text-6xl mb-4">✨</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Ready to Optimize
+                Ready for AI Optimization
               </h2>
-              <p className="text-gray-600 max-w-md mx-auto">
-                Enter some text above and watch as DSPy tests multiple prompt variants 
-                to find the best approach for classification and summarization.
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                Enter a customer message above to see DSPy automatically optimize prompts in real-time. 
+                You'll watch multiple AI strategies compete to find the best solution!
               </p>
             </motion.div>
           ) : (
@@ -116,53 +125,29 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="space-y-6"
+              className="space-y-8"
             >
-              {/* Progress Section */}
-              <div className="grid lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  <OptimizationMeter
-                    progress={state.progress}
-                    status={state.status}
-                    variantCount={3}
-                    completedCount={completedVariants}
-                  />
-                </div>
-                <div>
-                  <Scoreboard
-                    variants={state.variants}
-                    leader={state.leader}
-                  />
-                </div>
-              </div>
+              {/* DSPy Process Explainer */}
+              <DSPyExplainer
+                currentStep={getCurrentStep()}
+                variantCount={Math.max(state.variants.length, 3)}
+                completedCount={completedVariants}
+              />
 
-              {/* Variants Grid */}
-              {state.variants.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    Variant Testing
-                  </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <AnimatePresence>
-                      {state.variants.map((variantState, index) => (
-                        <VariantCard
-                          key={variantState.variant.variant_id}
-                          variantState={variantState}
-                          showInternals={state.showInternals}
-                          isLeader={variantState.variant.variant_id === state.leader}
-                          rank={index + 1}
-                        />
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              )}
+              {/* Variants Showcase */}
+              <VariantShowcase
+                variants={state.variants}
+                leader={state.leader}
+                showInternals={state.showInternals}
+                onToggleInternals={toggleInternals}
+              />
 
               {/* Final Results */}
               {state.status === 'complete' && (
-                <FinalPanel
+                <ResultsPanel
                   winnerVariant={getWinnerVariant()}
                   winnerScore={getWinnerScore()}
+                  allVariants={state.variants}
                   onReplay={replay}
                   onCopyJson={handleCopyFullJson}
                   inputText={state.currentRun?.input_text || ''}
