@@ -50,7 +50,7 @@ function App() {
   };
 
   const isRunning = state.status === 'compiling' || state.status === 'running';
-  const canReplay = state.status === 'complete' && state.currentRun;
+  const canReplay = state.status === 'complete' && !!state.currentRun;
   const completedVariants = state.variants.filter(v => v.state === 'scored' || v.state === 'error').length;
 
   return (

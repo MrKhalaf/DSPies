@@ -53,6 +53,8 @@ export function FinalPanel({
   };
 
   const handleCopyResult = () => {
+    if (!output) return;
+    
     const resultJson = {
       input: inputText,
       winner: {
@@ -96,7 +98,7 @@ export function FinalPanel({
               Classification
             </label>
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full font-medium">
-              {output.category}
+              {output?.category}
             </div>
           </div>
 
@@ -105,7 +107,7 @@ export function FinalPanel({
               Summary
             </label>
             <p className="text-gray-900 bg-white p-3 rounded-lg border">
-              {output.summary}
+              {output?.summary}
             </p>
           </div>
         </div>

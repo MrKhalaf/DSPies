@@ -68,14 +68,12 @@ export function VariantCard({ variantState, showInternals, isLeader, rank }: Var
     visible: { 
       opacity: 1, 
       y: 0, 
-      scale: 1,
-      transition: { duration: 0.3, ease: "easeOut" }
+      scale: 1
     },
     leader: {
       scale: 1.02,
       boxShadow: "0 8px 25px rgba(59, 130, 246, 0.15)",
-      borderColor: "rgb(59, 130, 246)",
-      transition: { duration: 0.3 }
+      borderColor: "rgb(59, 130, 246)"
     }
   };
 
@@ -94,6 +92,7 @@ export function VariantCard({ variantState, showInternals, isLeader, rank }: Var
       variants={cardVariants}
       initial="hidden"
       animate={isLeader ? "leader" : "visible"}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className={`relative bg-white rounded-lg border-2 p-4 transition-all duration-300 ${
         isLeader ? 'border-blue-400 bg-blue-50' : 'border-gray-200'
       }`}
