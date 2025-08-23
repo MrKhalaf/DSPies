@@ -159,26 +159,31 @@ async def process_run(run_id: str):
     Background task to process a run through DSPy optimization.
     """
     try:
+        logger.info(f"Starting to process run {run_id}")
+        
         run_data = run_store.get_run(run_id)
         if not run_data:
             logger.error(f"Run {run_id} not found for processing")
             return
         
         input_text = run_data["input_text"]
+        logger.info(f"Processing run {run_id} with input: {input_text[:50]}...")
         
         # Update status to processing
         run_store.update_run_status(run_id, RunStatus.PROCESSING)
+        logger.info(f"Updated run {run_id} status to PROCESSING")
         
         # Run optimization
+        logger.info(f"Starting optimization for run {run_id}")
         await optimizer.optimize(run_id, input_text, run_store)
+        logger.info(f"Optimization completed for run {run_id}")
         
         # Mark as complete
         run_store.update_run_status(run_id, RunStatus.COMPLETE)
-        
         logger.info(f"Completed run {run_id}")
         
     except Exception as e:
-        logger.error(f"Error processing run {run_id}: {str(e)}")
+        logger.error(f"Error processing run {run_id}: {str(e)}", exc_info=True)
         run_store.update_run_status(run_id, RunStatus.ERROR)
         run_store.add_event(run_id, {
             "type": "Error",

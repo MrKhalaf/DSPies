@@ -18,6 +18,9 @@ class ApiService {
    * Create a new optimization run
    */
   async createRun(request: RunRequest): Promise<RunResponse> {
+    console.log('Creating run with request:', request);
+    console.log('API URL:', `${this.baseUrl}/api/run`);
+    
     const response = await fetch(`${this.baseUrl}/api/run`, {
       method: 'POST',
       headers: {
@@ -26,12 +29,17 @@ class ApiService {
       body: JSON.stringify(request),
     });
 
+    console.log('Response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'Unknown error' }));
+      console.error('API Error:', error);
       throw new Error(error.detail || `HTTP ${response.status}`);
     }
 
-    return response.json();
+    const result = await response.json();
+    console.log('Run created:', result);
+    return result;
   }
 
   /**
@@ -80,25 +88,36 @@ class ApiService {
    * Stream run events via Server-Sent Events
    */
   streamRunEvents(runId: string, onEvent: (event: Event) => void, onError?: (error: Error) => void): () => void {
-    const eventSource = new EventSource(`${this.baseUrl}/api/run/${runId}/stream`);
+    const streamUrl = `${this.baseUrl}/api/run/${runId}/stream`;
+    console.log('Starting SSE stream:', streamUrl);
+    
+    const eventSource = new EventSource(streamUrl);
+    
+    eventSource.onopen = () => {
+      console.log('SSE connection opened');
+    };
     
     eventSource.onmessage = (event) => {
+      console.log('SSE event received:', event.data);
       try {
         const data = JSON.parse(event.data);
+        console.log('Parsed SSE data:', data);
         onEvent(data);
       } catch (error) {
-        console.error('Failed to parse SSE event:', error);
+        console.error('Failed to parse SSE event:', error, 'Raw data:', event.data);
         onError?.(new Error('Failed to parse event data'));
       }
     };
 
     eventSource.onerror = (error) => {
       console.error('SSE connection error:', error);
+      console.error('EventSource readyState:', eventSource.readyState);
       onError?.(new Error('Connection error'));
     };
 
     // Return cleanup function
     return () => {
+      console.log('Closing SSE connection');
       eventSource.close();
     };
   }

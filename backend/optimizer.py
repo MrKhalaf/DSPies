@@ -42,16 +42,22 @@ class DSPyOptimizer:
         provider_config = self.config["provider"]
         provider_name = provider_config["name"].lower()
         
+        logger.info(f"Setting up DSPy with provider: {provider_name}")
+        
         try:
             if provider_name == "openai":
+                logger.info("Configuring OpenAI provider")
                 api_key = get_api_key("openai")
+                logger.info(f"API key found: {api_key[:10]}..." if api_key else "No API key found")
                 lm = dspy.OpenAI(
                     model=provider_config["model"],
                     api_key=api_key,
                     max_tokens=200  # Keep responses concise
                 )
             elif provider_name == "anthropic":
+                logger.info("Configuring Anthropic provider")
                 api_key = get_api_key("anthropic")
+                logger.info(f"API key found: {api_key[:10]}..." if api_key else "No API key found")
                 lm = dspy.Claude(
                     model=provider_config["model"],
                     api_key=api_key,
@@ -61,10 +67,10 @@ class DSPyOptimizer:
                 raise ValueError(f"Unsupported provider: {provider_name}")
             
             dspy.settings.configure(lm=lm)
-            logger.info(f"Configured DSPy with {provider_name} provider")
+            logger.info(f"Successfully configured DSPy with {provider_name} provider using model {provider_config['model']}")
             
         except Exception as e:
-            logger.error(f"Failed to configure DSPy: {str(e)}")
+            logger.error(f"Failed to configure DSPy: {str(e)}", exc_info=True)
             raise
     
     def _create_variants(self) -> None:
@@ -119,7 +125,7 @@ class DSPyOptimizer:
         Run the optimization process for a given input.
         Executes variants, scores them, and emits events.
         """
-        logger.info(f"Starting optimization for run {run_id}")
+        logger.info(f"Starting optimization for run {run_id} with {len(self.variants)} variants")
         
         try:
             # Process each variant
@@ -138,8 +144,10 @@ class DSPyOptimizer:
                 
                 # Execute variant with timeout
                 try:
+                    logger.info(f"Executing variant {variant.variant_id} for run {run_id}")
                     result = await self._execute_variant(variant, spec, input_text)
                     variant_results.append(result)
+                    logger.info(f"Variant {variant.variant_id} completed with result: {result.output is not None}")
                     
                     # Add to run store
                     run_store.add_variant(run_id, result)
@@ -234,6 +242,7 @@ class DSPyOptimizer:
         start_time = time.time()
         
         try:
+            logger.info(f"Creating predictor for variant {variant.variant_id}")
             # Create a predictor with the variant's configuration
             predictor = dspy.Predict(ClassifyAndSummarize)
             
@@ -251,8 +260,11 @@ class DSPyOptimizer:
             context += f"Instructions: {spec['instruction']}\n\n"
             context += f"Text to classify: {input_text}"
             
+            logger.info(f"Built context for variant {variant.variant_id}: {context[:100]}...")
+            
             # Execute with timeout
             timeout = self.config["timeouts_ms"]["per_variant"] / 1000.0
+            logger.info(f"Executing variant {variant.variant_id} with timeout {timeout}s")
             
             result = await asyncio.wait_for(
                 asyncio.to_thread(predictor, text=context),
@@ -260,12 +272,16 @@ class DSPyOptimizer:
             )
             
             latency_ms = int((time.time() - start_time) * 1000)
+            logger.info(f"Variant {variant.variant_id} completed in {latency_ms}ms")
+            logger.info(f"Raw result for variant {variant.variant_id}: {result}")
             
             # Parse the output
             output = VariantOutput(
                 category=result.category.strip(),
                 summary=result.summary.strip()
             )
+            
+            logger.info(f"Parsed output for variant {variant.variant_id}: category={output.category}, summary={output.summary[:50]}...")
             
             return Variant(
                 variant_id=variant.variant_id,
@@ -275,9 +291,11 @@ class DSPyOptimizer:
             )
             
         except asyncio.TimeoutError:
+            logger.warning(f"Variant {variant.variant_id} timed out after {timeout}s")
             raise
         except Exception as e:
             latency_ms = int((time.time() - start_time) * 1000)
+            logger.error(f"Error executing variant {variant.variant_id}: {str(e)}", exc_info=True)
             return Variant(
                 variant_id=variant.variant_id,
                 prompt_spec=variant.prompt_spec,
