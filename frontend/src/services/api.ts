@@ -112,7 +112,13 @@ class ApiService {
     eventSource.onerror = (error) => {
       console.error('SSE connection error:', error);
       console.error('EventSource readyState:', eventSource.readyState);
-      onError?.(new Error('Connection error'));
+      
+      // Only report as error if connection failed, not if it closed normally
+      if (eventSource.readyState === EventSource.CONNECTING) {
+        onError?.(new Error('Connection error'));
+      } else if (eventSource.readyState === EventSource.CLOSED) {
+        console.log('SSE connection closed normally');
+      }
     };
 
     // Return cleanup function

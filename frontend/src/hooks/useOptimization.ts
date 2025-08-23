@@ -54,8 +54,15 @@ export function useOptimization(): UseOptimizationReturn {
         runResponse.run_id,
         handleEvent,
         (streamError) => {
-          setError(streamError.message);
-          setState(prev => ({ ...prev, status: 'error' }));
+          console.error('Stream error:', streamError.message);
+          // Only set error if we're not already complete
+          setState(prev => {
+            if (prev.status !== 'complete') {
+              setError(streamError.message);
+              return { ...prev, status: 'error' };
+            }
+            return prev;
+          });
         }
       );
       
@@ -77,12 +84,16 @@ export function useOptimization(): UseOptimizationReturn {
   }, []);
 
   const handleEvent = useCallback((event: Event) => {
+    console.log('Processing event:', event.type, event.payload);
+    
     setState(prev => {
       const newState = { ...prev };
 
       switch (event.type) {
         case EventType.VARIANT_START:
           const { variant_id, prompt_spec } = event.payload;
+          console.log(`Adding variant ${variant_id}`);
+          
           const newVariant: VariantCardState = {
             variant: {
               variant_id,
@@ -98,6 +109,7 @@ export function useOptimization(): UseOptimizationReturn {
           } else {
             newState.variants = [...newState.variants, newVariant];
           }
+          console.log(`Variants after adding ${variant_id}:`, newState.variants.map(v => v.variant.variant_id));
           break;
 
         case EventType.VARIANT_OUTPUT:
@@ -140,6 +152,7 @@ export function useOptimization(): UseOptimizationReturn {
 
         case EventType.RUN_COMPLETE:
           const { winner_variant_id } = event.payload;
+          console.log(`Run complete, winner: ${winner_variant_id}`);
           newState.status = 'complete';
           newState.progress = 100;
           newState.leader = winner_variant_id;
@@ -152,6 +165,7 @@ export function useOptimization(): UseOptimizationReturn {
           break;
 
         case EventType.ERROR:
+          console.error('Received error event:', event.payload);
           newState.status = 'error';
           setError(event.payload.error || 'Unknown error occurred');
           break;
@@ -162,7 +176,14 @@ export function useOptimization(): UseOptimizationReturn {
         v.state === 'scored' || v.state === 'error'
       ).length;
       const totalVariants = Math.max(newState.variants.length, 3); // Assume at least 3 variants
-      newState.progress = Math.min((completedVariants / totalVariants) * 90, 90); // Cap at 90% until complete
+      
+      if (newState.status === 'complete') {
+        newState.progress = 100;
+      } else {
+        newState.progress = Math.min((completedVariants / totalVariants) * 90, 90); // Cap at 90% until complete
+      }
+      
+      console.log(`Progress update: ${completedVariants}/${totalVariants} variants complete, progress: ${newState.progress}%`);
 
       return newState;
     });
