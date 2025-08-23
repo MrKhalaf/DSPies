@@ -1,0 +1,33 @@
+labels:
+  - billing
+  - technical
+  - cancellation
+  - urgent
+  - other
+
+variant_count: 3
+max_input_chars: 500
+
+timeouts_ms:
+  per_variant: 2500
+  run_total: 8000
+
+weights:
+  label_valid: 1.0
+  label_match: 1.0
+  summary_len_ok: 1.0
+  no_hedging: 1.0
+  format_ok: 1.0
+
+provider:
+  name: "openai"
+  model: "gpt-4o-mini"
+  temperature: [0.2, 0.3, 0.4]
+
+demo_examples:
+  - "I was double-charged after upgrading my plan."
+  - "My internet connection keeps dropping every few minutes."
+  - "I want to cancel my subscription immediately."
+  - "This is urgent - my account is locked and I need access now!"
+  - "How do I change my billing address?"
+  - "The mobile app crashes when I try to upload files."
