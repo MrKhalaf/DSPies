@@ -180,3 +180,10 @@ code {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.text-red-600 {
+  color: #dc2626;
+}

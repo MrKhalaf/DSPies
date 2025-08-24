@@ -1,24 +1,24 @@
-# Live Optimizing Classifier
+# DSPy Interactive Tutor
 
-A demo application showcasing DSPy's prompt optimization capabilities with live visualization.
+A conference-demo-ready tool that showcases DSPy's prompt and program optimization across multiple tasks with live visualization.
 
 ## 🎯 Overview
 
-This application demonstrates how DSPy can optimize prompts in real-time by:
-- Running multiple prompt variants simultaneously
-- Scoring each variant using deterministic rules
-- Selecting the best-performing variant
-- Visualizing the optimization process with smooth animations
+This application demonstrates DSPy pipelines by:
+- Animating multiple prompt/program variants sequentially
+- Scoring each variant with deterministic rules and heuristics
+- Highlighting the best-performing output with “why it won” chips
+- Supporting additional mini-tasks (math verification, field extraction, sentiment)
 
-**Perfect for:** Demos, workshops, understanding prompt optimization, and showcasing DSPy capabilities.
+**Perfect for:** conferences, workshops, and hands-on introductions to DSPy.
 
 ## 🏗️ Architecture
 
-- **Frontend**: React + TypeScript + Framer Motion for smooth animations
-- **Backend**: FastAPI + DSPy for prompt optimization
-- **LLM Provider**: Configurable (OpenAI, Anthropic, Azure)
-- **Task**: Short-text classification + one-sentence summary
-- **Scoring**: Deterministic rule-based evaluation (no LLM calls)
+- **Frontend**: React + TypeScript + Framer Motion for animations and light/dark theming
+- **Backend**: FastAPI + DSPy with in-memory run store
+- **LLM Provider**: Configurable (OpenAI primary, interchangeable)
+- **Tasks**: Classification + summary, tiny math, field extraction, sentiment analysis
+- **Scoring**: Rule-based correctness checks + heuristics
 
 ```
 [Browser] ⇄ [FastAPI + DSPy] ⇄ [LLM API]
@@ -68,35 +68,34 @@ npm start
 4. **View final results** with winning variant and score breakdown
 5. **Replay animation** to show the process again instantly
 
-### Example Inputs
+### Sample Inputs
 
-- "I was double-charged after upgrading my plan" → Billing
-- "The app keeps crashing when I try to login" → Technical
-- "I want to cancel my subscription immediately" → Cancellation
+- "I was double-charged after upgrading my plan" → Classification demo
+- "Add 3 and 5" → Math verification
+- "Contact Jane at jane@example.com on 2025-01-01" → Field extraction
+- "This product is amazing!" → Sentiment
 
 ## ✨ Key Features
 
 ### Real-Time Visualization
-- **Live progress meter** showing optimization status
-- **Animated variant cards** appearing sequentially
-- **Dynamic leaderboard** with real-time ranking updates
-- **Smooth transitions** powered by Framer Motion
+- **Animated variant cards** shown sequentially
+- **Dynamic leaderboard** with live scoring
+- **Optimization meter** and winner banner
 
 ### Intelligent Scoring
-- **Deterministic evaluation** without additional LLM calls
-- **Multi-factor scoring**: label validity, intent matching, format, length
-- **Transparent explanations** of why each variant won/lost
+- **Rule-based evaluation** for all tasks
+- **Visible sub-scores** and “why it won” chips
 
 ### Developer-Friendly
-- **Show internals** toggle to reveal prompt strategies
-- **Replay functionality** for demos and analysis
-- **JSON export** for detailed inspection
-- **Keyboard shortcuts** for efficient operation
+- **Show internals** toggle for prompt specs
+- **Replay** from cached events
+- **JSON export** for outputs and metadata
+- **Keyboard shortcuts** (Enter, R, I)
 
 ### Production-Ready
+- **Light and dark themes**
 - **Docker deployment** with health checks
-- **Comprehensive testing** suite included
-- **Configurable everything** via YAML and environment variables
+- **Configurable via YAML/env variables**
 - **Error handling** and graceful degradation
 
 ## 📊 Performance Targets

@@ -27,7 +27,7 @@ class EventType(str, Enum):
 
 class RunRequest(BaseModel):
     """Request to create a new optimization run."""
-    input_text: str = Field(..., max_length=500, description="Text to classify and summarize")
+    input_text: str = Field(..., description="Text to classify and summarize")
 
 class RunResponse(BaseModel):
     """Response when creating a new run."""
