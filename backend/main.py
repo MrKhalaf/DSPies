@@ -58,24 +58,26 @@ async def create_run(request: RunRequest, background_tasks: BackgroundTasks):
     Create a new optimization run.
     Returns run_id immediately and processes in background.
     """
+    # Validate input
+    if not request.input_text.strip():
+        raise HTTPException(status_code=422, detail="Input text cannot be empty")
+    if len(request.input_text) > config["max_input_chars"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Input text exceeds {config['max_input_chars']} characters"
+        )
+
     try:
-        # Validate input length
-        if len(request.input_text) > config["max_input_chars"]:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Input text exceeds {config['max_input_chars']} characters"
-            )
-        
         # Create run
         run_id = run_store.create_run(request.input_text)
-        
+
         # Start background processing
         background_tasks.add_task(process_run, run_id)
-        
+
         logger.info(f"Created run {run_id} for input: {request.input_text[:50]}...")
-        
+
         return RunResponse(run_id=run_id)
-        
+
     except Exception as e:
         logger.error(f"Error creating run: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create run")
