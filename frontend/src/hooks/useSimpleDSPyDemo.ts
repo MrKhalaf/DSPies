@@ -52,21 +52,22 @@ export function useSimpleDSPyDemo() {
 
   const startOptimization = useCallback(async (inputText: string) => {
     try {
+      console.log('[SimpleDSPy] Starting optimization for:', inputText);
       setError(null);
       setState({
         variants: [
           {
-            id: 'V1',
+            id: 'v1',
             name: 'Direct & Formal',
             prompt: 'Classify the text into one of the provided categories and write a concise summary.\n\nAvailable categories: billing, technical, cancellation, urgent, other\n\nInstructions: Classify the text into one of the provided categories and write a concise summary.\n\nText to classify: ' + inputText
           },
           {
-            id: 'V2',
+            id: 'v2',
             name: 'Conversational & Helpful',
             prompt: 'Help classify this customer message and summarize what they need.\n\nAvailable categories: billing, technical, cancellation, urgent, other\n\nInstructions: Help classify this customer message and summarize what they need.\n\nText to classify: ' + inputText
           },
           {
-            id: 'V3',
+            id: 'v3',
             name: 'Analytical & Detailed',
             prompt: 'Analyze the text to determine the primary intent category and provide a factual summary.\n\nAvailable categories: billing, technical, cancellation, urgent, other\n\nInstructions: Analyze the text to determine the primary intent category and provide a factual summary.\n\nText to classify: ' + inputText
           }
@@ -76,19 +77,26 @@ export function useSimpleDSPyDemo() {
       });
 
       // Create the run
+      console.log('[SimpleDSPy] Creating run...');
       const runResponse = await apiService.createRun({ input_text: inputText });
+      console.log('[SimpleDSPy] Run created:', runResponse.run_id);
 
       // Start streaming events
+      console.log('[SimpleDSPy] Starting SSE stream...');
       const cleanup = apiService.streamRunEvents(
         runResponse.run_id,
-        (event: Event) => handleEvent(event),
+        (event: Event) => {
+          console.log('[SimpleDSPy] Calling handleEvent with:', event.type);
+          handleEvent(event);
+        },
         (streamError) => {
-          console.error('Stream error:', streamError.message);
+          console.error('[SimpleDSPy] Stream error:', streamError.message);
           setError(streamError.message);
           setState(prev => ({ ...prev, isRunning: false }));
         }
       );
 
+      console.log('[SimpleDSPy] SSE stream started');
       cleanupRef.current = cleanup;
 
     } catch (err) {
@@ -98,11 +106,16 @@ export function useSimpleDSPyDemo() {
     }
   }, []);
 
-  const handleEvent = useCallback((event: Event) => {
-    console.log('Event received:', event.type, event.payload);
+  const handleEvent = (event: Event) => {
+    console.log('[SimpleDSPy] Event received:', event.type, event.payload);
 
     setState(prev => {
       const newState = { ...prev };
+      console.log('[SimpleDSPy] Current state before update:', {
+        variantCount: prev.variants.length,
+        isRunning: prev.isRunning,
+        winner: prev.winner
+      });
 
       switch (event.type) {
         case EventType.VARIANT_OUTPUT:
@@ -112,7 +125,8 @@ export function useSimpleDSPyDemo() {
               return {
                 ...v,
                 output: output ? {
-                  category: output.category,
+                  // Clean up category - remove "Category: " prefix if present
+                  category: output.category.replace(/^Category:\s*/i, '').trim(),
                   summary: output.summary
                 } : undefined,
                 latency_ms
@@ -161,9 +175,15 @@ export function useSimpleDSPyDemo() {
           break;
       }
 
+      console.log('[SimpleDSPy] State after update:', {
+        variantCount: newState.variants.length,
+        isRunning: newState.isRunning,
+        winner: newState.winner
+      });
+
       return newState;
     });
-  }, []);
+  };
 
   const reset = useCallback(() => {
     // Cleanup any active streams
