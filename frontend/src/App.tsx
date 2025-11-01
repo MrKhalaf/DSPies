@@ -1,10 +1,10 @@
 /**
  * Main App component for the Live Optimizing Classifier.
- * Simple, educational experience showcasing DSPy optimization.
+ * The Prompt Kitchen: A narrative-driven experience with chef characters!
  */
 
 import React from 'react';
-import { SimpleDSPyDemo } from './components/SimpleDSPyDemo';
+import { PromptKitchen } from './components/PromptKitchen';
 import { useSimpleDSPyDemo } from './hooks/useSimpleDSPyDemo';
 
 import './App.css';
@@ -13,7 +13,7 @@ function App() {
   const { variants, isRunning, winner, error, startOptimization, reset } = useSimpleDSPyDemo();
 
   return (
-    <SimpleDSPyDemo
+    <PromptKitchen
       variants={variants}
       isRunning={isRunning}
       winner={winner}
