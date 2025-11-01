@@ -1,15 +1,25 @@
 /**
  * Main App component for the Live Optimizing Classifier.
- * Modern full-screen experience showcasing DSPy optimization.
+ * Simple, educational experience showcasing DSPy optimization.
  */
 
 import React from 'react';
-import { ModernApp } from './components/ModernApp';
+import { SimpleDSPyDemo } from './components/SimpleDSPyDemo';
+import { useSimpleDSPyDemo } from './hooks/useSimpleDSPyDemo';
 
 import './App.css';
 
 function App() {
-  return <ModernApp />;
+  const { variants, isRunning, winner, error, startOptimization, reset } = useSimpleDSPyDemo();
+
+  return (
+    <SimpleDSPyDemo
+      variants={variants}
+      isRunning={isRunning}
+      winner={winner}
+      onRun={startOptimization}
+    />
+  );
 }
 
 export default App;
