@@ -634,7 +634,7 @@ const Step9: React.FC<any> = ({ variants, winner, isRunning }) => (
         )}
 
         <div className="grid md:grid-cols-3 gap-4">
-          {variants.map((v) => {
+          {variants.map((v: Variant) => {
             const isWinner = v.id === winner;
             const wizards = { v1: '🧙‍♂️', v2: '🧙‍♀️', v3: '🧙' };
             const colors = { v1: 'blue', v2: 'purple', v3: 'orange' };
