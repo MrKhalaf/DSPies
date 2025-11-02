@@ -207,7 +207,7 @@ const Step1: React.FC<any> = () => (
 
 const Step2: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-red-600 mb-6">⚠️ THE PROBLEM</h2>
+    <h2 className="pixel-text text-4xl font-bold text-red-400 mb-6">⚠️ THE PROBLEM</h2>
 
     <div className="grid md:grid-cols-2 gap-6 mb-6">
       <div className="bg-red-50 p-6 rounded-xl border-4 border-red-600">
@@ -248,7 +248,7 @@ const Step2: React.FC<any> = () => (
 
 const Step3: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-purple-600 mb-6">✨ MEET THE DSPy WIZARDS</h2>
+    <h2 className="pixel-text text-4xl font-bold text-purple-400 mb-6">✨ MEET THE DSPy WIZARDS</h2>
 
     <p className="pixel-text text-xl mb-8 text-gray-700">
       DSPy gives you THREE magic helpers. Each one has a different personality and style:
@@ -265,7 +265,7 @@ const Step3: React.FC<any> = () => (
           <p className="pixel-text text-lg text-blue-700">
             Speaks like a textbook. Very precise and professional.
           </p>
-          <p className="pixel-text text-sm text-blue-600 mt-2 italic">
+          <p className="pixel-text text-sm text-blue-400 mt-2 italic">
             "Please classify this text into the appropriate category and provide a summary."
           </p>
         </div>
@@ -281,7 +281,7 @@ const Step3: React.FC<any> = () => (
           <p className="pixel-text text-lg text-purple-700">
             Talks like your best friend. Warm and conversational.
           </p>
-          <p className="pixel-text text-sm text-purple-600 mt-2 italic">
+          <p className="pixel-text text-sm text-purple-400 mt-2 italic">
             "Hey! Can you help me figure out what this customer needs?"
           </p>
         </div>
@@ -297,7 +297,7 @@ const Step3: React.FC<any> = () => (
           <p className="pixel-text text-lg text-orange-700">
             Thinks deeply. Breaks everything down step-by-step.
           </p>
-          <p className="pixel-text text-sm text-orange-600 mt-2 italic">
+          <p className="pixel-text text-sm text-orange-400 mt-2 italic">
             "Let's analyze this systematically to determine the primary intent..."
           </p>
         </div>
@@ -308,7 +308,7 @@ const Step3: React.FC<any> = () => (
 
 const Step4: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-green-600 mb-6">📚 HOW DSPy WORKS</h2>
+    <h2 className="pixel-text text-4xl font-bold text-green-400 mb-6">📚 HOW DSPy WORKS</h2>
 
     <div className="bg-gray-50 p-6 rounded-xl mb-6">
       <p className="pixel-text text-2xl text-orange-600 font-bold mb-4">Think of it like a cooking competition:</p>
@@ -356,7 +356,7 @@ const Step4: React.FC<any> = () => (
       </div>
     </div>
 
-    <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-xl mt-6">
+    <div className="bg-gradient-to-r from-purple-900 to-pink-900 p-6 rounded-xl mt-6">
       <p className="pixel-text text-xl text-gray-800 font-bold text-center">
         🎯 That's DSPy: Automatic prompt testing + picking the best one!
       </p>
@@ -366,7 +366,7 @@ const Step4: React.FC<any> = () => (
 
 const Step5: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-yellow-600 mb-6">⚖️ STEP 1: DEFINE "GOOD"</h2>
+    <h2 className="pixel-text text-4xl font-bold text-yellow-400 mb-6">⚖️ STEP 1: DEFINE "GOOD"</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
       Before the competition starts, you need to tell the judges what makes a response "good."
@@ -411,15 +411,15 @@ const Step5: React.FC<any> = () => (
         <div className="flex items-center gap-4 bg-pink-50 p-3 rounded">
           <span className="text-3xl">✨</span>
           <div>
-            <strong className="pixel-text text-pink-600">Presentation:</strong>
-            <span className="pixel-text text-pink-700"> Is it properly formatted?</span>
+            <strong className="pixel-text text-pink-300">Presentation:</strong>
+            <span className="pixel-text text-pink-200"> Is it properly formatted?</span>
           </div>
         </div>
       </div>
     </div>
 
     <div className="bg-yellow-50 p-6 rounded-xl">
-      <p className="pixel-text text-lg text-yellow-700">
+      <p className="pixel-text text-lg text-yellow-200">
         💡 <strong>Key Insight:</strong> YOU decide what "good" means. DSPy just finds the
         prompt that best matches YOUR criteria!
       </p>
@@ -429,14 +429,14 @@ const Step5: React.FC<any> = () => (
 
 const Step6: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-blue-600 mb-6">🎨 STEP 2: DSPy GENERATES VARIANTS</h2>
+    <h2 className="pixel-text text-4xl font-bold text-blue-400 mb-6">🎨 STEP 2: DSPy GENERATES VARIANTS</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
       Now the magic happens! DSPy creates different prompt strategies automatically.
     </p>
 
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-6 rounded-xl border-4 border-blue-400">
+      <div className="bg-gradient-to-r from-blue-900 to-blue-700 p-6 rounded-xl border-4 border-blue-400">
         <div className="flex items-center gap-4 mb-3">
           <span className="text-5xl">🧙‍♂️</span>
           <h3 className="pixel-text text-2xl font-bold text-blue-700">Wizard #1's Prompt:</h3>
@@ -447,7 +447,7 @@ const Step6: React.FC<any> = () => (
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-purple-100 to-purple-200 p-6 rounded-xl border-4 border-purple-400">
+      <div className="bg-gradient-to-r from-purple-900 to-purple-700 p-6 rounded-xl border-4 border-purple-400">
         <div className="flex items-center gap-4 mb-3">
           <span className="text-5xl">🧙‍♀️</span>
           <h3 className="pixel-text text-2xl font-bold text-purple-700">Wizard #2's Prompt:</h3>
@@ -458,7 +458,7 @@ const Step6: React.FC<any> = () => (
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-orange-100 to-orange-200 p-6 rounded-xl border-4 border-orange-400">
+      <div className="bg-gradient-to-r from-orange-900 to-orange-700 p-6 rounded-xl border-4 border-orange-400">
         <div className="flex items-center gap-4 mb-3">
           <span className="text-5xl">🧙</span>
           <h3 className="pixel-text text-2xl font-bold text-orange-700">Wizard #3's Prompt:</h3>
@@ -480,7 +480,7 @@ const Step6: React.FC<any> = () => (
 
 const Step7: React.FC<any> = () => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-purple-600 mb-6">🏆 STEP 3: THE COMPETITION!</h2>
+    <h2 className="pixel-text text-4xl font-bold text-purple-400 mb-6">🏆 STEP 3: THE COMPETITION!</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
       All three wizards work on the same customer message. Let's see who does best!
@@ -506,7 +506,7 @@ const Step7: React.FC<any> = () => (
       ].map((w, i) => (
         <motion.div
           key={i}
-          className={`bg-${w.color}-50 p-4 rounded-xl border-4 border-${w.color}-500`}
+          className={`bg-${w.color}-900 p-4 rounded-xl border-4 border-${w.color}-500`}
           whileHover={{ scale: 1.05 }}
         >
           <div className="text-center text-5xl mb-2">{w.wizard}</div>
@@ -527,7 +527,7 @@ const Step7: React.FC<any> = () => (
     </div>
 
     <div className="bg-yellow-50 p-6 rounded-xl">
-      <p className="pixel-text text-lg text-yellow-700">
+      <p className="pixel-text text-lg text-yellow-200">
         🏆 <strong>Winner: Wizard #2!</strong> Short, clear, confident. Perfect score!
       </p>
     </div>
@@ -536,7 +536,7 @@ const Step7: React.FC<any> = () => (
 
 const Step8: React.FC<any> = ({ userInput, setUserInput, startDemo, hasStartedDemo }) => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-green-600 mb-6">🎮 NOW WATCH IT LIVE!</h2>
+    <h2 className="pixel-text text-4xl font-bold text-green-400 mb-6">🎮 NOW WATCH IT LIVE!</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
       Ready to see DSPy in action? Enter a customer message below and watch the three wizards compete!
@@ -599,7 +599,7 @@ const Step8: React.FC<any> = ({ userInput, setUserInput, startDemo, hasStartedDe
 
 const Step9: React.FC<any> = ({ variants, winner, isRunning }) => (
   <div className="pixel-border bg-white p-8 text-gray-800">
-    <h2 className="pixel-text text-4xl font-bold text-yellow-600 mb-6">🏆 THE RESULTS!</h2>
+    <h2 className="pixel-text text-4xl font-bold text-yellow-400 mb-6">🏆 THE RESULTS!</h2>
 
     {isRunning && (
       <div className="bg-purple-50 p-8 rounded-xl text-center">
@@ -683,7 +683,7 @@ const Step10: React.FC<any> = () => (
       🎉 YOU DID IT!
     </h2>
 
-    <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-8 rounded-xl mb-6 text-center">
+    <div className="bg-gradient-to-r from-purple-900 to-pink-900 p-8 rounded-xl mb-6 text-center">
       <p className="pixel-text text-3xl font-bold mb-4">You now understand DSPy!</p>
       <div className="text-7xl mb-4">🎓</div>
     </div>
@@ -710,10 +710,10 @@ const Step10: React.FC<any> = () => (
 
     <div className="bg-yellow-50 p-6 rounded-xl">
       <h3 className="pixel-text text-2xl font-bold text-orange-600 mb-3">🚀 What's Next?</h3>
-      <p className="pixel-text text-lg text-yellow-700">
+      <p className="pixel-text text-lg text-yellow-200">
         Use DSPy for your own projects! Any time you need to work with AI:
       </p>
-      <ul className="pixel-text mt-3 space-y-2 text-yellow-700">
+      <ul className="pixel-text mt-3 space-y-2 text-yellow-200">
         <li>• Customer support automation</li>
         <li>• Content classification</li>
         <li>• Question answering</li>
