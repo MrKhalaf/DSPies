@@ -232,7 +232,7 @@ const Step1: React.FC<any> = () => (
 );
 
 const Step2: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-red-600 mb-6">⚠️ THE PROBLEM</h2>
 
     <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -273,7 +273,7 @@ const Step2: React.FC<any> = () => (
 );
 
 const Step3: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-purple-600 mb-6">✨ MEET THE DSPy WIZARDS</h2>
 
     <p className="pixel-text text-xl mb-8 text-gray-700">
@@ -333,7 +333,7 @@ const Step3: React.FC<any> = () => (
 );
 
 const Step4: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-green-600 mb-6">📚 HOW DSPy WORKS</h2>
 
     <div className="bg-gray-50 p-6 rounded-xl mb-6">
@@ -391,7 +391,7 @@ const Step4: React.FC<any> = () => (
 );
 
 const Step5: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-yellow-600 mb-6">⚖️ STEP 1: DEFINE "GOOD"</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
@@ -454,7 +454,7 @@ const Step5: React.FC<any> = () => (
 );
 
 const Step6: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-blue-600 mb-6">🎨 STEP 2: DSPy GENERATES VARIANTS</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
@@ -505,7 +505,7 @@ const Step6: React.FC<any> = () => (
 );
 
 const Step7: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-purple-600 mb-6">🏆 STEP 3: THE COMPETITION!</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
@@ -561,7 +561,7 @@ const Step7: React.FC<any> = () => (
 );
 
 const Step8: React.FC<any> = ({ userInput, setUserInput, startDemo, hasStartedDemo }) => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-green-600 mb-6">🎮 NOW WATCH IT LIVE!</h2>
 
     <p className="pixel-text text-xl mb-6 text-gray-700">
@@ -624,7 +624,7 @@ const Step8: React.FC<any> = ({ userInput, setUserInput, startDemo, hasStartedDe
 );
 
 const Step9: React.FC<any> = ({ variants, winner, isRunning }) => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-yellow-600 mb-6">🏆 THE RESULTS!</h2>
 
     {isRunning && (
@@ -704,7 +704,7 @@ const Step9: React.FC<any> = ({ variants, winner, isRunning }) => (
 );
 
 const Step10: React.FC<any> = () => (
-  <div className="bg-white rounded-3xl shadow-2xl p-12 border-8 border-orange-500 text-gray-800">
+  <div className="pixel-border bg-white p-8 text-gray-800">
     <h2 className="pixel-text text-4xl font-bold text-rainbow mb-6 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
       🎉 YOU DID IT!
     </h2>
