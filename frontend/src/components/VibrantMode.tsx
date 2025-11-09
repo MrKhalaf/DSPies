@@ -86,13 +86,28 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
     setCurrentChapter(9);
 
     try {
+      console.log('🚀 Starting run with input:', userInput);
       const response = await fetch('http://localhost:8000/api/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: userInput })
       });
 
+      console.log('📡 Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+        console.error('❌ API Error:', errorData);
+        throw new Error(`API returned ${response.status}: ${JSON.stringify(errorData)}`);
+      }
+
       const data = await response.json();
+      console.log('✅ Run created:', data);
+
+      if (!data.run_id) {
+        throw new Error('No run_id in response');
+      }
+
       setRunId(data.run_id);
 
       const eventSource = new EventSource(`http://localhost:8000/api/run/${data.run_id}/stream`);
