@@ -110,7 +110,22 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
 
       setRunId(data.run_id);
 
-      const eventSource = new EventSource(`http://localhost:8000/api/run/${data.run_id}/stream`);
+      // Connect to SSE stream immediately
+      const streamUrl = `http://localhost:8000/api/run/${data.run_id}/stream`;
+      console.log('📡 Connecting to stream:', streamUrl);
+      const eventSource = new EventSource(streamUrl);
+
+      eventSource.onopen = () => {
+        console.log('✅ SSE connection opened');
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('❌ SSE error:', error);
+      };
+
+      eventSource.onmessage = (e) => {
+        console.log('📨 Generic message received:', e.data);
+      };
 
       eventSource.addEventListener('VariantOutput', (e) => {
         const event = JSON.parse(e.data);
