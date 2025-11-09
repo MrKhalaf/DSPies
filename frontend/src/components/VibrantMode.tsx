@@ -151,7 +151,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-black text-white overflow-hidden relative">
+    <div className="min-h-screen overflow-hidden relative" style={{ background: 'linear-gradient(to bottom right, #581c87, #1e3a8a, #000000)', color: '#ffffff' }}>
       {/* Animated Background Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particles.map(particle => (
@@ -282,15 +282,21 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       </div>
 
       {/* Navigation */}
-      <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-8 z-40">
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex gap-8 z-40">
         <motion.button
           onClick={handlePrev}
           disabled={currentChapter === 1}
-          className={`px-8 py-4 rounded-lg font-bold text-xl ${
-            currentChapter === 1
-              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-              : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/50'
-          }`}
+          style={{
+            padding: '1rem 2rem',
+            borderRadius: '0.5rem',
+            fontWeight: 'bold',
+            fontSize: '1.25rem',
+            background: currentChapter === 1 ? '#374151' : 'linear-gradient(to right, #06b6d4, #2563eb)',
+            color: currentChapter === 1 ? '#6b7280' : '#ffffff',
+            cursor: currentChapter === 1 ? 'not-allowed' : 'pointer',
+            boxShadow: currentChapter === 1 ? 'none' : '0 10px 15px -3px rgba(6, 182, 212, 0.5)',
+            border: 'none'
+          }}
           whileHover={currentChapter > 1 ? { scale: 1.05 } : {}}
           whileTap={currentChapter > 1 ? { scale: 0.95 } : {}}
         >
@@ -299,11 +305,17 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
         <motion.button
           onClick={handleNext}
           disabled={currentChapter === 10}
-          className={`px-8 py-4 rounded-lg font-bold text-xl ${
-            currentChapter === 10
-              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-              : 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg shadow-pink-500/50'
-          }`}
+          style={{
+            padding: '1rem 2rem',
+            borderRadius: '0.5rem',
+            fontWeight: 'bold',
+            fontSize: '1.25rem',
+            background: currentChapter === 10 ? '#374151' : 'linear-gradient(to right, #ec4899, #9333ea)',
+            color: currentChapter === 10 ? '#6b7280' : '#ffffff',
+            cursor: currentChapter === 10 ? 'not-allowed' : 'pointer',
+            boxShadow: currentChapter === 10 ? 'none' : '0 10px 15px -3px rgba(236, 72, 153, 0.5)',
+            border: 'none'
+          }}
           whileHover={currentChapter < 10 ? { scale: 1.05 } : {}}
           whileTap={currentChapter < 10 ? { scale: 0.95 } : {}}
         >
@@ -371,22 +383,51 @@ const ChapterContent: React.FC<{ chapter: number }> = ({ chapter }) => {
       transition={{ duration: 0.5 }}
       className="max-w-4xl mx-auto"
     >
-      <div className="bg-black/40 backdrop-blur-xl border-4 border-cyan-500 rounded-3xl p-12 shadow-2xl shadow-cyan-500/50">
+      <div style={{
+        background: 'rgba(0, 0, 0, 0.4)',
+        backdropFilter: 'blur(20px)',
+        border: '4px solid #06b6d4',
+        borderRadius: '1.5rem',
+        padding: '3rem',
+        boxShadow: '0 25px 50px -12px rgba(6, 182, 212, 0.5)'
+      }}>
         <motion.div
-          className="text-9xl text-center mb-8"
+          style={{ fontSize: '8rem', textAlign: 'center', marginBottom: '2rem' }}
           animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           {current.icon}
         </motion.div>
-        <h2 className="text-5xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+        <h2 style={{
+          fontSize: '3rem',
+          fontWeight: '900',
+          textAlign: 'center',
+          marginBottom: '2rem',
+          background: 'linear-gradient(to right, #22d3ee, #ec4899)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          lineHeight: '1.2'
+        }}>
           {current.title}
         </h2>
-        <p className="text-2xl text-cyan-100 leading-relaxed text-center mb-6">
+        <p style={{
+          fontSize: '1.5rem',
+          color: '#e0f2fe',
+          lineHeight: '1.75',
+          textAlign: 'center',
+          marginBottom: '1.5rem'
+        }}>
           {current.text}
         </p>
         <motion.p
-          className="text-xl text-pink-400 font-bold text-center italic"
+          style={{
+            fontSize: '1.25rem',
+            color: '#f472b6',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            fontStyle: 'italic'
+          }}
           animate={{ opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
