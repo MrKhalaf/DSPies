@@ -30,6 +30,7 @@ interface VibrantModeProps {
 
 const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
   const [currentChapter, setCurrentChapter] = useState(1);
+  const [hasCompletedDemo, setHasCompletedDemo] = useState(false);
   const [userInput, setUserInput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [runId, setRunId] = useState<string | null>(null);
@@ -83,7 +84,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
     setIsRunning(true);
     setVariants([]);
     setWinner(null);
-    setCurrentChapter(9);
+    setCurrentChapter(4);
 
     try {
       console.log('🚀 Starting run with input:', userInput);
@@ -164,7 +165,9 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
             soundManager.current?.playVictory();
             setWinner(payload.winner_variant_id);
             setIsRunning(false);
-            setCurrentChapter(10);
+            setHasCompletedDemo(true);
+            // Move to explanation chapter 5 after demo
+            setCurrentChapter(5);
             eventSource.close();
           } else if (event.type === 'Error') {
             console.error('❌ Backend error:', event);
@@ -263,7 +266,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
           <motion.div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 via-pink-500 to-purple-500"
             initial={{ width: 0 }}
-            animate={{ width: `${(currentChapter / 10) * 100}%` }}
+            animate={{ width: `${(currentChapter / 8) * 100}%` }}
             transition={{ duration: 0.5 }}
           />
           <motion.div
@@ -273,14 +276,14 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
           />
         </div>
         <div className="text-center mt-2 text-cyan-400 font-bold">
-          CHAPTER {currentChapter} / 10
+          STEP {currentChapter} / 8
         </div>
       </div>
 
       {/* Main Content */}
       <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 2rem 5rem 2rem', position: 'relative', zIndex: 10 }}>
         <AnimatePresence mode="wait">
-          {currentChapter === 8 && (
+          {currentChapter === 3 && (
             <VibrantInputSection
               key="input"
               userInput={userInput}
@@ -291,7 +294,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
             />
           )}
 
-          {currentChapter === 9 && (
+          {currentChapter === 4 && (
             <VibrantVisualization
               key="visualization"
               variants={variants}
@@ -301,60 +304,24 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
             />
           )}
 
-          {currentChapter === 10 && (
-            winner ? (
-              <VibrantResults
-                key="results"
-                variants={variants}
-                winner={winner}
-                soundManager={soundManager.current}
-              />
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center"
-                style={{ maxWidth: '800px', margin: '0 auto' }}
-              >
-                <div style={{
-                  background: 'rgba(0, 0, 0, 0.6)',
-                  padding: '3rem',
-                  borderRadius: '2rem',
-                  border: '4px solid rgba(239, 68, 68, 0.5)'
-                }}>
-                  <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>⚠️</div>
-                  <h2 style={{ fontSize: '2rem', color: '#fca5a5', marginBottom: '1rem' }}>
-                    No Results Available
-                  </h2>
-                  <p style={{ fontSize: '1.2rem', color: '#fecaca', marginBottom: '1.5rem' }}>
-                    The battle didn't complete successfully. This could mean:
-                  </p>
-                  <ul style={{ textAlign: 'left', color: '#ffffff', fontSize: '1.1rem', marginBottom: '2rem' }}>
-                    <li style={{ marginBottom: '0.5rem' }}>• Backend server is not running</li>
-                    <li style={{ marginBottom: '0.5rem' }}>• API connection failed</li>
-                    <li style={{ marginBottom: '0.5rem' }}>• No winner was determined</li>
-                  </ul>
-                  <button
-                    onClick={() => setCurrentChapter(8)}
-                    style={{
-                      padding: '1rem 2rem',
-                      background: 'linear-gradient(to right, #ef4444, #dc2626)',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: '0.5rem',
-                      fontSize: '1.2rem',
-                      fontWeight: 'bold',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    ← Go Back and Try Again
-                  </button>
-                </div>
-              </motion.div>
-            )
+          {currentChapter === 8 && hasCompletedDemo && (
+            <VibrantResults
+              key="results"
+              variants={variants}
+              winner={winner}
+              soundManager={soundManager.current}
+            />
           )}
 
-          {currentChapter < 8 && (
+          {currentChapter < 3 && (
+            <ChapterContent key={currentChapter} chapter={currentChapter} />
+          )}
+
+          {currentChapter >= 5 && currentChapter <= 7 && hasCompletedDemo && (
+            <ChapterContent key={currentChapter} chapter={currentChapter} />
+          )}
+
+          {currentChapter === 8 && !hasCompletedDemo && (
             <ChapterContent key={currentChapter} chapter={currentChapter} />
           )}
         </AnimatePresence>
@@ -391,20 +358,20 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
         </motion.button>
         <motion.button
           onClick={handleNext}
-          disabled={currentChapter === 10}
+          disabled={currentChapter === 8}
           style={{
             padding: '1rem 2rem',
             borderRadius: '0.5rem',
             fontWeight: 'bold',
             fontSize: '1.25rem',
-            background: currentChapter === 10 ? '#374151' : 'linear-gradient(to right, #ec4899, #9333ea)',
-            color: currentChapter === 10 ? '#6b7280' : '#ffffff',
-            cursor: currentChapter === 10 ? 'not-allowed' : 'pointer',
-            boxShadow: currentChapter === 10 ? 'none' : '0 10px 15px -3px rgba(236, 72, 153, 0.5)',
+            background: currentChapter === 8 ? '#374151' : 'linear-gradient(to right, #ec4899, #9333ea)',
+            color: currentChapter === 8 ? '#6b7280' : '#ffffff',
+            cursor: currentChapter === 8 ? 'not-allowed' : 'pointer',
+            boxShadow: currentChapter === 8 ? 'none' : '0 10px 15px -3px rgba(236, 72, 153, 0.5)',
             border: 'none'
           }}
-          whileHover={currentChapter < 10 ? { scale: 1.05 } : {}}
-          whileTap={currentChapter < 10 ? { scale: 0.95 } : {}}
+          whileHover={currentChapter < 8 ? { scale: 1.05 } : {}}
+          whileTap={currentChapter < 8 ? { scale: 0.95 } : {}}
         >
           NEXT →
         </motion.button>
@@ -413,50 +380,45 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
   );
 };
 
-// Chapter content components for chapters 1-7
+// Chapter content components
 const ChapterContent: React.FC<{ chapter: number }> = ({ chapter }) => {
-  const content = {
+  const content: Record<number, {title: string, text: string, icon: string, subtext: string}> = {
     1: {
       title: 'THE PROBLEM',
-      text: 'Writing AI prompts is hard. You try one. It fails. You rewrite it. Test again. Repeat 20 times. Hours wasted.',
+      text: 'Writing good AI prompts takes forever. You write one, test it, rewrite it, test again... 20+ iterations later, you\'re exhausted.',
       icon: '😫',
-      subtext: 'There has to be a better way...'
+      subtext: 'What if there was a faster way?'
     },
     2: {
-      title: 'WHAT IF AI COULD DO THIS FOR YOU?',
-      text: 'Imagine: You describe what you want. AI generates 10 different prompts. Tests them all. Picks the best one. Done in seconds.',
-      icon: '💡',
-      subtext: 'This is DSPy.'
-    },
-    3: {
-      title: 'HERE\'S HOW IT WORKS',
-      text: 'Step 1: You write rules for what makes a "good" answer. Step 2: DSPy creates different prompt styles. Step 3: Each one competes. Step 4: The winner is chosen automatically.',
+      title: 'THE SOLUTION',
+      text: 'DSPy automatically generates multiple prompt strategies, tests them all, and picks the best one. In seconds.',
       icon: '⚡',
-      subtext: 'Let me show you...'
+      subtext: 'Let\'s see it in action!'
     },
-    4: {
-      title: 'THE CHALLENGE',
-      text: 'Task: Sort customer messages. Is it billing? Technical? Urgent? We need the AI to categorize correctly AND write a short summary.',
-      icon: '🎯',
-      subtext: 'Simple task. But how do we find the BEST prompt?'
-    },
+    // Ch 3 = Input, Ch 4 = Results, then explanations:
     5: {
-      title: 'DEFINE "GOOD"',
-      text: 'We create 5 rules: ✓ Category must be correct ✓ Must understand the real problem ✓ Summary under 20 words ✓ No uncertain language ✓ Proper format',
-      icon: '📋',
-      subtext: 'These are our judges. They score each attempt.'
+      title: 'WHAT JUST HAPPENED?',
+      text: 'You saw 3 different AI prompt strategies compete. Each had a unique approach: Formal, Friendly, and Analytical. DSPy ran them all simultaneously.',
+      icon: '🤖',
+      subtext: 'But how did it know which one won?'
     },
     6: {
-      title: 'DSPY CREATES 3 STRATEGIES',
-      text: 'Strategy 1: Formal and precise. Strategy 2: Friendly and conversational. Strategy 3: Analytical and detailed. Same task. Completely different approaches.',
-      icon: '🤖',
-      subtext: 'Which one will win?'
+      title: 'THE SCORING SYSTEM',
+      text: 'We defined 5 rules for "good": ✓ Correct category ✓ Understands intent ✓ Concise summary ✓ Confident tone ✓ Proper format. Each strategy was scored against these rules.',
+      icon: '📊',
+      subtext: 'The highest score wins!'
     },
     7: {
-      title: 'READY TO WATCH?',
-      text: 'You\'ll type a customer message. Three AI strategies will compete. Our judges will score them. The best one wins. All in real-time.',
+      title: 'THE POWER OF DSPy',
+      text: 'This demo tested 3 prompts. In production, DSPy can test hundreds of variations. Same effort for you. Infinitely better results.',
       icon: '🚀',
-      subtext: 'Click NEXT to start the battle!'
+      subtext: 'That\'s automatic optimization.'
+    },
+    8: {
+      title: 'YOU\'RE READY!',
+      text: 'You just experienced DSPy: Define your quality criteria, let it generate and test variants, get the optimal prompt. Now imagine using this for ANY AI task.',
+      icon: '🎉',
+      subtext: 'Welcome to the future of prompt engineering!'
     }
   };
 
