@@ -129,38 +129,40 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
           const event = JSON.parse(e.data);
           console.log('📋 Parsed event:', event);
 
-          // Handle different event types
+          // Handle different event types (events have payload wrapper)
+          const payload = event.payload || event;
+
           if (event.type === 'VariantOutput') {
-            console.log('📊 Variant output:', event);
+            console.log('📊 Variant output:', payload);
             soundManager.current?.playVariantComplete();
             setVariants(prev => {
-              const existing = prev.find(v => v.id === event.variant_id);
+              const existing = prev.find(v => v.id === payload.variant_id);
               if (existing) {
-                return prev.map(v => v.id === event.variant_id
-                  ? { ...v, output: event.output, latency_ms: event.latency_ms }
+                return prev.map(v => v.id === payload.variant_id
+                  ? { ...v, output: payload.output, latency_ms: payload.latency_ms }
                   : v
                 );
               }
               return [...prev, {
-                id: event.variant_id,
-                name: event.variant_id,
+                id: payload.variant_id,
+                name: payload.variant_id,
                 instruction: '',
-                output: event.output,
-                latency_ms: event.latency_ms
+                output: payload.output,
+                latency_ms: payload.latency_ms
               }];
             });
           } else if (event.type === 'VariantScored') {
-            console.log('⭐ Variant scored:', event);
+            console.log('⭐ Variant scored:', payload);
             soundManager.current?.playScore();
             setVariants(prev => prev.map(v =>
-              v.id === event.variant_id
-                ? { ...v, score: event.score, scoreComponents: event.score_components }
+              v.id === payload.variant_id
+                ? { ...v, score: payload.score?.total, scoreComponents: payload.score?.components }
                 : v
             ));
           } else if (event.type === 'RunComplete') {
-            console.log('🏆 Run complete! Winner:', event.winner);
+            console.log('🏆 Run complete! Winner:', payload.winner_variant_id);
             soundManager.current?.playVictory();
-            setWinner(event.winner);
+            setWinner(payload.winner_variant_id);
             setIsRunning(false);
             setCurrentChapter(10);
             eventSource.close();
