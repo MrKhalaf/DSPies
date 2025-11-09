@@ -152,7 +152,6 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
           <textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            onFocus={() => soundManager?.playHover()}
             style={{
               position: 'relative',
               width: '100%',
