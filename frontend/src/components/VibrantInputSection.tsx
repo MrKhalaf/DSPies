@@ -49,11 +49,11 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
           animate={{ scale: [1, 1.02, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          🎯 INITIATE NEURAL BATTLE 🎯
+          🎯 TRY IT YOURSELF 🎯
         </motion.h2>
 
         <p className="text-2xl text-cyan-200 text-center mb-12 font-semibold">
-          Enter a customer message and watch three AI variants compete for dominance
+          Enter any customer support message. Watch three different AI prompts compete. See which wins.
         </p>
 
         {/* Input Area */}

@@ -71,7 +71,7 @@ const VibrantVisualization: React.FC<VibrantVisualizationProps> = ({
             animate={{ opacity: [1, 0.7, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            ⚡ NEURAL PROCESSING IN PROGRESS ⚡
+            ⚡ 3 PROMPTS COMPETING... ⚡
           </motion.h2>
         )}
         {winner && (
@@ -81,7 +81,7 @@ const VibrantVisualization: React.FC<VibrantVisualizationProps> = ({
             transition={{ type: 'spring', duration: 1 }}
           >
             <h2 className="text-7xl font-black mb-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
-              👑 VICTOR EMERGED 👑
+              👑 WINNER FOUND 👑
             </h2>
           </motion.div>
         )}

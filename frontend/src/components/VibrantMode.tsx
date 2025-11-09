@@ -215,10 +215,10 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
           }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          ⚡ NEURAL KITCHEN ⚡
+          ⚡ DSPY EXPLAINED ⚡
         </motion.h1>
         <p className="text-2xl text-cyan-300 font-bold tracking-wider">
-          WHERE AI CHEFS BATTLE FOR SUPREMACY
+          AUTOMATIC PROMPT OPTIMIZATION IN ACTION
         </p>
       </motion.div>
 
@@ -318,39 +318,46 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
 const ChapterContent: React.FC<{ chapter: number }> = ({ chapter }) => {
   const content = {
     1: {
-      title: 'THE NEURAL CHEF AWAKENS',
-      text: 'You are Chef Claude, master of the Neural Kitchen. In this neon-lit realm, AI prompts are your ingredients, and optimization is your art.',
-      icon: '👨‍🍳'
+      title: 'THE PROBLEM',
+      text: 'Writing AI prompts is hard. You try one. It fails. You rewrite it. Test again. Repeat 20 times. Hours wasted.',
+      icon: '😫',
+      subtext: 'There has to be a better way...'
     },
     2: {
-      title: 'THE ANCIENT PROBLEM',
-      text: 'The old way: Manual testing, endless iterations, wasted hours. The new way: Let AI variants compete in real-time. Watch them battle. Choose the victor.',
-      icon: '⚔️'
+      title: 'WHAT IF AI COULD DO THIS FOR YOU?',
+      text: 'Imagine: You describe what you want. AI generates 10 different prompts. Tests them all. Picks the best one. Done in seconds.',
+      icon: '💡',
+      subtext: 'This is DSPy.'
     },
     3: {
-      title: 'MEET YOUR DIGITAL CHAMPIONS',
-      text: 'Three AI warriors, each with unique strategies: The Formal Sentinel (precise), The Friendly Oracle (warm), The Analytical Sage (detailed).',
-      icon: '🤖'
+      title: 'HERE\'S HOW IT WORKS',
+      text: 'Step 1: You write rules for what makes a "good" answer. Step 2: DSPy creates different prompt styles. Step 3: Each one competes. Step 4: The winner is chosen automatically.',
+      icon: '⚡',
+      subtext: 'Let me show you...'
     },
     4: {
-      title: 'THE NEURAL ARENA',
-      text: 'How it works: You define the challenge. Three AI variants compete. Judges score each response. The best strategy wins. Simple. Powerful. Fast.',
-      icon: '🎮'
+      title: 'THE CHALLENGE',
+      text: 'Task: Sort customer messages. Is it billing? Technical? Urgent? We need the AI to categorize correctly AND write a short summary.',
+      icon: '🎯',
+      subtext: 'Simple task. But how do we find the BEST prompt?'
     },
     5: {
-      title: 'THE SCORING MATRIX',
-      text: 'Five criteria judge each response: Correct Category, Intent Match, Perfect Length, Confidence, Presentation. Each scored. Weighted. Totaled.',
-      icon: '📊'
+      title: 'DEFINE "GOOD"',
+      text: 'We create 5 rules: ✓ Category must be correct ✓ Must understand the real problem ✓ Summary under 20 words ✓ No uncertain language ✓ Proper format',
+      icon: '📋',
+      subtext: 'These are our judges. They score each attempt.'
     },
     6: {
-      title: 'VARIANT GENERATION',
-      text: 'Watch as DSPy generates three distinct prompt strategies. Same goal. Different approaches. All tested automatically.',
-      icon: '🔮'
+      title: 'DSPY CREATES 3 STRATEGIES',
+      text: 'Strategy 1: Formal and precise. Strategy 2: Friendly and conversational. Strategy 3: Analytical and detailed. Same task. Completely different approaches.',
+      icon: '🤖',
+      subtext: 'Which one will win?'
     },
     7: {
-      title: 'BATTLE SIMULATION',
-      text: 'See a live example: "I was double-charged." Three variants process it. Scores emerge. A winner is crowned. This is the power of automation.',
-      icon: '⚡'
+      title: 'READY TO WATCH?',
+      text: 'You\'ll type a customer message. Three AI strategies will compete. Our judges will score them. The best one wins. All in real-time.',
+      icon: '🚀',
+      subtext: 'Click NEXT to start the battle!'
     }
   };
 
@@ -367,17 +374,24 @@ const ChapterContent: React.FC<{ chapter: number }> = ({ chapter }) => {
       <div className="bg-black/40 backdrop-blur-xl border-4 border-cyan-500 rounded-3xl p-12 shadow-2xl shadow-cyan-500/50">
         <motion.div
           className="text-9xl text-center mb-8"
-          animate={{ rotateY: [0, 360] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
         >
           {current.icon}
         </motion.div>
-        <h2 className="text-5xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+        <h2 className="text-5xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent leading-tight">
           {current.title}
         </h2>
-        <p className="text-2xl text-cyan-100 leading-relaxed text-center">
+        <p className="text-2xl text-cyan-100 leading-relaxed text-center mb-6">
           {current.text}
         </p>
+        <motion.p
+          className="text-xl text-pink-400 font-bold text-center italic"
+          animate={{ opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          {current.subtext}
+        </motion.p>
       </div>
     </motion.div>
   );

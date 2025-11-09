@@ -177,75 +177,103 @@ const VibrantResults: React.FC<VibrantResultsProps> = ({ variants, winner, sound
         </div>
       </motion.div>
 
-      {/* Key Learnings */}
+      {/* The Aha Moment */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.5 }}
         className="bg-gradient-to-br from-purple-900/80 to-blue-900/80 backdrop-blur-xl border-4 border-pink-500 rounded-3xl p-12 shadow-2xl shadow-pink-500/50"
       >
-        <h3 className="text-5xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
-          🧠 KNOWLEDGE ACQUIRED 🧠
+        <motion.div
+          className="text-9xl text-center mb-8"
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          💡
+        </motion.div>
+
+        <h3 className="text-6xl font-black text-center mb-12 bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-400 bg-clip-text text-transparent leading-tight">
+          THE AHA MOMENT
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {[
-            {
-              icon: '⚡',
-              title: 'WHAT DSPy DOES',
-              text: 'Automatically generates and tests multiple prompt strategies in parallel'
-            },
-            {
-              icon: '🎯',
-              title: 'HOW IT WORKS',
-              text: 'You define "good," DSPy finds the best prompt to achieve it'
-            },
-            {
-              icon: '🚀',
-              title: 'WHY IT\'S POWERFUL',
-              text: 'Saves hours of manual testing. Better results, less work!'
-            }
-          ].map((item, idx) => (
-            <motion.div
-              key={idx}
-              className="bg-black/40 rounded-2xl p-6 border-2 border-cyan-400 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.7 + idx * 0.2 }}
-              whileHover={{ scale: 1.05, borderColor: '#ec4899' }}
-            >
-              <div className="text-6xl mb-4">{item.icon}</div>
-              <h4 className="text-2xl font-black text-cyan-300 mb-3">{item.title}</h4>
-              <p className="text-white text-lg">{item.text}</p>
-            </motion.div>
-          ))}
+        <div className="space-y-8 mb-12">
+          <motion.div
+            className="bg-black/60 rounded-2xl p-8 border-4 border-red-500"
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 1.7 }}
+          >
+            <div className="flex items-center gap-6 mb-4">
+              <span className="text-7xl">😫</span>
+              <h4 className="text-4xl font-black text-red-400">BEFORE DSPy</h4>
+            </div>
+            <p className="text-2xl text-white leading-relaxed">
+              Write prompt → Test → Bad result → Rewrite → Test again → Still bad → Try again → Repeat 20 times → Give up or settle for "good enough"
+            </p>
+            <p className="text-xl text-red-300 mt-4 font-bold">Hours wasted. Mediocre results.</p>
+          </motion.div>
+
+          <motion.div
+            className="bg-black/60 rounded-2xl p-8 border-4 border-green-500"
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 2 }}
+          >
+            <div className="flex items-center gap-6 mb-4">
+              <span className="text-7xl">⚡</span>
+              <h4 className="text-4xl font-black text-green-400">WITH DSPy</h4>
+            </div>
+            <p className="text-2xl text-white leading-relaxed">
+              Define what "good" means → DSPy generates many prompts → Tests them all automatically → Picks the best one → Done in seconds
+            </p>
+            <p className="text-xl text-green-300 mt-4 font-bold">Seconds invested. Optimal results.</p>
+          </motion.div>
         </div>
 
-        {/* Next Steps */}
-        <div className="text-center">
-          <h4 className="text-4xl font-black text-yellow-400 mb-6">🌟 WHAT'S NEXT? 🌟</h4>
+        <motion.div
+          className="text-center bg-gradient-to-r from-cyan-900/50 to-purple-900/50 rounded-2xl p-10 border-4 border-yellow-400"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 2.3, type: 'spring' }}
+        >
+          <h4 className="text-5xl font-black text-yellow-400 mb-6">THAT'S THE MAGIC</h4>
+          <p className="text-3xl text-white leading-relaxed mb-6">
+            You just saw 3 prompts compete. DSPy can test 100. Or 1000.
+          </p>
+          <p className="text-3xl text-cyan-300 font-bold">
+            Same effort for you. Infinitely better results.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="text-center mt-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.6 }}
+        >
+          <p className="text-2xl text-pink-400 mb-6 font-bold">Now imagine using this for:</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-white text-lg">
-            {['Customer Support', 'Content Classification', 'Question Answering', 'Text Summarization'].map((item, idx) => (
+            {['Customer Support', 'Code Generation', 'Data Analysis', 'Content Writing'].map((item, idx) => (
               <motion.div
                 key={idx}
-                className="bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl p-4 font-bold"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2 + idx * 0.1 }}
+                className="bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl p-4 font-bold border-2 border-pink-400"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.7 + idx * 0.1 }}
                 whileHover={{ scale: 1.1, boxShadow: '0 0 30px rgba(236, 72, 153, 0.8)' }}
               >
                 {item}
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         <motion.div
-          className="text-center mt-12 text-5xl font-black bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent"
+          className="text-center mt-16 text-6xl font-black bg-gradient-to-r from-green-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent"
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          MISSION COMPLETE! 🎮
+          YOU GET IT NOW. 🚀
         </motion.div>
       </motion.div>
     </motion.div>
