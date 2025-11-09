@@ -31,18 +31,64 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
       exit={{ opacity: 0, y: -50 }}
       className="max-w-5xl mx-auto"
     >
-      <div className="bg-gradient-to-br from-purple-900/80 to-blue-900/80 backdrop-blur-xl border-4 border-pink-500 rounded-3xl p-12 shadow-2xl shadow-pink-500/50 relative overflow-hidden">
-        {/* Animated Corner Accents */}
+      <div style={{
+        position: 'relative',
+        background: 'linear-gradient(135deg, rgba(88, 28, 135, 0.9), rgba(30, 58, 138, 0.9))',
+        backdropFilter: 'blur(20px)',
+        border: '4px solid transparent',
+        borderRadius: '2rem',
+        padding: '3rem',
+        boxShadow: '0 25px 50px -12px rgba(236, 72, 153, 0.5), inset 0 0 60px rgba(236, 72, 153, 0.1)',
+        overflow: 'hidden'
+      }}>
+        {/* Animated border gradient */}
         <motion.div
-          className="absolute top-0 left-0 w-32 h-32 bg-cyan-500/20 rounded-br-full"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(90deg, #06b6d4, #ec4899, #a855f7, #06b6d4)',
+            backgroundSize: '300% 100%',
+            borderRadius: '2rem',
+            padding: '4px',
+            zIndex: -1,
+            mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            maskComposite: 'exclude',
+            WebkitMaskComposite: 'xor'
+          }}
+          animate={{
+            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
         />
-        <motion.div
-          className="absolute bottom-0 right-0 w-32 h-32 bg-pink-500/20 rounded-tl-full"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-        />
+
+        {/* Energy orbs floating around */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              background: `radial-gradient(circle, ${i % 2 === 0 ? 'rgba(6, 182, 212, 0.3)' : 'rgba(236, 72, 153, 0.3)'}, transparent)`,
+              filter: 'blur(20px)',
+              left: `${(i * 20) % 100}%`,
+              top: `${(i * 30) % 100}%`
+            }}
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -50, 50, 0],
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{
+              duration: 8 + i,
+              repeat: Infinity,
+              delay: i * 0.5
+            }}
+          />
+        ))}
 
         <motion.h2
           className="text-6xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent"
@@ -58,11 +104,51 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
 
         {/* Input Area */}
         <div className="relative mb-8">
+          {/* Animated border glow */}
           <motion.div
-            className="absolute -inset-2 bg-gradient-to-r from-cyan-500 via-pink-500 to-purple-500 rounded-2xl opacity-30 blur-xl"
-            animate={{ opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            style={{
+              position: 'absolute',
+              inset: '-6px',
+              background: 'linear-gradient(90deg, #06b6d4, #ec4899, #a855f7, #06b6d4)',
+              backgroundSize: '300% 100%',
+              borderRadius: '1.5rem',
+              opacity: 0.6,
+              filter: 'blur(15px)',
+              zIndex: 0
+            }}
+            animate={{
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           />
+
+          {/* Corner accents */}
+          {[0, 1, 2, 3].map((i) => (
+            <motion.div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: '20px',
+                height: '20px',
+                border: '3px solid #22d3ee',
+                ...(i === 0 && { top: '-3px', left: '-3px', borderRight: 'none', borderBottom: 'none' }),
+                ...(i === 1 && { top: '-3px', right: '-3px', borderLeft: 'none', borderBottom: 'none' }),
+                ...(i === 2 && { bottom: '-3px', left: '-3px', borderRight: 'none', borderTop: 'none' }),
+                ...(i === 3 && { bottom: '-3px', right: '-3px', borderLeft: 'none', borderTop: 'none' }),
+                zIndex: 2
+              }}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                delay: i * 0.2
+              }}
+            />
+          ))}
+
           <textarea
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -71,82 +157,256 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
               position: 'relative',
               width: '100%',
               height: '12rem',
-              background: 'rgba(0, 0, 0, 0.6)',
-              border: '4px solid #22d3ee',
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(168, 85, 247, 0.1))',
+              backdropFilter: 'blur(10px)',
+              border: '2px solid rgba(34, 211, 238, 0.5)',
               borderRadius: '1rem',
               padding: '1.5rem',
               fontSize: '1.5rem',
+              fontWeight: '600',
               color: '#ffffff',
               fontFamily: 'monospace',
               resize: 'none',
-              transition: 'all 0.3s'
+              transition: 'all 0.3s',
+              boxShadow: 'inset 0 0 30px rgba(34, 211, 238, 0.2), 0 0 40px rgba(236, 72, 153, 0.3)',
+              zIndex: 1
             }}
-            placeholder="Type your customer message here..."
+            onFocus={(e) => {
+              soundManager?.playHover();
+              e.target.style.border = '2px solid rgba(236, 72, 153, 0.8)';
+              e.target.style.boxShadow = 'inset 0 0 30px rgba(236, 72, 153, 0.3), 0 0 60px rgba(236, 72, 153, 0.5)';
+            }}
+            onBlur={(e) => {
+              e.target.style.border = '2px solid rgba(34, 211, 238, 0.5)';
+              e.target.style.boxShadow = 'inset 0 0 30px rgba(34, 211, 238, 0.2), 0 0 40px rgba(236, 72, 153, 0.3)';
+            }}
+            placeholder="⚡ TYPE YOUR MESSAGE HERE ⚡"
             disabled={isRunning}
           />
         </div>
 
         {/* Example Buttons */}
         <div className="mb-12">
-          <p className="text-cyan-300 text-center mb-6 text-xl font-bold">
-            ⚡ OR TRY THESE EXAMPLES ⚡
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <motion.p
+            className="text-cyan-300 text-center mb-6 text-2xl font-black"
+            animate={{
+              textShadow: [
+                '0 0 10px rgba(34, 211, 238, 0.5)',
+                '0 0 20px rgba(236, 72, 153, 0.5)',
+                '0 0 10px rgba(34, 211, 238, 0.5)'
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            💥 QUICK START EXAMPLES 💥
+          </motion.p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {examples.map((example, idx) => (
-              <motion.button
-                key={idx}
-                onClick={() => {
-                  soundManager?.playClick();
-                  setUserInput(example);
-                }}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 border-2 border-pink-400 rounded-xl p-4 text-left text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all relative overflow-hidden group"
-                whileHover={{ scale: 1.03, boxShadow: '0 0 30px rgba(236, 72, 153, 0.6)' }}
-                whileTap={{ scale: 0.97 }}
-                disabled={isRunning}
-              >
+              <motion.div key={idx} className="relative">
+                {/* Glowing background */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-400/30 to-cyan-400/0"
-                  initial={{ x: '-100%' }}
-                  whileHover={{ x: '100%' }}
-                  transition={{ duration: 0.6 }}
+                  style={{
+                    position: 'absolute',
+                    inset: '-4px',
+                    background: `linear-gradient(${45 + idx * 90}deg, #06b6d4, #ec4899)`,
+                    borderRadius: '1rem',
+                    opacity: 0.3,
+                    filter: 'blur(10px)'
+                  }}
+                  whileHover={{ opacity: 0.6, scale: 1.05 }}
                 />
-                <span className="relative z-10">{example}</span>
-              </motion.button>
+                <motion.button
+                  onClick={() => {
+                    soundManager?.playClick();
+                    setUserInput(example);
+                  }}
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    background: 'linear-gradient(135deg, rgba(88, 28, 135, 0.8), rgba(30, 58, 138, 0.8))',
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(236, 72, 153, 0.5)',
+                    borderRadius: '1rem',
+                    padding: '1.25rem',
+                    textAlign: 'left',
+                    color: '#ffffff',
+                    fontSize: '1.1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    boxShadow: '0 0 20px rgba(236, 72, 153, 0.3)'
+                  }}
+                  whileHover={{
+                    scale: 1.03,
+                    border: '2px solid rgba(34, 211, 238, 0.8)',
+                    boxShadow: '0 0 40px rgba(34, 211, 238, 0.6)'
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={isRunning}
+                >
+                  {/* Scan line effect */}
+                  <motion.div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: '-100%',
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)'
+                    }}
+                    animate={{
+                      left: ['100%', '100%', '-100%']
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: idx * 0.5
+                    }}
+                  />
+                  <span style={{ position: 'relative', zIndex: 1 }}>
+                    <span style={{ color: '#22d3ee', marginRight: '0.5rem' }}>▶</span>
+                    {example}
+                  </span>
+                </motion.button>
+              </motion.div>
             ))}
           </div>
         </div>
 
         {/* Start Button */}
         <motion.div className="text-center">
-          <motion.button
-            onClick={onStartDemo}
-            disabled={isRunning || !userInput.trim()}
-            className={`
-              relative px-16 py-6 text-3xl font-black rounded-2xl
-              ${isRunning || !userInput.trim()
-                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-green-400 via-cyan-400 to-blue-500 text-white cursor-pointer'
-              }
-              border-4 border-white/50 shadow-2xl
-              overflow-hidden
-            `}
-            whileHover={!isRunning && userInput.trim() ? {
-              scale: 1.1,
-              boxShadow: '0 0 50px rgba(0, 255, 255, 1), 0 0 100px rgba(0, 255, 255, 0.5)'
-            } : {}}
-            whileTap={!isRunning && userInput.trim() ? { scale: 0.95 } : {}}
-          >
+          <div className="relative inline-block">
+            {/* Outer pulsing rings */}
             {!isRunning && userInput.trim() && (
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"
-                animate={{ x: ['-200%', '200%'] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
+              <>
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    style={{
+                      position: 'absolute',
+                      inset: '-20px',
+                      border: '3px solid rgba(34, 211, 238, 0.5)',
+                      borderRadius: '2rem',
+                      pointerEvents: 'none'
+                    }}
+                    animate={{
+                      scale: [1, 1.5, 1.5],
+                      opacity: [0.8, 0, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: i * 0.6
+                    }}
+                  />
+                ))}
+              </>
             )}
-            <span className="relative z-10 drop-shadow-lg">
-              {isRunning ? '⚡ BATTLE IN PROGRESS ⚡' : '🚀 START THE BATTLE! 🚀'}
-            </span>
-          </motion.button>
+
+            {/* Main button */}
+            <motion.button
+              onClick={onStartDemo}
+              disabled={isRunning || !userInput.trim()}
+              style={{
+                position: 'relative',
+                padding: '2rem 4rem',
+                fontSize: '2.5rem',
+                fontWeight: '900',
+                borderRadius: '1.5rem',
+                border: isRunning || !userInput.trim() ? '4px solid #4b5563' : '4px solid rgba(255, 255, 255, 0.8)',
+                background: isRunning || !userInput.trim()
+                  ? '#374151'
+                  : 'linear-gradient(135deg, #10b981, #06b6d4, #3b82f6)',
+                backgroundSize: '200% 200%',
+                color: isRunning || !userInput.trim() ? '#6b7280' : '#ffffff',
+                cursor: isRunning || !userInput.trim() ? 'not-allowed' : 'pointer',
+                overflow: 'hidden',
+                boxShadow: isRunning || !userInput.trim()
+                  ? 'none'
+                  : '0 0 60px rgba(6, 182, 212, 0.8), inset 0 0 30px rgba(255, 255, 255, 0.2)',
+                textShadow: isRunning || !userInput.trim() ? 'none' : '0 0 20px rgba(0, 0, 0, 0.5)',
+                zIndex: 1
+              }}
+              animate={!isRunning && userInput.trim() ? {
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                scale: [1, 1.02, 1]
+              } : {}}
+              transition={{
+                backgroundPosition: { duration: 3, repeat: Infinity },
+                scale: { duration: 1.5, repeat: Infinity }
+              }}
+              whileHover={!isRunning && userInput.trim() ? {
+                scale: 1.08,
+                boxShadow: '0 0 100px rgba(6, 182, 212, 1), 0 0 150px rgba(59, 130, 246, 0.5), inset 0 0 40px rgba(255, 255, 255, 0.3)'
+              } : {}}
+              whileTap={!isRunning && userInput.trim() ? { scale: 0.95 } : {}}
+            >
+              {/* Lightning bolts on sides */}
+              {!isRunning && userInput.trim() && (
+                <>
+                  <motion.span
+                    style={{
+                      position: 'absolute',
+                      left: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      fontSize: '3rem'
+                    }}
+                    animate={{
+                      rotate: [0, 10, -10, 0],
+                      scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}
+                  >
+                    ⚡
+                  </motion.span>
+                  <motion.span
+                    style={{
+                      position: 'absolute',
+                      right: '1rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      fontSize: '3rem'
+                    }}
+                    animate={{
+                      rotate: [0, -10, 10, 0],
+                      scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1, delay: 0.3 }}
+                  >
+                    ⚡
+                  </motion.span>
+                </>
+              )}
+
+              {/* Shimmer effect */}
+              {!isRunning && userInput.trim() && (
+                <motion.div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: '-100%',
+                    width: '50%',
+                    height: '100%',
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)',
+                    transform: 'skewX(-20deg)'
+                  }}
+                  animate={{
+                    left: ['100%', '100%', '-100%']
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                />
+              )}
+
+              <span style={{ position: 'relative', zIndex: 1, letterSpacing: '0.1em' }}>
+                {isRunning ? '🔥 BATTLE IN PROGRESS 🔥' : '🚀 IGNITE BATTLE 🚀'}
+              </span>
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     </motion.div>
