@@ -67,7 +67,20 @@ const VibrantInputSection: React.FC<VibrantInputSectionProps> = ({
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             onFocus={() => soundManager?.playHover()}
-            className="relative w-full h-48 bg-black/60 border-4 border-cyan-400 rounded-2xl p-6 text-2xl text-white placeholder-cyan-300/50 focus:outline-none focus:border-pink-400 focus:shadow-lg focus:shadow-pink-400/50 transition-all resize-none font-mono"
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '12rem',
+              background: 'rgba(0, 0, 0, 0.6)',
+              border: '4px solid #22d3ee',
+              borderRadius: '1rem',
+              padding: '1.5rem',
+              fontSize: '1.5rem',
+              color: '#ffffff',
+              fontFamily: 'monospace',
+              resize: 'none',
+              transition: 'all 0.3s'
+            }}
             placeholder="Type your customer message here..."
             disabled={isRunning}
           />

@@ -133,6 +133,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
         soundManager.current?.playVictory();
         setWinner(event.winner);
         setIsRunning(false);
+        setCurrentChapter(10);
         eventSource.close();
       });
 
@@ -243,7 +244,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-8 pb-20 relative z-10">
+      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 2rem 5rem 2rem', position: 'relative', zIndex: 10 }}>
         <AnimatePresence mode="wait">
           {currentChapter === 8 && (
             <VibrantInputSection
@@ -282,7 +283,15 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       </div>
 
       {/* Navigation */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex gap-8 z-40">
+      <div style={{
+        position: 'fixed',
+        bottom: '2rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: '2rem',
+        zIndex: 40
+      }}>
         <motion.button
           onClick={handlePrev}
           disabled={currentChapter === 1}
