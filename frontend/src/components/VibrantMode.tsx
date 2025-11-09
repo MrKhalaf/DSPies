@@ -90,7 +90,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       const response = await fetch('http://localhost:8000/api/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: userInput })
+        body: JSON.stringify({ input_text: userInput })
       });
 
       console.log('📡 Response status:', response.status);
