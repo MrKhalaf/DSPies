@@ -124,59 +124,56 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       };
 
       eventSource.onmessage = (e) => {
-        console.log('📨 Generic message received:', e.data);
-      };
+        console.log('📨 SSE message received:', e.data);
+        try {
+          const event = JSON.parse(e.data);
+          console.log('📋 Parsed event:', event);
 
-      eventSource.addEventListener('VariantOutput', (e) => {
-        const event = JSON.parse(e.data);
-        console.log('📊 Variant output received:', event);
-        soundManager.current?.playVariantComplete();
-        setVariants(prev => {
-          const existing = prev.find(v => v.id === event.variant_id);
-          if (existing) {
-            return prev.map(v => v.id === event.variant_id
-              ? { ...v, output: event.output, latency_ms: event.latency_ms }
-              : v
-            );
+          // Handle different event types
+          if (event.type === 'VariantOutput') {
+            console.log('📊 Variant output:', event);
+            soundManager.current?.playVariantComplete();
+            setVariants(prev => {
+              const existing = prev.find(v => v.id === event.variant_id);
+              if (existing) {
+                return prev.map(v => v.id === event.variant_id
+                  ? { ...v, output: event.output, latency_ms: event.latency_ms }
+                  : v
+                );
+              }
+              return [...prev, {
+                id: event.variant_id,
+                name: event.variant_id,
+                instruction: '',
+                output: event.output,
+                latency_ms: event.latency_ms
+              }];
+            });
+          } else if (event.type === 'VariantScored') {
+            console.log('⭐ Variant scored:', event);
+            soundManager.current?.playScore();
+            setVariants(prev => prev.map(v =>
+              v.id === event.variant_id
+                ? { ...v, score: event.score, scoreComponents: event.score_components }
+                : v
+            ));
+          } else if (event.type === 'RunComplete') {
+            console.log('🏆 Run complete! Winner:', event.winner);
+            soundManager.current?.playVictory();
+            setWinner(event.winner);
+            setIsRunning(false);
+            setCurrentChapter(10);
+            eventSource.close();
+          } else if (event.type === 'Error') {
+            console.error('❌ Backend error:', event);
+            soundManager.current?.playError();
+            setIsRunning(false);
+            eventSource.close();
           }
-          return [...prev, {
-            id: event.variant_id,
-            name: event.variant_id,
-            instruction: '',
-            output: event.output,
-            latency_ms: event.latency_ms
-          }];
-        });
-      });
-
-      eventSource.addEventListener('VariantScored', (e) => {
-        const event = JSON.parse(e.data);
-        console.log('⭐ Variant scored:', event);
-        soundManager.current?.playScore();
-        setVariants(prev => prev.map(v =>
-          v.id === event.variant_id
-            ? { ...v, score: event.score, scoreComponents: event.score_components }
-            : v
-        ));
-      });
-
-      eventSource.addEventListener('RunComplete', (e) => {
-        const event = JSON.parse(e.data);
-        console.log('🏆 Run complete! Winner:', event.winner);
-        console.log('📋 Final variants:', variants);
-        soundManager.current?.playVictory();
-        setWinner(event.winner);
-        setIsRunning(false);
-        setCurrentChapter(10);
-        eventSource.close();
-      });
-
-      eventSource.addEventListener('Error', (e) => {
-        soundManager.current?.playError();
-        console.error('Error:', e.data);
-        setIsRunning(false);
-        eventSource.close();
-      });
+        } catch (error) {
+          console.error('Failed to parse SSE event:', error, 'Raw data:', e.data);
+        }
+      };
 
     } catch (error) {
       soundManager.current?.playError();
