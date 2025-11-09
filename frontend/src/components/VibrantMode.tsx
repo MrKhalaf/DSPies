@@ -304,7 +304,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
             />
           )}
 
-          {currentChapter === 8 && hasCompletedDemo && (
+          {currentChapter === 8 && hasCompletedDemo && winner && (
             <VibrantResults
               key="results"
               variants={variants}
