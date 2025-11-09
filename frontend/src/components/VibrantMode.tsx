@@ -99,6 +99,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
 
       eventSource.addEventListener('VariantOutput', (e) => {
         const event = JSON.parse(e.data);
+        console.log('📊 Variant output received:', event);
         soundManager.current?.playVariantComplete();
         setVariants(prev => {
           const existing = prev.find(v => v.id === event.variant_id);
@@ -120,6 +121,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
 
       eventSource.addEventListener('VariantScored', (e) => {
         const event = JSON.parse(e.data);
+        console.log('⭐ Variant scored:', event);
         soundManager.current?.playScore();
         setVariants(prev => prev.map(v =>
           v.id === event.variant_id
@@ -130,6 +132,8 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
 
       eventSource.addEventListener('RunComplete', (e) => {
         const event = JSON.parse(e.data);
+        console.log('🏆 Run complete! Winner:', event.winner);
+        console.log('📋 Final variants:', variants);
         soundManager.current?.playVictory();
         setWinner(event.winner);
         setIsRunning(false);
@@ -148,6 +152,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
       soundManager.current?.playError();
       console.error('Failed to start run:', error);
       setIsRunning(false);
+      alert('❌ Failed to connect to backend API.\n\nMake sure the backend server is running on http://localhost:8000\n\nSee the terminal for details.');
     }
   };
 
@@ -267,13 +272,57 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
             />
           )}
 
-          {currentChapter === 10 && winner && (
-            <VibrantResults
-              key="results"
-              variants={variants}
-              winner={winner}
-              soundManager={soundManager.current}
-            />
+          {currentChapter === 10 && (
+            winner ? (
+              <VibrantResults
+                key="results"
+                variants={variants}
+                winner={winner}
+                soundManager={soundManager.current}
+              />
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center"
+                style={{ maxWidth: '800px', margin: '0 auto' }}
+              >
+                <div style={{
+                  background: 'rgba(0, 0, 0, 0.6)',
+                  padding: '3rem',
+                  borderRadius: '2rem',
+                  border: '4px solid rgba(239, 68, 68, 0.5)'
+                }}>
+                  <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>⚠️</div>
+                  <h2 style={{ fontSize: '2rem', color: '#fca5a5', marginBottom: '1rem' }}>
+                    No Results Available
+                  </h2>
+                  <p style={{ fontSize: '1.2rem', color: '#fecaca', marginBottom: '1.5rem' }}>
+                    The battle didn't complete successfully. This could mean:
+                  </p>
+                  <ul style={{ textAlign: 'left', color: '#ffffff', fontSize: '1.1rem', marginBottom: '2rem' }}>
+                    <li style={{ marginBottom: '0.5rem' }}>• Backend server is not running</li>
+                    <li style={{ marginBottom: '0.5rem' }}>• API connection failed</li>
+                    <li style={{ marginBottom: '0.5rem' }}>• No winner was determined</li>
+                  </ul>
+                  <button
+                    onClick={() => setCurrentChapter(8)}
+                    style={{
+                      padding: '1rem 2rem',
+                      background: 'linear-gradient(to right, #ef4444, #dc2626)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      fontSize: '1.2rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    ← Go Back and Try Again
+                  </button>
+                </div>
+              </motion.div>
+            )
           )}
 
           {currentChapter < 8 && (
