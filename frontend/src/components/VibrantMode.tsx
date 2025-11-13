@@ -1,27 +1,50 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import VibrantAhaHeader from './VibrantAhaHeader';
-import VibrantInputPanel from './VibrantInputPanel';
-import VibrantCompactResults from './VibrantCompactResults';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useOptimization } from '../hooks/useOptimization';
+import VibrantCaveScene from './VibrantCaveScene';
+import VibrantGameArena from './VibrantGameArena';
+import VibrantGameResults from './VibrantGameResults';
 
 interface VibrantModeProps {
   onExitVibrantMode: () => void;
 }
 
+type GameStep = 'cave' | 'arena' | 'results';
+
 const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
-  const { state, startOptimization, error } = useOptimization();
-  const isRunning = state.status === 'compiling' || state.status === 'running';
+  const { state, startOptimization, reset } = useOptimization();
+  const [step, setStep] = React.useState<GameStep>('cave');
+
+  const handleHandoff = async ({ message, notes }: { message: string; notes: Record<'v1' | 'v2' | 'v3', string> }) => {
+    // Compose input: include message and notes so the back-end gets a richer context
+    const composed = [
+      message && `Message: ${message}`,
+      `Notes:\n- ${notes.v1}\n- ${notes.v2}\n- ${notes.v3}`
+    ].filter(Boolean).join('\n\n');
+    await startOptimization(composed || 'Notes only');
+    setStep('arena');
+  };
+
+  React.useEffect(() => {
+    if (state.status === 'complete' && step === 'arena') {
+      setStep('results');
+    }
+  }, [state.status, step]);
+
+  const handlePlayAgain = () => {
+    reset();
+    setStep('cave');
+  };
 
   return (
-    <div className="min-h-screen overflow-hidden relative" style={{ background: 'linear-gradient(to bottom right, #581c87, #1e3a8a, #000000)', color: '#ffffff' }}>
-      {/* Subtle grid overlay */}
+    <div className="min-h-screen overflow-hidden relative" style={{ background: 'linear-gradient(to bottom right, #0b1226, #111827, #0b1226)', color: '#ffffff' }}>
+      {/* Minimal grid overlay */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, 0.3) 25%, rgba(0, 255, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.3) 75%, rgba(0, 255, 255, 0.3) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, 0.3) 25%, rgba(0, 255, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.3) 75%, rgba(0, 255, 255, 0.3) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.2) 25%, rgba(59, 130, 246, 0.2) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.2) 75%, rgba(59, 130, 246, 0.2) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.2) 25%, rgba(59, 130, 246, 0.2) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.2) 75%, rgba(59, 130, 246, 0.2) 76%, transparent 77%, transparent)
           `,
           backgroundSize: '50px 50px'
         }}
@@ -37,37 +60,53 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
         ← EXIT
       </motion.button>
 
-      {/* AHA Header */}
-      <div className="relative z-10 max-w-7xl mx-auto">
-        <VibrantAhaHeader />
+      <div className="relative z-10 max-w-6xl mx-auto px-6" style={{ height: '100vh' }}>
+        <div className="pt-14 h-full">
+          <AnimatePresence mode="wait">
+            {step === 'cave' && (
+      <motion.div
+                key="cave"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-full"
+              >
+                <VibrantCaveScene onHandoff={handleHandoff} />
+      </motion.div>
+            )}
+            {step === 'arena' && (
+          <motion.div
+                key="arena"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-full"
+              >
+                <VibrantGameArena
+                  variants={state.variants}
+                  leader={state.leader}
+                  status={state.status}
+                />
+              </motion.div>
+            )}
+            {step === 'results' && (
+          <motion.div
+              key="results"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="h-full"
+              >
+                <VibrantGameResults
+                  variants={state.variants}
+                  leader={state.leader}
+                  onPlayAgain={handlePlayAgain}
+                  inputText={state.currentRun?.input_text}
+                />
+              </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-
-      {/* Split Pane */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pb-6">
-        <div
-          className="rounded-2xl border border-cyan-400/30 bg-black/30 overflow-hidden"
-          style={{ height: 'calc(100vh - 150px)' }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-            {/* Left: Input */}
-            <div className="border-b md:border-b-0 md:border-r border-cyan-400/20">
-              <VibrantInputPanel
-                onRun={(text) => startOptimization(text)}
-                isRunning={isRunning}
-                disabled={!!error}
-              />
-            </div>
-
-            {/* Right: Results */}
-            <div className="h-full">
-              <VibrantCompactResults
-                variants={state.variants}
-                leader={state.leader}
-                status={state.status}
-              />
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
