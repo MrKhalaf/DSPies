@@ -53,3 +53,9 @@ html {
     display: none !important;
   }
 }
+
+/* Ensure crisp pixel rendering for Phaser canvas */
+#dungeon-root canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
