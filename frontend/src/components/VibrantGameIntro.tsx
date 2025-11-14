@@ -75,3 +75,4 @@ const VibrantGameIntro: React.FC<VibrantGameIntroProps> = ({ onStart, disabled }
 
 export default VibrantGameIntro;
 
+

@@ -110,3 +110,4 @@ const WizardCharacter: React.FC<WizardCharacterProps> = ({
 
 export default WizardCharacter;
 
+

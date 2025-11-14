@@ -108,3 +108,4 @@ const VibrantGameResults: React.FC<VibrantGameResultsProps> = ({ variants, leade
 
 export default VibrantGameResults;
 
+
