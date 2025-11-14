@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useOptimization } from '../hooks/useOptimization';
-import VibrantCaveScene from './VibrantCaveScene';
+import PhaserCaveScene from './PhaserCaveScene';
 import VibrantGameArena from './VibrantGameArena';
 import VibrantGameResults from './VibrantGameResults';
 
@@ -50,15 +50,17 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
         }}
       />
 
-      {/* Exit Button */}
-      <motion.button
-        onClick={onExitVibrantMode}
-        className="fixed top-6 right-6 z-50 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg font-bold text-white shadow-lg shadow-pink-500/50 border-2 border-pink-400 text-sm"
-        whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(236, 72, 153, 0.8)' }}
-        whileTap={{ scale: 0.95 }}
-      >
-        ← EXIT
-      </motion.button>
+      {/* Exit Button (hide during cave step, shown in-scene) */}
+      {step !== 'cave' && (
+        <motion.button
+          onClick={onExitVibrantMode}
+          className="fixed top-6 right-6 z-50 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg font-bold text-white shadow-lg shadow-pink-500/50 border-2 border-pink-400 text-sm"
+          whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(236, 72, 153, 0.8)' }}
+          whileTap={{ scale: 0.95 }}
+        >
+          ← EXIT
+        </motion.button>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto px-6" style={{ height: '100vh' }}>
         <div className="pt-14 h-full">
@@ -71,7 +73,7 @@ const VibrantMode: React.FC<VibrantModeProps> = ({ onExitVibrantMode }) => {
                 exit={{ opacity: 0, y: -20 }}
                 className="h-full"
               >
-                <VibrantCaveScene onHandoff={handleHandoff} />
+                <PhaserCaveScene onHandoff={handleHandoff} onExit={onExitVibrantMode} />
       </motion.div>
             )}
             {step === 'arena' && (
