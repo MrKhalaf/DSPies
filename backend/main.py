@@ -9,14 +9,16 @@ from fastapi.responses import StreamingResponse
 import asyncio
 import json
 import logging
-from typing import Dict, Any
+from typing import Dict, Any, List
 import os
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 from models import RunRequest, RunResponse, RunStatus
 from optimizer import DSPyOptimizer
 from run_store import RunStore
 from config import load_config
+from dungeon_optimizer import dungeon_optimizer
 
 # Load environment variables
 load_dotenv()
@@ -33,7 +35,8 @@ app = FastAPI(
 )
 
 # Configure CORS
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003").split(",")
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3100").split(",")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
@@ -156,6 +159,33 @@ async def get_config():
         "demo_examples": config["demo_examples"],
         "variant_count": config["variant_count"]
     }
+
+# Dungeon game models
+class OptimizeRequest(BaseModel):
+    prompts: List[str]
+    task: str = "general_qa"
+
+@app.post("/api/optimize")
+async def optimize_prompts(request: OptimizeRequest):
+    """
+    Optimize three prompt principles from the wise elders.
+    Used by the dungeon game.
+    """
+    try:
+        logger.info(f"Optimizing prompts for dungeon game: {len(request.prompts)} prompts")
+        
+        # Run optimization
+        results = await dungeon_optimizer.optimize_prompts(
+            request.prompts, 
+            request.task
+        )
+        
+        logger.info(f"Optimization complete. Score: {results['score']}")
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error optimizing prompts: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Optimization failed: {str(e)}")
 
 async def process_run(run_id: str):
     """
