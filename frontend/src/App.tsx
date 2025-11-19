@@ -1,51 +1,97 @@
 /**
- * The Prompt Chef's Journey
- * An interactive 16-bit pixel art story that teaches DSPy in 10 steps
+ * DSPy Dungeon - Pokemon-style prompt optimization adventure
+ * Walk around, consult three wise elders, optimize your prompts
  */
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { StoryContainer } from './components/StoryMode/StoryContainer';
-import { useSimpleDSPyDemo } from './hooks/useSimpleDSPyDemo';
+import { DungeonGame } from './game/DungeonGame';
 
 import './App.css';
 
 function App() {
-  const [isVibrantMode, setIsVibrantMode] = useState(false);
-  // The hook is now used inside StoryContainer, but we might keep it here if we want to share state,
-  // or just let StoryContainer handle it. For now, let's keep App clean.
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  if (isVibrantMode) {
-    return <StoryContainer onExit={() => setIsVibrantMode(false)} />;
+  if (isPlaying) {
+    return <DungeonGame />;
   }
 
   return (
-    <div className="relative min-h-screen bg-gray-900 flex items-center justify-center">
-      {/* Vibrant Mode Toggle Button */}
+    <div className="relative min-h-screen bg-black flex items-center justify-center">
+      {/* Title */}
+      <div className="absolute top-20 text-center">
+        <motion.h1
+          className="text-6xl font-bold mb-4"
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            color: '#9bbc0f',
+            textShadow: '4px 4px 0px #0f380f'
+          }}
+          animate={{
+            textShadow: [
+              '4px 4px 0px #0f380f',
+              '6px 6px 0px #0f380f',
+              '4px 4px 0px #0f380f'
+            ]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          DSPy DUNGEON
+        </motion.h1>
+        <p
+          className="text-sm"
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            color: '#306230',
+            lineHeight: 1.8
+          }}
+        >
+          A PROMPT OPTIMIZATION ADVENTURE
+        </p>
+      </div>
+
+      {/* Start Button */}
       <motion.button
-        onClick={() => setIsVibrantMode(true)}
-        className="px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 rounded-lg font-bold text-white shadow-lg border-2 border-white/50 text-xl"
+        onClick={() => setIsPlaying(true)}
+        className="px-8 py-4 rounded-lg font-bold shadow-lg border-4 text-xl"
+        style={{
+          fontFamily: "'Press Start 2P', monospace",
+          background: '#9bbc0f',
+          color: '#0f380f',
+          borderColor: '#0f380f',
+        }}
         whileHover={{
           scale: 1.05,
-          boxShadow: '0 0 30px rgba(236, 72, 153, 0.8), 0 0 60px rgba(0, 255, 255, 0.4)'
+          boxShadow: '0 0 30px rgba(155, 188, 15, 0.8)'
         }}
         whileTap={{ scale: 0.95 }}
         animate={{
           boxShadow: [
-            '0 0 20px rgba(236, 72, 153, 0.5)',
-            '0 0 30px rgba(0, 255, 255, 0.5)',
-            '0 0 20px rgba(236, 72, 153, 0.5)'
+            '0 0 20px rgba(155, 188, 15, 0.5)',
+            '0 0 30px rgba(155, 188, 15, 0.7)',
+            '0 0 20px rgba(155, 188, 15, 0.5)'
           ]
         }}
         transition={{
           boxShadow: { duration: 2, repeat: Infinity }
         }}
       >
-        ⚡ START THE JOURNEY ⚡
+        ▶ START GAME
       </motion.button>
 
-      <div className="absolute bottom-10 text-gray-500 text-sm">
-        Click to enter the Prompt Chef's Journey
+      {/* Instructions */}
+      <div
+        className="absolute bottom-20 text-center max-w-2xl px-8"
+        style={{
+          fontFamily: "'Press Start 2P', monospace",
+          color: '#306230',
+          fontSize: '10px',
+          lineHeight: 2
+        }}
+      >
+        <p className="mb-4">SEEK THE WISDOM OF THREE ELDERS</p>
+        <p className="mb-4">BRING THEIR KNOWLEDGE TO THE COMPUTER</p>
+        <p>OPTIMIZE YOUR PROMPTS WITH DSPy</p>
       </div>
     </div>
   );
