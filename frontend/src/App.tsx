@@ -5,26 +5,26 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { DSPyStory } from './components/DSPyStory';
-import VibrantMode from './components/VibrantMode';
+import { StoryContainer } from './components/StoryMode/StoryContainer';
 import { useSimpleDSPyDemo } from './hooks/useSimpleDSPyDemo';
 
 import './App.css';
 
 function App() {
   const [isVibrantMode, setIsVibrantMode] = useState(false);
-  const { variants, isRunning, winner, error, startOptimization, reset } = useSimpleDSPyDemo();
+  // The hook is now used inside StoryContainer, but we might keep it here if we want to share state,
+  // or just let StoryContainer handle it. For now, let's keep App clean.
 
   if (isVibrantMode) {
-    return <VibrantMode onExitVibrantMode={() => setIsVibrantMode(false)} />;
+    return <StoryContainer onExit={() => setIsVibrantMode(false)} />;
   }
 
   return (
-    <div className="relative">
+    <div className="relative min-h-screen bg-gray-900 flex items-center justify-center">
       {/* Vibrant Mode Toggle Button */}
       <motion.button
         onClick={() => setIsVibrantMode(true)}
-        className="fixed top-6 right-6 z-50 px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 rounded-lg font-bold text-white shadow-lg border-2 border-white/50"
+        className="px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600 rounded-lg font-bold text-white shadow-lg border-2 border-white/50 text-xl"
         whileHover={{
           scale: 1.05,
           boxShadow: '0 0 30px rgba(236, 72, 153, 0.8), 0 0 60px rgba(0, 255, 255, 0.4)'
@@ -41,15 +41,12 @@ function App() {
           boxShadow: { duration: 2, repeat: Infinity }
         }}
       >
-        ⚡ ENTER VIBRANT MODE ⚡
+        ⚡ START THE JOURNEY ⚡
       </motion.button>
 
-      <DSPyStory
-        variants={variants}
-        isRunning={isRunning}
-        winner={winner}
-        onRun={startOptimization}
-      />
+      <div className="absolute bottom-10 text-gray-500 text-sm">
+        Click to enter the Prompt Chef's Journey
+      </div>
     </div>
   );
 }
