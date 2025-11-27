@@ -457,3 +457,161 @@
         transform: translateY(4px);
     }
 }
+
+/* ========================================
+   ULTRA MODE STYLES
+   ======================================== */
+
+.dungeon-game.ultra-mode {
+    background: linear-gradient(135deg, #030712 0%, #0a0f1e 30%, #0f172a 60%, #0a0f1e 80%, #030712 100%);
+}
+
+.dungeon-game.ultra-mode .game-viewport {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    box-shadow:
+        inset 0 0 0 8px #7c3aed,
+        inset 0 0 0 12px #0f172a,
+        0 0 60px rgba(124, 58, 237, 0.4),
+        0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.dungeon-game.ultra-mode .dungeon-grid {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 4px solid #7c3aed;
+    box-shadow: 
+        inset 0 0 30px rgba(124, 58, 237, 0.2),
+        0 0 20px rgba(34, 211, 238, 0.2);
+}
+
+/* Ultra mode tiles */
+.dungeon-game.ultra-mode .tile.type-0 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.dungeon-game.ultra-mode .tile.type-1 {
+    background: linear-gradient(135deg, #7c3aed 0%, #581c87 100%);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.dungeon-game.ultra-mode .tile.type-2 {
+    background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%);
+    border: 2px dashed #a855f7;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+.dungeon-game.ultra-mode .tile.type-3 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 1px solid #22d3ee;
+    box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.3);
+}
+
+/* Ultra mode scene name */
+.dungeon-game.ultra-mode .scene-name {
+    color: #22d3ee;
+    text-shadow: 2px 2px 0 #7c3aed, 0 0 20px rgba(34, 211, 238, 0.5);
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid #7c3aed;
+}
+
+/* Ultra mode NPC */
+.dungeon-game.ultra-mode .npc-sprite {
+    filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.6));
+}
+
+.dungeon-game.ultra-mode .wisdom-indicator {
+    background: linear-gradient(135deg, #22d3ee 0%, #a855f7 100%);
+    color: #0f172a;
+    border: 2px solid #22d3ee;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+/* Ultra mode player */
+.dungeon-game.ultra-mode .player-sprite {
+    filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.8));
+}
+
+/* Ultra mode dialogue */
+.dungeon-game.ultra-mode .dialogue-box {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 4px solid #22d3ee;
+    box-shadow: 
+        0 0 30px rgba(34, 211, 238, 0.3),
+        inset 0 0 20px rgba(124, 58, 237, 0.2);
+}
+
+.dungeon-game.ultra-mode .dialogue-portrait {
+    background: linear-gradient(135deg, #7c3aed 0%, #581c87 100%);
+    border: 2px solid #22d3ee;
+}
+
+.dungeon-game.ultra-mode .dialogue-speaker {
+    color: #22d3ee;
+    text-shadow: 2px 2px 0px #7c3aed;
+}
+
+.dungeon-game.ultra-mode .dialogue-text {
+    color: #e0e7ff;
+}
+
+/* Ultra mode status bar */
+.dungeon-game.ultra-mode .status-bar {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 4px solid #7c3aed;
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+}
+
+.dungeon-game.ultra-mode .status-label {
+    color: #a855f7;
+}
+
+.dungeon-game.ultra-mode .status-value {
+    color: #22d3ee;
+}
+
+.dungeon-game.ultra-mode .status-value.ready {
+    color: #22d3ee;
+    animation: ultra-ready-glow 1s ease-in-out infinite;
+}
+
+@keyframes ultra-ready-glow {
+    0%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
+    }
+    50% {
+        opacity: 0.7;
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+    }
+}
+
+/* Ultra mode controls hint */
+.dungeon-game.ultra-mode .controls-hint {
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid #a855f7;
+    color: #22d3ee;
+}
+
+/* Ultra mode optimization overlay */
+.dungeon-game.ultra-mode .optimization-overlay {
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.dungeon-game.ultra-mode .optimization-spinner {
+    border: 8px solid #1e1b4b;
+    border-top: 8px solid #22d3ee;
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.5);
+}
+
+.dungeon-game.ultra-mode .optimization-text {
+    color: #22d3ee;
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+/* Ultra mode CRT effect - more vibrant */
+.dungeon-game.ultra-mode .game-viewport::after {
+    background: repeating-linear-gradient(0deg,
+            rgba(34, 211, 238, 0.03) 0px,
+            transparent 2px,
+            transparent 4px);
+}

@@ -89,7 +89,7 @@ const VibrantGameArena: React.FC<VibrantGameArenaProps> = ({ variants, leader, s
 
   const battleTexts = [
     'The strategies clash...',
-    'Wisdom flows through the sanctum...',
+    'Wisdom flows through the dungeon...',
     'The Oracle weighs each approach...',
     'Power courses through the stones...'
   ];

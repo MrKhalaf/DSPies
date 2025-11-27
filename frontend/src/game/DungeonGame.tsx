@@ -23,7 +23,11 @@ interface Position {
     y: number;
 }
 
-export const DungeonGame: React.FC = () => {
+interface DungeonGameProps {
+    ultraMode?: boolean;
+}
+
+export const DungeonGame: React.FC<DungeonGameProps> = ({ ultraMode = false }) => {
     const gameRef = useRef<HTMLDivElement>(null);
 
     // Game State
@@ -268,7 +272,7 @@ export const DungeonGame: React.FC = () => {
     }, [movePlayer, handleInteraction, activeDialogue]);
 
     return (
-        <div className="dungeon-game" ref={gameRef} tabIndex={0}>
+        <div className={`dungeon-game ${ultraMode ? 'ultra-mode' : ''}`} ref={gameRef} tabIndex={0}>
             {/* Game viewport */}
             <div className="game-viewport">
                 <div

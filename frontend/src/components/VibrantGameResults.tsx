@@ -321,7 +321,7 @@ const VibrantGameResults: React.FC<VibrantGameResultsProps> = ({ variants, leade
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 rounded-xl font-black text-lg bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 text-black shadow-lg shadow-cyan-500/30"
           >
-            ⚔️ Enter the Sanctum Again
+            ⚔️ Enter the Dungeon Again
           </motion.button>
           <p className="text-xs text-slate-500 mt-3">
             Challenge the Oracle with a new problem
