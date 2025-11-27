@@ -10,6 +10,8 @@ interface PhaserGameProps {
     nearOracle?: boolean;
     isMoving?: boolean;
     openDialogNpc?: 'v1' | 'v2' | 'v3';
+    playerPos?: { x: number; y: number };
+    currentRoom?: string;
   }) => void;
   onReady?: (api: {
     setNote: (id: 'v1' | 'v2' | 'v3', text: string) => void;
@@ -21,22 +23,39 @@ export const PhaserGame: React.FC<PhaserGameProps> = ({ onHandoff, onState, onRe
   const containerRef = useRef<HTMLDivElement | null>(null);
   const gameRef = useRef<Phaser.Game | null>(null);
   const sceneRef = useRef<DungeonScene | null>(null);
+  
+  // Store callbacks in refs to avoid stale closures
+  const callbacksRef = useRef({ onHandoff, onState, onReady });
+  useEffect(() => {
+    callbacksRef.current = { onHandoff, onState, onReady };
+  });
 
   useEffect(() => {
     if (!containerRef.current) return;
+    
+    // Destroy any existing game first
+    if (gameRef.current) {
+      gameRef.current.destroy(true);
+      gameRef.current = null;
+      sceneRef.current = null;
+    }
 
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
       parent: containerRef.current,
-      width: 320,
-      height: 192,
-      zoom: 3,
+      width: 448,
+      height: 288,
+      zoom: 2.1,
       physics: {
         default: 'arcade',
         arcade: { gravity: { x: 0, y: 0 }, debug: false }
       },
-      render: { pixelArt: true, antialias: false },
-      backgroundColor: '#0a0f1e',
+      render: { 
+        pixelArt: true, 
+        antialias: false,
+        roundPixels: true
+      },
+      backgroundColor: '#030712',
       scene: []
     };
 
@@ -44,44 +63,53 @@ export const PhaserGame: React.FC<PhaserGameProps> = ({ onHandoff, onState, onRe
     gameRef.current = game;
 
     const scene = new DungeonScene({
-      onHandoff,
-      onState
+      onHandoff: (payload) => callbacksRef.current.onHandoff(payload),
+      onState: (state) => callbacksRef.current.onState(state)
     });
     game.scene.add('DungeonScene', scene, true);
     sceneRef.current = scene;
 
-    // Improve canvas focus and crispness
+    const container = containerRef.current;
     const focusCanvas = () => {
-      const canvas = game.canvas as HTMLCanvasElement | null;
+      const canvas = game.canvas;
       if (canvas) {
         canvas.tabIndex = 1;
-        try {
-          canvas.style.imageRendering = 'pixelated';
-        } catch {}
+        canvas.style.imageRendering = 'pixelated';
         canvas.focus();
       }
     };
-    focusCanvas();
-    containerRef.current?.addEventListener('mousedown', focusCanvas);
+    
+    setTimeout(focusCanvas, 200);
+    container.addEventListener('mousedown', focusCanvas);
+    container.addEventListener('click', focusCanvas);
 
-    if (onReady) {
-      onReady({
+    if (callbacksRef.current.onReady) {
+      callbacksRef.current.onReady({
         setNote: (id, text) => sceneRef.current?.setNote(id, text),
         setMessage: (text) => sceneRef.current?.setMessage(text)
       });
     }
 
     return () => {
-      containerRef.current?.removeEventListener('mousedown', focusCanvas);
+      container.removeEventListener('mousedown', focusCanvas);
+      container.removeEventListener('click', focusCanvas);
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;
         sceneRef.current = null;
       }
     };
-  }, [onHandoff, onState]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <div ref={containerRef} id="dungeon-root" />;
+  return (
+    <div 
+      ref={containerRef} 
+      id="dungeon-root" 
+      style={{ 
+        width: '940px',
+        height: '605px',
+        imageRendering: 'pixelated'
+      }}
+    />
+  );
 };
-
-
