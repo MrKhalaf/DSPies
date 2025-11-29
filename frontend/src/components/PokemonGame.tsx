@@ -38,7 +38,7 @@ const STONES: Stone[] = [
     name: 'Stone of Structure',
     icon: '💎',
     color: '#60a5fa',
-    position: { x: 150, y: 180 },
+    position: { x: 2, y: 2 }, // Grid position
     teachingTopic: 'Prompt Templates',
     inscription: 'In clarity lies power. Structure your intent with precision.',
     dialogues: [
@@ -56,7 +56,7 @@ const STONES: Stone[] = [
     name: 'Stone of Warmth',
     icon: '🔮',
     color: '#f472b6',
-    position: { x: 650, y: 180 },
+    position: { x: 14, y: 2 }, // Grid position
     teachingTopic: 'Few-Shot Learning',
     inscription: 'Connection through examples. Learning by warmth and guidance.',
     dialogues: [
@@ -74,7 +74,7 @@ const STONES: Stone[] = [
     name: 'Stone of Wisdom',
     icon: '⚡',
     color: '#fbbf24',
-    position: { x: 400, y: 400 },
+    position: { x: 8, y: 8 }, // Grid position
     teachingTopic: 'Optimization',
     inscription: 'Through iteration and competition, perfection emerges.',
     dialogues: [
@@ -88,6 +88,9 @@ const STONES: Stone[] = [
     ]
   }
 ];
+
+// Oracle grid position
+const ORACLE_GRID = { x: 8, y: 5 };
 
 const INTRO_DIALOGUES = [
   "In the age of AI, engineers struggled with the dark art of prompting...",
@@ -117,12 +120,51 @@ const COMBATANTS = [
 // Oracle position
 const ORACLE_POSITION = { x: 400, y: 280 };
 
+// Dungeon map configuration
+const MAP_WIDTH = 17;
+const MAP_HEIGHT = 11;
+const TILE_SIZE = 48;
+
+// Map tile types: 0=floor, 1=wall, 2=water/void, 3=special floor
+const DUNGEON_MAP = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
+  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+  [1,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,1],
+  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
+  [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+// Convert grid position to pixel position
+const gridToPixel = (gx: number, gy: number) => ({
+  x: gx * TILE_SIZE + TILE_SIZE / 2,
+  y: gy * TILE_SIZE + TILE_SIZE / 2
+});
+
+// Convert pixel position to grid position
+const pixelToGrid = (px: number, py: number) => ({
+  gx: Math.floor(px / TILE_SIZE),
+  gy: Math.floor(py / TILE_SIZE)
+});
+
+// Check if a grid position is walkable
+const isWalkable = (gx: number, gy: number) => {
+  if (gx < 0 || gx >= MAP_WIDTH || gy < 0 || gy >= MAP_HEIGHT) return false;
+  return DUNGEON_MAP[gy][gx] !== 1;
+};
+
 const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Game state
   const [phase, setPhase] = useState<GamePhase>('title');
-  const [playerPos, setPlayerPos] = useState<Position>({ x: 400, y: 480 });
+  const [playerGridPos, setPlayerGridPos] = useState<Position>({ x: 8, y: 9 }); // Grid position
   const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('up');
   const [isWalking, setIsWalking] = useState(false);
+  const [isMoving, setIsMoving] = useState(false); // Prevent rapid movement
   
   // Dialogue state
   const [currentDialogue, setCurrentDialogue] = useState<string[]>([]);
@@ -171,76 +213,102 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     }
   }, [currentDialogue, dialogueIndex, displayedText]);
 
-  // Movement loop
+  // Grid-based movement
+  const movePlayer = useCallback((dx: number, dy: number, direction: 'up' | 'down' | 'left' | 'right') => {
+    if (isMoving || phase !== 'overworld' || currentDialogue.length > 0) return;
+    
+    setPlayerDirection(direction);
+    
+    const newX = playerGridPos.x + dx;
+    const newY = playerGridPos.y + dy;
+    
+    // Check for stone collision
+    const stoneAtPos = STONES.find(s => s.position.x === newX && s.position.y === newY);
+    if (stoneAtPos) return;
+    
+    // Check for oracle collision
+    if (newX === ORACLE_GRID.x && newY === ORACLE_GRID.y) return;
+    
+    // Check if walkable
+    if (isWalkable(newX, newY)) {
+      setIsMoving(true);
+      setIsWalking(true);
+      setPlayerGridPos({ x: newX, y: newY });
+      
+      // Reset movement lock after animation
+      setTimeout(() => {
+        setIsMoving(false);
+        setIsWalking(false);
+      }, 150);
+    }
+  }, [isMoving, phase, playerGridPos, currentDialogue]);
+
+  // Movement key handling
   useEffect(() => {
     if (phase !== 'overworld') return;
     
-    const moveSpeed = 4;
-    let animationId: number;
-    
-    const gameLoop = () => {
-      let dx = 0, dy = 0;
-      let newDirection = playerDirection;
+    const handleMovement = (e: KeyboardEvent) => {
+      if (currentDialogue.length > 0) return;
       
-      if (keysPressed.current.has('ArrowUp') || keysPressed.current.has('w') || keysPressed.current.has('W')) {
-        dy = -moveSpeed;
-        newDirection = 'up';
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          e.preventDefault();
+          movePlayer(0, -1, 'up');
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          e.preventDefault();
+          movePlayer(0, 1, 'down');
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          e.preventDefault();
+          movePlayer(-1, 0, 'left');
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          e.preventDefault();
+          movePlayer(1, 0, 'right');
+          break;
       }
-      if (keysPressed.current.has('ArrowDown') || keysPressed.current.has('s') || keysPressed.current.has('S')) {
-        dy = moveSpeed;
-        newDirection = 'down';
-      }
-      if (keysPressed.current.has('ArrowLeft') || keysPressed.current.has('a') || keysPressed.current.has('A')) {
-        dx = -moveSpeed;
-        newDirection = 'left';
-      }
-      if (keysPressed.current.has('ArrowRight') || keysPressed.current.has('d') || keysPressed.current.has('D')) {
-        dx = moveSpeed;
-        newDirection = 'right';
-      }
-      
-      if (dx !== 0 || dy !== 0) {
-        setIsWalking(true);
-        setPlayerDirection(newDirection);
-        setPlayerPos(prev => ({
-          x: Math.max(50, Math.min(750, prev.x + dx)),
-          y: Math.max(100, Math.min(500, prev.y + dy))
-        }));
-      } else {
-        setIsWalking(false);
-      }
-      
-      animationId = requestAnimationFrame(gameLoop);
     };
     
-    animationId = requestAnimationFrame(gameLoop);
-    return () => cancelAnimationFrame(animationId);
-  }, [phase, playerDirection]);
+    window.addEventListener('keydown', handleMovement);
+    return () => window.removeEventListener('keydown', handleMovement);
+  }, [phase, movePlayer, currentDialogue]);
 
-  // Check proximity to stones/oracle
+  // Check proximity to stones/oracle (adjacent tiles)
   const getProximity = useCallback(() => {
+    const adjacentPositions = [
+      { x: playerGridPos.x, y: playerGridPos.y - 1 }, // up
+      { x: playerGridPos.x, y: playerGridPos.y + 1 }, // down
+      { x: playerGridPos.x - 1, y: playerGridPos.y }, // left
+      { x: playerGridPos.x + 1, y: playerGridPos.y }, // right
+    ];
+    
     // Check stones
     for (const stone of STONES) {
-      const dist = Math.sqrt(
-        Math.pow(playerPos.x - stone.position.x, 2) + 
-        Math.pow(playerPos.y - stone.position.y, 2)
-      );
-      if (dist < 80) {
-        return { type: 'stone', entity: stone };
+      for (const pos of adjacentPositions) {
+        if (stone.position.x === pos.x && stone.position.y === pos.y) {
+          return { type: 'stone', entity: stone };
+        }
       }
     }
     
     // Check Oracle
-    const oracleDist = Math.sqrt(
-      Math.pow(playerPos.x - ORACLE_POSITION.x, 2) + 
-      Math.pow(playerPos.y - ORACLE_POSITION.y, 2)
-    );
-    if (oracleDist < 90) {
-      return { type: 'oracle', entity: null };
+    for (const pos of adjacentPositions) {
+      if (ORACLE_GRID.x === pos.x && ORACLE_GRID.y === pos.y) {
+        return { type: 'oracle', entity: null };
+      }
     }
     
     return null;
-  }, [playerPos]);
+  }, [playerGridPos]);
 
   // Interaction handler
   const handleInteraction = useCallback(() => {
@@ -394,7 +462,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     setCollectedWisdoms({ v1: '', v2: '', v3: '' });
     setChallengeText('');
     setPhase('overworld');
-    setPlayerPos({ x: 400, y: 480 });
+    setPlayerGridPos({ x: 8, y: 9 });
     setPlayerDirection('up');
   }, [resetOptimization]);
 
@@ -489,66 +557,84 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     const proximity = getProximity();
     const wisdomCount = Object.values(collectedWisdoms).filter(w => w.length > 0).length;
     
+    // Calculate map dimensions
+    const mapPixelWidth = MAP_WIDTH * TILE_SIZE;
+    const mapPixelHeight = MAP_HEIGHT * TILE_SIZE;
+    
     return (
       <div className="overworld">
-        <div className="overworld-map">
-          {/* Floor grid */}
-          <div className="floor-grid" />
-          
-          {/* Ambient particles */}
-          <div className="ambient-particles">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="particle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 4}s`,
-                  backgroundColor: ['#818cf8', '#f472b6', '#fbbf24', '#22d3ee'][i % 4]
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Sacred Stones */}
-          {STONES.map((stone) => {
-            const hasWisdom = collectedWisdoms[stone.id].length > 0;
-            return (
-              <div
-                key={stone.id}
-                className={`sacred-stone ${hasWisdom ? 'consulted' : ''}`}
-                style={{ 
-                  left: stone.position.x, 
-                  top: stone.position.y,
-                  color: stone.color
-                }}
-              >
-                <span className="stone-sprite">{stone.icon}</span>
-                <span className="stone-label">{stone.name}</span>
-              </div>
-            );
-          })}
-          
-          {/* Oracle */}
+        {/* Centered dungeon container */}
+        <div className="dungeon-viewport">
           <div 
-            className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
-            style={{ left: ORACLE_POSITION.x - 60, top: ORACLE_POSITION.y - 60 }}
+            className="dungeon-map"
+            style={{ 
+              width: mapPixelWidth, 
+              height: mapPixelHeight,
+            }}
           >
-            <span className="oracle-sprite">🏛️</span>
-            <span className="oracle-label">{wisdomCount === 3 ? '✨ ORACLE READY ✨' : 'THE ORACLE'}</span>
-          </div>
-          
-          {/* Player */}
-          <div 
-            className={`player ${isWalking ? 'walking' : ''}`}
-            style={{ left: playerPos.x - 24, top: playerPos.y - 32 }}
-          >
-            <span className="player-sprite">
-              {playerDirection === 'up' ? '🧙‍♂️' : 
-               playerDirection === 'down' ? '🧙' : 
-               playerDirection === 'left' ? '🧙‍♂️' : '🧙'}
-            </span>
+            {/* Render tiles */}
+            {DUNGEON_MAP.map((row, y) =>
+              row.map((tile, x) => (
+                <div
+                  key={`${x}-${y}`}
+                  className={`dungeon-tile tile-${tile}`}
+                  style={{
+                    left: x * TILE_SIZE,
+                    top: y * TILE_SIZE,
+                    width: TILE_SIZE,
+                    height: TILE_SIZE,
+                  }}
+                />
+              ))
+            )}
+            
+            {/* Sacred Stones */}
+            {STONES.map((stone) => {
+              const hasWisdom = collectedWisdoms[stone.id].length > 0;
+              const pixelPos = gridToPixel(stone.position.x, stone.position.y);
+              return (
+                <div
+                  key={stone.id}
+                  className={`sacred-stone ${hasWisdom ? 'consulted' : ''}`}
+                  style={{ 
+                    left: pixelPos.x - 40,
+                    top: pixelPos.y - 50,
+                    color: stone.color
+                  }}
+                >
+                  <span className="stone-sprite">{stone.icon}</span>
+                  <span className="stone-label">{stone.name}</span>
+                </div>
+              );
+            })}
+            
+            {/* Oracle */}
+            <div 
+              className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
+              style={{ 
+                left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 60,
+                top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
+              }}
+            >
+              <span className="oracle-sprite">🏛️</span>
+              <span className="oracle-label">{wisdomCount === 3 ? '✨ READY ✨' : 'ORACLE'}</span>
+            </div>
+            
+            {/* Player */}
+            <motion.div 
+              className={`player ${isWalking ? 'walking' : ''}`}
+              animate={{
+                left: gridToPixel(playerGridPos.x, playerGridPos.y).x - 24,
+                top: gridToPixel(playerGridPos.x, playerGridPos.y).y - 40,
+              }}
+              transition={{ duration: 0.15, ease: 'linear' }}
+            >
+              <span className="player-sprite">
+                {playerDirection === 'up' ? '🧙‍♂️' : 
+                 playerDirection === 'down' ? '🧙' : 
+                 playerDirection === 'left' ? '🧙‍♂️' : '🧙'}
+              </span>
+            </motion.div>
           </div>
         </div>
         
