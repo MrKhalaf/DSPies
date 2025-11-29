@@ -38,7 +38,7 @@ const STONES: Stone[] = [
     name: 'Stone of Structure',
     icon: '💎',
     color: '#60a5fa',
-    position: { x: 2, y: 2 }, // Grid position
+    position: { x: 2, y: 2 }, // Grid position - top left
     teachingTopic: 'Prompt Templates',
     inscription: 'In clarity lies power. Structure your intent with precision.',
     dialogues: [
@@ -56,7 +56,7 @@ const STONES: Stone[] = [
     name: 'Stone of Warmth',
     icon: '🔮',
     color: '#f472b6',
-    position: { x: 14, y: 2 }, // Grid position
+    position: { x: 14, y: 2 }, // Grid position - top right
     teachingTopic: 'Few-Shot Learning',
     inscription: 'Connection through examples. Learning by warmth and guidance.',
     dialogues: [
@@ -74,7 +74,7 @@ const STONES: Stone[] = [
     name: 'Stone of Wisdom',
     icon: '⚡',
     color: '#fbbf24',
-    position: { x: 8, y: 8 }, // Grid position
+    position: { x: 2, y: 8 }, // Grid position - bottom left corner
     teachingTopic: 'Optimization',
     inscription: 'Through iteration and competition, perfection emerges.',
     dialogues: [
@@ -89,7 +89,7 @@ const STONES: Stone[] = [
   }
 ];
 
-// Oracle grid position
+// Oracle grid position - center of dungeon
 const ORACLE_GRID = { x: 8, y: 5 };
 
 const INTRO_DIALOGUES = [
@@ -629,11 +629,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               }}
               transition={{ duration: 0.15, ease: 'linear' }}
             >
-              <span className="player-sprite">
-                {playerDirection === 'up' ? '🧙‍♂️' : 
-                 playerDirection === 'down' ? '🧙' : 
-                 playerDirection === 'left' ? '🧙‍♂️' : '🧙'}
-              </span>
+              <span className="player-sprite">🧙‍♂️</span>
             </motion.div>
           </div>
         </div>
