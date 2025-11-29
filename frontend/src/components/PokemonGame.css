@@ -2,6 +2,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
+:root {
+  --game-primary: #6366f1;
+  --game-secondary: #8b5cf6;
+  --game-accent: #22d3ee;
+  --game-gold: #fbbf24;
+  --game-pink: #f472b6;
+  --game-dark: #0f0f23;
+  --game-darker: #0a0a1a;
+  --game-border: #4b5563;
+}
+
 /* ========================================
    BASE STYLES
    ======================================== */
@@ -9,7 +20,7 @@
 .pokemon-game {
   width: 100vw;
   height: 100vh;
-  background: #1a1a2e;
+  background: var(--game-dark);
   font-family: 'Press Start 2P', monospace;
   overflow: hidden;
   image-rendering: pixelated;
@@ -17,6 +28,22 @@
   image-rendering: crisp-edges;
   position: relative;
   user-select: none;
+}
+
+/* Scanline overlay for retro feel */
+.pokemon-game::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
 }
 
 /* ========================================
@@ -27,7 +54,11 @@
   width: 100%;
   height: 100%;
   position: relative;
-  background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background: 
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 30% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 30% at 70% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0a1a 0%, #0f0f23 30%, #12122b 70%, #1a1a35 100%);
 }
 
 .overworld-map {
@@ -37,15 +68,24 @@
   overflow: hidden;
 }
 
-/* Grid floor pattern */
+/* Grid floor pattern - dungeon tiles */
 .floor-grid {
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
   background-size: 48px 48px;
-  opacity: 0.5;
+}
+
+/* Additional floor texture */
+.floor-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 24px 24px, rgba(99, 102, 241, 0.03) 2px, transparent 2px);
+  background-size: 48px 48px;
 }
 
 /* Ambient particles */
@@ -75,7 +115,7 @@
   width: 48px;
   height: 64px;
   z-index: 100;
-  transition: left 0.15s linear, top 0.15s linear;
+  transition: left 0.12s linear, top 0.12s linear;
 }
 
 .player-sprite {
@@ -84,24 +124,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  font-size: 36px;
+  filter: 
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 15px rgba(99, 102, 241, 0.3));
+  transition: filter 0.2s ease;
+}
+
+.player:hover .player-sprite {
+  filter: 
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 25px rgba(99, 102, 241, 0.5));
 }
 
 .player.walking .player-sprite {
-  animation: walk-bounce 0.3s ease-in-out infinite;
+  animation: walk-bounce 0.25s ease-in-out infinite;
 }
 
 @keyframes walk-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.02); }
+}
+
+/* Player shadow */
+.player::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 8px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
 /* Sacred stones (NPCs) */
 .sacred-stone {
   position: absolute;
-  width: 64px;
-  height: 80px;
+  width: 80px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,35 +172,76 @@
   z-index: 50;
 }
 
+/* Stone pedestal */
+.sacred-stone::before {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  width: 60px;
+  height: 20px;
+  background: linear-gradient(180deg, #2a2a4a 0%, #1a1a30 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
 .stone-sprite {
-  font-size: 48px;
-  filter: drop-shadow(0 0 20px currentColor);
-  animation: stone-pulse 2s ease-in-out infinite;
+  font-size: 56px;
+  filter: drop-shadow(0 0 25px currentColor);
+  animation: stone-pulse 2.5s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+/* Stone glow aura */
+.sacred-stone::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 70px;
+  height: 70px;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  opacity: 0.15;
+  border-radius: 50%;
+  animation: stone-aura 3s ease-in-out infinite;
 }
 
 .sacred-stone.consulted .stone-sprite {
-  opacity: 0.5;
-  filter: drop-shadow(0 0 10px currentColor) grayscale(0.5);
+  opacity: 0.4;
+  filter: drop-shadow(0 0 10px currentColor) grayscale(0.6) brightness(0.7);
+}
+
+.sacred-stone.consulted::after {
+  opacity: 0.05;
 }
 
 @keyframes stone-pulse {
   0%, 100% { transform: scale(1) translateY(0); }
-  50% { transform: scale(1.05) translateY(-4px); }
+  50% { transform: scale(1.08) translateY(-8px); }
+}
+
+@keyframes stone-aura {
+  0%, 100% { transform: scale(1); opacity: 0.15; }
+  50% { transform: scale(1.2); opacity: 0.25; }
 }
 
 .stone-label {
-  font-size: 6px;
-  color: #a5b4fc;
+  font-size: 7px;
+  color: #c7d2fe;
   text-align: center;
-  margin-top: 4px;
-  text-shadow: 0 0 10px rgba(165, 180, 252, 0.8);
+  margin-top: 8px;
+  text-shadow: 0 0 10px currentColor;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Oracle pedestal */
 .oracle-pedestal {
   position: absolute;
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -146,31 +249,106 @@
   z-index: 50;
 }
 
+/* Oracle platform */
+.oracle-pedestal::before {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  width: 100px;
+  height: 30px;
+  background: linear-gradient(180deg, #2a3a5a 0%, #1a2a40 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 4px 16px rgba(34, 211, 238, 0.3),
+    inset 0 2px 4px rgba(34, 211, 238, 0.2);
+}
+
 .oracle-sprite {
-  font-size: 56px;
+  font-size: 64px;
   animation: oracle-glow 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+/* Oracle energy rings */
+.oracle-pedestal::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border: 2px solid rgba(34, 211, 238, 0.2);
+  border-radius: 50%;
+  animation: oracle-ring 4s linear infinite;
+}
+
+.oracle-pedestal.ready::after {
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 
+    0 0 20px rgba(251, 191, 36, 0.3),
+    inset 0 0 20px rgba(251, 191, 36, 0.1);
+  animation: oracle-ring-ready 2s linear infinite;
 }
 
 .oracle-pedestal.ready .oracle-sprite {
-  animation: oracle-ready 1s ease-in-out infinite;
+  animation: oracle-ready 1.5s ease-in-out infinite;
 }
 
 @keyframes oracle-glow {
-  0%, 100% { filter: drop-shadow(0 0 20px #22d3ee); }
-  50% { filter: drop-shadow(0 0 40px #a855f7); }
+  0%, 100% { 
+    filter: drop-shadow(0 0 20px #22d3ee) drop-shadow(0 0 40px rgba(34, 211, 238, 0.3));
+    transform: translateY(0);
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px #a855f7) drop-shadow(0 0 60px rgba(168, 85, 247, 0.4));
+    transform: translateY(-5px);
+  }
 }
 
 @keyframes oracle-ready {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px #fbbf24); }
-  50% { transform: scale(1.1); filter: drop-shadow(0 0 50px #fbbf24); }
+  0%, 100% { 
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 0 30px #fbbf24) drop-shadow(0 0 60px rgba(251, 191, 36, 0.5));
+  }
+  50% { 
+    transform: scale(1.1) translateY(-10px);
+    filter: drop-shadow(0 0 50px #fbbf24) drop-shadow(0 0 80px rgba(251, 191, 36, 0.7));
+  }
+}
+
+@keyframes oracle-ring {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); opacity: 0.5; }
+}
+
+@keyframes oracle-ring-ready {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
 }
 
 .oracle-label {
-  font-size: 8px;
+  font-size: 9px;
   color: #22d3ee;
   text-align: center;
-  margin-top: 8px;
-  text-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
+  margin-top: 12px;
+  text-shadow: 0 0 15px rgba(34, 211, 238, 0.8);
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.oracle-pedestal.ready .oracle-label {
+  color: #fbbf24;
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+  animation: label-glow 1s ease-in-out infinite;
+}
+
+@keyframes label-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 /* ========================================
@@ -196,58 +374,103 @@
 
 /* Quest tracker */
 .quest-box {
-  background: linear-gradient(180deg, rgba(15, 15, 35, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
-  border: 3px solid #6366f1;
-  border-radius: 8px;
-  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(10, 10, 26, 0.98) 0%, rgba(15, 15, 35, 0.98) 100%);
+  border: 3px solid var(--game-primary);
+  border-radius: 12px;
+  padding: 16px 20px;
   box-shadow: 
-    0 0 20px rgba(99, 102, 241, 0.3),
-    inset 0 0 20px rgba(0, 0, 0, 0.5);
+    0 0 30px rgba(99, 102, 241, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+/* Quest box inner border */
+.quest-box::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  pointer-events: none;
 }
 
 .quest-title {
-  font-size: 8px;
-  color: #fbbf24;
-  margin-bottom: 12px;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-  letter-spacing: 2px;
+  font-size: 9px;
+  color: var(--game-gold);
+  margin-bottom: 14px;
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+  letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quest-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--game-gold) 0%, transparent 100%);
+  opacity: 0.3;
 }
 
 .wisdom-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .wisdom-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 7px;
+  gap: 10px;
+  font-size: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.wisdom-item:hover {
+  background: rgba(99, 102, 241, 0.1);
 }
 
 .wisdom-icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
+  filter: drop-shadow(0 0 5px currentColor);
 }
 
 .wisdom-name {
-  color: #a5b4fc;
+  color: #c7d2fe;
   flex: 1;
+  letter-spacing: 0.5px;
+}
+
+.wisdom-item.collected {
+  background: rgba(74, 222, 128, 0.1);
 }
 
 .wisdom-item.collected .wisdom-name {
   color: #4ade80;
   text-decoration: line-through;
+  text-decoration-color: rgba(74, 222, 128, 0.5);
 }
 
 .wisdom-check {
   color: #4ade80;
-  font-size: 10px;
+  font-size: 12px;
+  animation: check-pop 0.3s ease-out;
+}
+
+@keyframes check-pop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
 }
 
 /* Controls hint */
@@ -284,79 +507,96 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 16px;
+  padding: 20px;
   z-index: 300;
 }
 
 .dialogue-box {
-  background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
-  border: 4px solid #6366f1;
-  border-radius: 12px;
-  padding: 4px;
+  background: linear-gradient(180deg, #0a0a1a 0%, #12122b 100%);
+  border: 4px solid var(--game-primary);
+  border-radius: 16px;
+  padding: 5px;
   box-shadow: 
-    0 0 30px rgba(99, 102, 241, 0.4),
-    inset 0 0 30px rgba(0, 0, 0, 0.5);
-  max-width: 900px;
+    0 0 40px rgba(99, 102, 241, 0.35),
+    0 -10px 40px rgba(99, 102, 241, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  max-width: 950px;
   margin: 0 auto;
+  backdrop-filter: blur(12px);
 }
 
 .dialogue-inner {
-  border: 2px solid #4338ca;
-  border-radius: 8px;
-  padding: 16px 20px;
-  min-height: 120px;
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: 12px;
+  padding: 20px 24px;
+  min-height: 130px;
   position: relative;
+  background: linear-gradient(180deg, rgba(15, 15, 35, 0.5) 0%, rgba(10, 10, 26, 0.8) 100%);
 }
 
 .dialogue-speaker {
   position: absolute;
-  top: -12px;
-  left: 16px;
-  background: #1a1a2e;
-  padding: 4px 12px;
-  border: 2px solid #6366f1;
-  border-radius: 4px;
+  top: -14px;
+  left: 20px;
+  background: linear-gradient(180deg, #1a1a3e 0%, #12122b 100%);
+  padding: 6px 16px;
+  border: 3px solid var(--game-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .speaker-name {
-  font-size: 10px;
-  color: #a5b4fc;
-  text-shadow: 0 0 10px rgba(165, 180, 252, 0.5);
+  font-size: 11px;
+  color: #c7d2fe;
+  text-shadow: 0 0 12px rgba(199, 210, 254, 0.5);
+  letter-spacing: 1px;
 }
 
 .dialogue-text {
-  font-size: 12px;
-  color: #e5e7eb;
-  line-height: 2;
-  margin-top: 8px;
+  font-size: 13px;
+  color: #f1f5f9;
+  line-height: 2.2;
+  margin-top: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .dialogue-cursor {
   display: inline-block;
-  width: 12px;
-  height: 16px;
-  background: #6366f1;
-  margin-left: 4px;
-  animation: cursor-blink 0.6s step-end infinite;
+  width: 10px;
+  height: 18px;
+  background: linear-gradient(180deg, var(--game-primary) 0%, var(--game-secondary) 100%);
+  margin-left: 6px;
+  border-radius: 2px;
+  animation: cursor-blink 0.5s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
 }
 
 @keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.8); }
 }
 
 .dialogue-continue {
   position: absolute;
-  bottom: 8px;
-  right: 16px;
+  bottom: 12px;
+  right: 20px;
+  font-size: 9px;
+  color: var(--game-accent);
+  animation: continue-bounce 0.8s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dialogue-continue::before {
+  content: '▼';
   font-size: 8px;
-  color: #6366f1;
-  animation: continue-bounce 1s ease-in-out infinite;
 }
 
 @keyframes continue-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-6px); opacity: 0.7; }
 }
 
 /* ========================================
