@@ -339,12 +339,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         e.preventDefault();
         
         if (phase === 'title') {
-          // Start intro
-          setDialogueSpeaker('???');
-          setCurrentDialogue(INTRO_DIALOGUES);
-          setDialogueIndex(0);
-          setDisplayedText('');
-          setPhase('intro');
+          startGame();
         } else if (phase === 'intro' || (phase === 'battle' && currentDialogue.length > 0)) {
           advanceDialogue();
         } else if (phase === 'overworld' && currentDialogue.length === 0) {
@@ -374,7 +369,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [phase, advanceDialogue, handleInteraction, onExit, currentDialogue]);
+  }, [phase, advanceDialogue, handleInteraction, onExit, currentDialogue, startGame]);
 
   // Watch for optimization completion
   useEffect(() => {
@@ -399,12 +394,23 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     return optState.variants.find(v => v.variant.variant_id === id);
   }, [optState.variants]);
 
+  // Start game from title screen
+  const startGame = useCallback(() => {
+    setDialogueSpeaker('???');
+    setCurrentDialogue(INTRO_DIALOGUES);
+    setDialogueIndex(0);
+    setDisplayedText('');
+    setPhase('intro');
+  }, []);
+
   // Render title screen
   const renderTitleScreen = () => (
     <motion.div 
       className="title-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      onClick={startGame}
+      style={{ cursor: 'pointer' }}
     >
       <motion.div
         className="title-logo"
@@ -430,13 +436,24 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       >
         The Prompt Optimization Adventure
       </motion.p>
-      <motion.p 
-        className="title-prompt"
+      <motion.button
+        className="title-prompt mt-8 px-8 py-4 border-2 border-indigo-500/50 rounded-lg hover:border-indigo-400 hover:bg-indigo-500/10 transition-all"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
+        onClick={startGame}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        Press SPACE or ENTER to start
+        ▶ START GAME
+      </motion.button>
+      <motion.p
+        className="text-[10px] text-indigo-400/50 mt-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4 }}
+      >
+        or press SPACE / ENTER
       </motion.p>
       
       {/* Challenge input on title */}
@@ -446,6 +463,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.5 }}
         style={{ maxWidth: '400px', width: '90%' }}
+        onClick={(e) => e.stopPropagation()}
       >
         <p className="text-[8px] text-indigo-300 mb-2">YOUR CHALLENGE (Optional)</p>
         <input
@@ -455,7 +473,12 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
           placeholder='e.g., "I was double charged..."'
           className="w-full bg-black/60 border-2 border-indigo-500/40 rounded px-3 py-2 text-[10px] text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-400"
           onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter') {
+              startGame();
+            }
+          }}
         />
       </motion.div>
     </motion.div>
