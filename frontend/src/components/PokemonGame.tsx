@@ -765,6 +765,18 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             )}
           </div>
         </div>
+        {/* Skip intro button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentDialogue([]);
+            setPhase('overworld');
+          }}
+          className="absolute bottom-4 right-4 px-4 py-2 text-[10px] text-indigo-400/60 hover:text-indigo-300 border border-indigo-500/30 rounded-lg hover:border-indigo-400/50 transition-all"
+          style={{ fontFamily: "'Press Start 2P', monospace" }}
+        >
+          SKIP INTRO →
+        </button>
       </motion.div>
     </div>
   );
