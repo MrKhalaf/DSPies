@@ -330,6 +330,15 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     setPhase('overworld');
   }, [currentStone, inputText]);
 
+  // Start game from title screen - defined before useEffect that uses it
+  const startGame = useCallback(() => {
+    setDialogueSpeaker('???');
+    setCurrentDialogue(INTRO_DIALOGUES);
+    setDialogueIndex(0);
+    setDisplayedText('');
+    setPhase('intro');
+  }, []);
+
   // Key handling
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -393,15 +402,6 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   const getVariantData = useCallback((id: string): VariantCardState | undefined => {
     return optState.variants.find(v => v.variant.variant_id === id);
   }, [optState.variants]);
-
-  // Start game from title screen
-  const startGame = useCallback(() => {
-    setDialogueSpeaker('???');
-    setCurrentDialogue(INTRO_DIALOGUES);
-    setDialogueIndex(0);
-    setDisplayedText('');
-    setPhase('intro');
-  }, []);
 
   // Render title screen
   const renderTitleScreen = () => (
