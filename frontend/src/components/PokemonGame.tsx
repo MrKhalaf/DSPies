@@ -38,16 +38,17 @@ const STONES: Stone[] = [
     name: 'Stone of Structure',
     icon: '💎',
     color: '#60a5fa',
-    position: { x: 200, y: 200 },
+    position: { x: 150, y: 180 },
     teachingTopic: 'Prompt Templates',
-    inscription: 'In clarity lies power. Structure your intent.',
+    inscription: 'In clarity lies power. Structure your intent with precision.',
     dialogues: [
       "Traveler! I am the Stone of Structure.",
       "In DSPy, we don't write prompts by hand...",
       "Instead, we define SIGNATURES - declarative specs of what the LLM should do.",
-      "Like: 'question -> answer' or 'context, question -> reasoning, answer'",
+      "A signature like 'question -> answer' tells DSPy the INPUT and OUTPUT.",
+      "More complex: 'context, question -> reasoning, answer' adds chain-of-thought!",
       "This structure lets DSPy OPTIMIZE prompts automatically!",
-      "Share with me: What task do you need help with?"
+      "Now share with me: What is the STRUCTURE of your task?"
     ]
   },
   {
@@ -55,16 +56,17 @@ const STONES: Stone[] = [
     name: 'Stone of Warmth',
     icon: '🔮',
     color: '#f472b6',
-    position: { x: 600, y: 150 },
+    position: { x: 650, y: 180 },
     teachingTopic: 'Few-Shot Learning',
-    inscription: 'Connection through examples. Learning by warmth.',
+    inscription: 'Connection through examples. Learning by warmth and guidance.',
     dialogues: [
       "Welcome, seeker of knowledge!",
       "I teach the way of EXAMPLES and FEW-SHOT learning.",
-      "DSPy can automatically find the BEST examples to include in prompts.",
+      "DSPy automatically finds the BEST examples to include in prompts.",
+      "These examples TEACH the model how to respond correctly.",
       "It's like having a wise mentor show you how to solve problems!",
       "The more examples it tries, the better it learns your style.",
-      "What approach would YOU take to solve your challenge?"
+      "What EXAMPLE approach would YOU take to solve this challenge?"
     ]
   },
   {
@@ -72,31 +74,38 @@ const STONES: Stone[] = [
     name: 'Stone of Wisdom',
     icon: '⚡',
     color: '#fbbf24',
-    position: { x: 400, y: 350 },
+    position: { x: 400, y: 400 },
     teachingTopic: 'Optimization',
-    inscription: 'Through iteration, perfection emerges.',
+    inscription: 'Through iteration and competition, perfection emerges.',
     dialogues: [
-      "Ah, a true scholar approaches!",
+      "Ah, a true scholar approaches the Stone of Wisdom!",
       "I hold the secrets of OPTIMIZATION itself.",
-      "DSPy uses techniques like Bootstrap, MIPRO, and more...",
+      "DSPy uses powerful techniques: Bootstrap, MIPRO, BayesianSignatureOptimizer...",
       "These optimizers TEST different prompt versions automatically!",
-      "They compete, like Pokemon in battle, until the BEST emerges.",
-      "What deep insight can you offer to the Oracle?"
+      "They compete like Pokemon in battle - only the STRONGEST survives!",
+      "Each variant is scored, and the best one becomes your champion.",
+      "What WISDOM or insight can you offer to strengthen the Oracle's judgment?"
     ]
   }
 ];
 
 const INTRO_DIALOGUES = [
-  "Long ago, engineers struggled with the art of prompting...",
-  "Each prompt was crafted by hand, fragile and unreliable.",
-  "Then came DSPy - the Framework of Declarative Self-improving Language Programs.",
-  "DSPy transforms prompt engineering from art into SCIENCE.",
-  "Instead of writing prompts, you declare what you want...",
-  "And DSPy OPTIMIZES to find the perfect prompt automatically!",
-  "Your quest: Seek wisdom from the three Sacred Stones.",
-  "Then face the Oracle to witness DSPy's power firsthand!",
-  "Use ARROW KEYS or WASD to move. Press SPACE or ENTER to interact.",
-  "Now go forth, brave optimizer!"
+  "In the age of AI, engineers struggled with the dark art of prompting...",
+  "Each prompt was crafted by hand - fragile, unreliable, impossible to improve.",
+  "Then came DSPy - the Framework of Declarative Self-improving Language Programs!",
+  "Created by Stanford researchers, DSPy transforms prompting into SCIENCE.",
+  "Instead of writing prompts, you DECLARE what you want...",
+  "Define your task structure, provide examples, set your metrics...",
+  "And DSPy OPTIMIZES to find the perfect prompt AUTOMATICALLY!",
+  "Your quest: Seek wisdom from the three Sacred Stones of DSPy.",
+  "💎 The Stone of Structure teaches SIGNATURES and task definition.",
+  "🔮 The Stone of Warmth reveals FEW-SHOT learning secrets.",
+  "⚡ The Stone of Wisdom unveils OPTIMIZATION algorithms.",
+  "Gather all three wisdoms, then face the Oracle!",
+  "The Oracle will pit THREE prompt strategies against each other...",
+  "And crown the CHAMPION based on real evaluation scores!",
+  "Controls: ARROW KEYS or WASD to move. SPACE or ENTER to interact.",
+  "Now go forth, brave optimizer! Your journey begins!"
 ];
 
 const COMBATANTS = [
@@ -105,11 +114,14 @@ const COMBATANTS = [
   { id: 'v3', name: 'Analytical Sage', subtitle: 'Seeker of Precision', icon: '✦', color: '#fbbf24', gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' }
 ];
 
+// Oracle position
+const ORACLE_POSITION = { x: 400, y: 280 };
+
 const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Game state
   const [phase, setPhase] = useState<GamePhase>('title');
-  const [playerPos, setPlayerPos] = useState<Position>({ x: 400, y: 400 });
-  const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
+  const [playerPos, setPlayerPos] = useState<Position>({ x: 400, y: 480 });
+  const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('up');
   const [isWalking, setIsWalking] = useState(false);
   
   // Dialogue state
@@ -213,17 +225,17 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         Math.pow(playerPos.x - stone.position.x, 2) + 
         Math.pow(playerPos.y - stone.position.y, 2)
       );
-      if (dist < 60) {
+      if (dist < 80) {
         return { type: 'stone', entity: stone };
       }
     }
     
-    // Check Oracle (center of map)
+    // Check Oracle
     const oracleDist = Math.sqrt(
-      Math.pow(playerPos.x - 400, 2) + 
-      Math.pow(playerPos.y - 280, 2)
+      Math.pow(playerPos.x - ORACLE_POSITION.x, 2) + 
+      Math.pow(playerPos.y - ORACLE_POSITION.y, 2)
     );
-    if (oracleDist < 70) {
+    if (oracleDist < 90) {
       return { type: 'oracle', entity: null };
     }
     
@@ -378,7 +390,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     setCollectedWisdoms({ v1: '', v2: '', v3: '' });
     setChallengeText('');
     setPhase('overworld');
-    setPlayerPos({ x: 400, y: 400 });
+    setPlayerPos({ x: 400, y: 480 });
+    setPlayerDirection('up');
   }, [resetOptimization]);
 
   // Get variant data
@@ -497,10 +510,10 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
           {/* Oracle */}
           <div 
             className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
-            style={{ left: 352, top: 220 }}
+            style={{ left: ORACLE_POSITION.x - 60, top: ORACLE_POSITION.y - 60 }}
           >
             <span className="oracle-sprite">🏛️</span>
-            <span className="oracle-label">THE ORACLE</span>
+            <span className="oracle-label">{wisdomCount === 3 ? '✨ ORACLE READY ✨' : 'THE ORACLE'}</span>
           </div>
           
           {/* Player */}
