@@ -35,56 +35,56 @@ interface Stone {
 const STONES: Stone[] = [
   {
     id: 'v1',
-    name: 'Stone of Structure',
-    icon: '💎',
+    name: 'Signatures Module',
+    icon: '📋',
     color: '#60a5fa',
     position: { x: 2, y: 2 }, // Grid position - top left
     teachingTopic: 'Prompt Templates',
-    inscription: 'In clarity lies power. Structure your intent with precision.',
+    inscription: 'Define your inputs and outputs clearly.',
     dialogues: [
-      "Traveler! I am the Stone of Structure.",
+      "Welcome to the Signatures Module!",
       "In DSPy, we don't write prompts by hand...",
       "Instead, we define SIGNATURES - declarative specs of what the LLM should do.",
       "A signature like 'question -> answer' tells DSPy the INPUT and OUTPUT.",
       "More complex: 'context, question -> reasoning, answer' adds chain-of-thought!",
-      "This structure lets DSPy OPTIMIZE prompts automatically!",
-      "Now share with me: What is the STRUCTURE of your task?"
+      "This structure lets DSPy OPTIMIZE prompts automatically.",
+      "Input your task: What is the STRUCTURE of what you need?"
     ]
   },
   {
     id: 'v2',
-    name: 'Stone of Warmth',
-    icon: '🔮',
+    name: 'Examples Module',
+    icon: '📚',
     color: '#f472b6',
     position: { x: 14, y: 2 }, // Grid position - top right
     teachingTopic: 'Few-Shot Learning',
-    inscription: 'Connection through examples. Learning by warmth and guidance.',
+    inscription: 'Learn from demonstrations and examples.',
     dialogues: [
-      "Welcome, seeker of knowledge!",
-      "I teach the way of EXAMPLES and FEW-SHOT learning.",
+      "Welcome to the Examples Module!",
+      "This covers EXAMPLES and FEW-SHOT learning.",
       "DSPy automatically finds the BEST examples to include in prompts.",
       "These examples TEACH the model how to respond correctly.",
-      "It's like having a wise mentor show you how to solve problems!",
+      "Think of it as showing the model how to solve similar problems.",
       "The more examples it tries, the better it learns your style.",
       "What EXAMPLE approach would YOU take to solve this challenge?"
     ]
   },
   {
     id: 'v3',
-    name: 'Stone of Wisdom',
-    icon: '⚡',
+    name: 'Optimizer Module',
+    icon: '⚙️',
     color: '#fbbf24',
     position: { x: 2, y: 8 }, // Grid position - bottom left corner
     teachingTopic: 'Optimization',
-    inscription: 'Through iteration and competition, perfection emerges.',
+    inscription: 'Iterate and improve through automated testing.',
     dialogues: [
-      "Ah, a true scholar approaches the Stone of Wisdom!",
-      "I hold the secrets of OPTIMIZATION itself.",
-      "DSPy uses powerful techniques: Bootstrap, MIPRO, BayesianSignatureOptimizer...",
+      "Welcome to the Optimizer Module!",
+      "This is where the real power of DSPy lives.",
+      "DSPy uses techniques like Bootstrap, MIPRO, and BayesianSignatureOptimizer...",
       "These optimizers TEST different prompt versions automatically!",
-      "They compete like Pokemon in battle - only the STRONGEST survives!",
-      "Each variant is scored, and the best one becomes your champion.",
-      "What WISDOM or insight can you offer to strengthen the Oracle's judgment?"
+      "They compete head-to-head - only the highest-scoring variant wins.",
+      "Each variant is evaluated, and the best one becomes your solution.",
+      "What insight can you provide to improve the optimization?"
     ]
   }
 ];
@@ -93,28 +93,28 @@ const STONES: Stone[] = [
 const ORACLE_GRID = { x: 8, y: 5 };
 
 const INTRO_DIALOGUES = [
-  "In the age of AI, engineers struggled with the dark art of prompting...",
-  "Each prompt was crafted by hand - fragile, unreliable, impossible to improve.",
-  "Then came DSPy - the Framework of Declarative Self-improving Language Programs!",
-  "Created by Stanford researchers, DSPy transforms prompting into SCIENCE.",
+  "Welcome to the DSPy Learning Lab!",
+  "Writing prompts by hand is tedious - fragile, unreliable, and hard to improve.",
+  "DSPy is a framework for Declarative Self-improving Language Programs.",
+  "Created by Stanford researchers, DSPy makes prompt engineering systematic.",
   "Instead of writing prompts, you DECLARE what you want...",
   "Define your task structure, provide examples, set your metrics...",
-  "And DSPy OPTIMIZES to find the perfect prompt AUTOMATICALLY!",
-  "Your quest: Seek wisdom from the three Sacred Stones of DSPy.",
-  "💎 The Stone of Structure teaches SIGNATURES and task definition.",
-  "🔮 The Stone of Warmth reveals FEW-SHOT learning secrets.",
-  "⚡ The Stone of Wisdom unveils OPTIMIZATION algorithms.",
-  "Gather all three wisdoms, then face the Oracle!",
-  "The Oracle will pit THREE prompt strategies against each other...",
-  "And crown the CHAMPION based on real evaluation scores!",
+  "And DSPy OPTIMIZES to find the best prompt AUTOMATICALLY!",
+  "Your task: Learn from the three DSPy Modules in this lab.",
+  "📋 The Signatures Module teaches input/output definitions.",
+  "📚 The Examples Module covers few-shot learning techniques.",
+  "⚙️ The Optimizer Module explains automated improvement.",
+  "Visit all three modules, then return to the DSPy Terminal.",
+  "The Terminal will test THREE prompt strategies against each other...",
+  "And select the WINNER based on real evaluation scores!",
   "Controls: ARROW KEYS or WASD to move. SPACE or ENTER to interact.",
-  "Now go forth, brave optimizer! Your journey begins!"
+  "Let's get started!"
 ];
 
 const COMBATANTS = [
-  { id: 'v1', name: 'Formal Sentinel', subtitle: 'Master of Structure', icon: '◈', color: '#60a5fa', gradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)' },
-  { id: 'v2', name: 'Warm Oracle', subtitle: 'Voice of Connection', icon: '❋', color: '#f472b6', gradient: 'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)' },
-  { id: 'v3', name: 'Analytical Sage', subtitle: 'Seeker of Precision', icon: '✦', color: '#fbbf24', gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' }
+  { id: 'v1', name: 'Structured Prompt', subtitle: 'Clear & Defined', icon: '◈', color: '#60a5fa', gradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)' },
+  { id: 'v2', name: 'Example-Based Prompt', subtitle: 'Learns from Data', icon: '❋', color: '#f472b6', gradient: 'linear-gradient(135deg, #f472b6 0%, #ec4899 100%)' },
+  { id: 'v3', name: 'Optimized Prompt', subtitle: 'Auto-Improved', icon: '✦', color: '#fbbf24', gradient: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' }
 ];
 
 // Oracle position
@@ -327,11 +327,11 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     } else if (proximity?.type === 'oracle') {
       const wisdomCount = Object.values(collectedWisdoms).filter(w => w.length > 0).length;
       if (wisdomCount < 3) {
-        setDialogueSpeaker('Oracle');
+        setDialogueSpeaker('DSPy Terminal');
         setCurrentDialogue([
-          `You have gathered ${wisdomCount} of 3 wisdoms.`,
-          "Seek all three Sacred Stones before returning to me.",
-          "Each holds knowledge vital to your journey."
+          `You have completed ${wisdomCount} of 3 modules.`,
+          "Visit all three DSPy modules before running optimization.",
+          "Each contains concepts needed for the process."
         ]);
         setDialogueIndex(0);
         setDisplayedText('');
@@ -349,10 +349,10 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     
     const composed = [
       challengeText && `Challenge: ${challengeText}`,
-      `\nWisdoms gathered from the Sacred Stones:`,
-      `◈ Stone of Structure: "${collectedWisdoms.v1}"`,
-      `❋ Stone of Warmth: "${collectedWisdoms.v2}"`,
-      `✦ Stone of Wisdom: "${collectedWisdoms.v3}"`
+      `\nInputs from DSPy Modules:`,
+      `◈ Signatures: "${collectedWisdoms.v1}"`,
+      `❋ Examples: "${collectedWisdoms.v2}"`,
+      `✦ Optimizer: "${collectedWisdoms.v3}"`
     ].filter(Boolean).join('\n');
     
     await startOptimization(composed || 'Analyze this optimization challenge');
@@ -616,8 +616,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                 top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
               }}
             >
-              <span className="oracle-sprite">🏛️</span>
-              <span className="oracle-label">{wisdomCount === 3 ? '✨ READY ✨' : 'ORACLE'}</span>
+              <span className="oracle-sprite">🖥️</span>
+              <span className="oracle-label">{wisdomCount === 3 ? '✨ READY ✨' : 'TERMINAL'}</span>
             </div>
             
             {/* Player */}
@@ -675,13 +675,13 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                 <div className="dialogue-inner" style={{ minHeight: '60px' }}>
                   <div className="dialogue-text">
                     {proximity.type === 'stone' && (
-                      <>Press SPACE to consult the {(proximity.entity as Stone).name}</>
+                      <>Press SPACE to access the {(proximity.entity as Stone).name}</>
                     )}
                     {proximity.type === 'oracle' && wisdomCount < 3 && (
-                      <>Gather {3 - wisdomCount} more wisdom{3 - wisdomCount > 1 ? 's' : ''} from the Sacred Stones</>
+                      <>Complete {3 - wisdomCount} more module{3 - wisdomCount > 1 ? 's' : ''} before running optimization</>
                     )}
                     {proximity.type === 'oracle' && wisdomCount === 3 && (
-                      <>✨ Press SPACE to begin the Optimization Battle! ✨</>
+                      <>✨ Press SPACE to run DSPy Optimization! ✨</>
                     )}
                   </div>
                 </div>
@@ -862,7 +862,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             <span className="input-icon" style={{ color: currentStone.color }}>{currentStone.icon}</span>
             <div>
               <div className="input-title">{currentStone.name}</div>
-              <div className="input-subtitle">Inscribe Your Wisdom</div>
+              <div className="input-subtitle">Enter Your Input</div>
             </div>
           </div>
           
@@ -895,7 +895,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               disabled={!inputText.trim()}
               style={{ borderColor: currentStone.color, color: currentStone.color }}
             >
-              ✓ Seal Wisdom
+              ✓ Submit
             </button>
           </div>
         </motion.div>
@@ -909,7 +909,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       'The strategies clash in the arena...',
       'DSPy evaluates each approach...',
       'Scores are being calculated...',
-      'A champion emerges!'
+      'Optimization complete!'
     ];
     
     return (
@@ -1004,7 +1004,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                     {variant?.state === 'querying' && (
                       <>
                         <span className="opt-status-dot" style={{ background: combatant.color }} />
-                        <span>Channeling wisdom...</span>
+                        <span>Processing...</span>
                       </>
                     )}
                     {variant?.state === 'output' && (
@@ -1014,9 +1014,9 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                       </>
                     )}
                     {variant?.state === 'scored' && (
-                      <span>{isLeader ? '⚔️ CHAMPION!' : 'Battle complete'}</span>
+                      <span>{isLeader ? '🏆 WINNER!' : 'Complete'}</span>
                     )}
-                    {!variant && <span>Awaiting...</span>}
+                    {!variant && <span>Waiting...</span>}
                   </div>
                   
                   {variant?.score?.total !== undefined && (
@@ -1048,9 +1048,9 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         <div className="battle-dialogue">
           <div className="battle-dialogue-box">
             <div className="battle-dialogue-text text-center">
-              {optState.status === 'compiling' && '🔄 Preparing the arena...'}
-              {optState.status === 'running' && '⚡ The strategies clash! DSPy evaluates each approach...'}
-              {optState.status === 'complete' && '🏆 Victory! A champion has emerged!'}
+              {optState.status === 'compiling' && '🔄 Initializing optimization...'}
+              {optState.status === 'running' && '⚡ Testing variants... DSPy evaluates each approach...'}
+              {optState.status === 'complete' && '🏆 Optimization complete! Best variant selected!'}
             </div>
           </div>
         </div>
@@ -1093,7 +1093,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
           >
-            The Oracle's optimization is complete
+            DSPy optimization complete
           </motion.p>
         </div>
         
