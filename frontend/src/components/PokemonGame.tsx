@@ -663,6 +663,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         className="dialogue-container"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="dialogue-box" onClick={advanceDialogue}>
           <div className="dialogue-inner">
