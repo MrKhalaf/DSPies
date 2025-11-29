@@ -617,7 +617,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               exit={{ y: 20, opacity: 0 }}
               className="dialogue-container"
             >
-              <div className="dialogue-box">
+              <div className="dialogue-box" onClick={advanceDialogue} style={{ cursor: 'pointer' }}>
                 <div className="dialogue-inner">
                   <div className="dialogue-speaker">
                     <span className="speaker-name">{dialogueSpeaker}</span>
@@ -627,7 +627,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                     {isTyping && <span className="dialogue-cursor" />}
                   </div>
                   {!isTyping && (
-                    <div className="dialogue-continue">▼ SPACE</div>
+                    <div className="dialogue-continue">▼ CLICK or SPACE</div>
                   )}
                 </div>
               </div>
@@ -640,7 +640,11 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
 
   // Render intro
   const renderIntro = () => (
-    <div className="overworld" style={{ background: '#0f0f23' }}>
+    <div 
+      className="overworld" 
+      style={{ background: '#0f0f23', cursor: 'pointer' }}
+      onClick={advanceDialogue}
+    >
       <div className="ambient-particles">
         {[...Array(30)].map((_, i) => (
           <div
@@ -660,7 +664,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
       >
-        <div className="dialogue-box">
+        <div className="dialogue-box" onClick={advanceDialogue}>
           <div className="dialogue-inner">
             <div className="dialogue-speaker">
               <span className="speaker-name">{dialogueSpeaker}</span>
@@ -670,7 +674,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               {isTyping && <span className="dialogue-cursor" />}
             </div>
             {!isTyping && (
-              <div className="dialogue-continue">▼ SPACE</div>
+              <div className="dialogue-continue">▼ CLICK or SPACE</div>
             )}
           </div>
         </div>
@@ -725,17 +729,17 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         </div>
         
         {/* Battle dialogue */}
-        <div className="battle-dialogue">
+        <div className="battle-dialogue" onClick={advanceDialogue} style={{ cursor: 'pointer' }}>
           <div className="battle-dialogue-box">
             <div className="battle-dialogue-text">
               {displayedText}
               {isTyping && <span className="dialogue-cursor" />}
             </div>
             {!isTyping && dialogueIndex < currentDialogue.length - 1 && (
-              <div className="dialogue-continue">▼ SPACE</div>
+              <div className="dialogue-continue">▼ CLICK to continue</div>
             )}
             {!isTyping && dialogueIndex === currentDialogue.length - 1 && (
-              <div className="dialogue-continue">▼ SPACE to respond</div>
+              <div className="dialogue-continue">▼ CLICK to respond</div>
             )}
           </div>
         </div>
