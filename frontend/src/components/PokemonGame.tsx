@@ -15,6 +15,7 @@ interface PokemonGameProps {
 
 type GamePhase = 'title' | 'intro' | 'overworld' | 'battle' | 'input' | 'optimization' | 'results';
 type WisdomId = 'v1' | 'v2' | 'v3';
+type AreaId = 'outdoor' | 'lab';
 
 interface Position {
   x: number;
@@ -35,56 +36,44 @@ interface Stone {
 const STONES: Stone[] = [
   {
     id: 'v1',
-    name: 'Signatures Module',
+    name: 'GYM 1: SIGNATURES',
     icon: '📋',
     color: '#60a5fa',
     position: { x: 2, y: 2 }, // Grid position - top left
-    teachingTopic: 'Prompt Templates',
+    teachingTopic: 'Gym Leader STRUCT',
     inscription: 'Define your inputs and outputs clearly.',
     dialogues: [
-      "Welcome to the Signatures Module!",
-      "In DSPy, we don't write prompts by hand...",
-      "Instead, we define SIGNATURES - declarative specs of what the LLM should do.",
-      "A signature like 'question -> answer' tells DSPy the INPUT and OUTPUT.",
-      "More complex: 'context, question -> reasoning, answer' adds chain-of-thought!",
-      "This structure lets DSPy OPTIMIZE prompts automatically.",
-      "Input your task: What is the STRUCTURE of what you need?"
+      "I'm STRUCT, leader of the SIGNATURES GYM!",
+      "In DSPy, you define WHAT you want - input → output!",
+      "Show me YOUR signature structure to earn this badge!"
     ]
   },
   {
     id: 'v2',
-    name: 'Examples Module',
+    name: 'GYM 2: EXAMPLES',
     icon: '📚',
     color: '#f472b6',
     position: { x: 14, y: 2 }, // Grid position - top right
-    teachingTopic: 'Few-Shot Learning',
+    teachingTopic: 'Gym Leader DEMO',
     inscription: 'Learn from demonstrations and examples.',
     dialogues: [
-      "Welcome to the Examples Module!",
-      "This covers EXAMPLES and FEW-SHOT learning.",
-      "DSPy automatically finds the BEST examples to include in prompts.",
-      "These examples TEACH the model how to respond correctly.",
-      "Think of it as showing the model how to solve similar problems.",
-      "The more examples it tries, the better it learns your style.",
-      "What EXAMPLE approach would YOU take to solve this challenge?"
+      "Welcome, trainer! I'm DEMO of the EXAMPLES GYM!",
+      "DSPy learns from examples - just like you train Pokemon!",
+      "Give me YOUR example approach for this badge!"
     ]
   },
   {
     id: 'v3',
-    name: 'Optimizer Module',
+    name: 'GYM 3: OPTIMIZER',
     icon: '⚙️',
     color: '#fbbf24',
     position: { x: 2, y: 8 }, // Grid position - bottom left corner
-    teachingTopic: 'Optimization',
+    teachingTopic: 'Gym Leader TUNE',
     inscription: 'Iterate and improve through automated testing.',
     dialogues: [
-      "Welcome to the Optimizer Module!",
-      "This is where the real power of DSPy lives.",
-      "DSPy uses techniques like Bootstrap, MIPRO, and BayesianSignatureOptimizer...",
-      "These optimizers TEST different prompt versions automatically!",
-      "They compete head-to-head - only the highest-scoring variant wins.",
-      "Each variant is evaluated, and the best one becomes your solution.",
-      "What insight can you provide to improve the optimization?"
+      "So YOU'RE the new trainer! I'm TUNE, the OPTIMIZER master!",
+      "My specialty? Testing prompts until only the BEST survives!",
+      "Share your optimization insight to claim the final badge!"
     ]
   }
 ];
@@ -93,22 +82,10 @@ const STONES: Stone[] = [
 const ORACLE_GRID = { x: 8, y: 5 };
 
 const INTRO_DIALOGUES = [
-  "Welcome to the DSPy Learning Lab!",
-  "Writing prompts by hand is tedious - fragile, unreliable, and hard to improve.",
-  "DSPy is a framework for Declarative Self-improving Language Programs.",
-  "Created by Stanford researchers, DSPy makes prompt engineering systematic.",
-  "Instead of writing prompts, you DECLARE what you want...",
-  "Define your task structure, provide examples, set your metrics...",
-  "And DSPy OPTIMIZES to find the best prompt AUTOMATICALLY!",
-  "Your task: Learn from the three DSPy Modules in this lab.",
-  "📋 The Signatures Module teaches input/output definitions.",
-  "📚 The Examples Module covers few-shot learning techniques.",
-  "⚙️ The Optimizer Module explains automated improvement.",
-  "Visit all three modules, then return to the DSPy Terminal.",
-  "The Terminal will test THREE prompt strategies against each other...",
-  "And select the WINNER based on real evaluation scores!",
-  "Controls: ARROW KEYS or WASD to move. SPACE or ENTER to interact.",
-  "Let's get started!"
+  "Hey! You must be the new PROMPT TRAINER!",
+  "I'm PROF. DSPY. I study how AI learns to respond better!",
+  "Inside this LAB are 3 GYMS. Beat them all to face the TERMINAL!",
+  "Good luck, trainer! ARROW KEYS move, SPACE interacts. Go!"
 ];
 
 const COMBATANTS = [
@@ -125,9 +102,9 @@ const MAP_WIDTH = 17;
 const MAP_HEIGHT = 11;
 const TILE_SIZE = 48;
 
-// Map tile types: 0=floor, 1=wall, 2=water/void, 3=special floor
-const DUNGEON_MAP = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+// Map tile types: 0=floor, 1=wall, 2=water/void, 3=special floor, 4=grass, 5=path, 6=tree, 7=door
+const LAB_MAP = [
+  [1,1,1,1,1,1,1,1,7,1,1,1,1,1,1,1,1],
   [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
   [1,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
   [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -139,6 +116,47 @@ const DUNGEON_MAP = [
   [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
   [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
+
+// Outdoor map - Route 101 style
+const OUTDOOR_MAP = [
+  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+  [6,4,4,4,6,4,4,4,5,4,4,4,6,4,4,4,6],
+  [6,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,6],
+  [6,4,4,6,4,4,4,4,5,4,4,4,4,6,4,4,6],
+  [6,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,6],
+  [6,4,4,4,4,4,5,5,5,5,5,4,4,4,4,4,6],
+  [6,4,4,4,4,4,5,1,7,1,5,4,4,4,4,4,6],
+  [6,4,4,6,4,4,5,1,1,1,5,4,4,6,4,4,6],
+  [6,4,4,4,4,4,5,1,1,1,5,4,4,4,4,4,6],
+  [6,4,4,4,4,4,5,5,5,5,5,4,4,4,4,4,6],
+  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+];
+
+// Area configurations
+interface AreaConfig {
+  map: number[][];
+  name: string;
+  playerStart: Position;
+  exits: { position: Position; targetArea: AreaId; targetPosition: Position }[];
+}
+
+const AREAS: Record<AreaId, AreaConfig> = {
+  outdoor: {
+    map: OUTDOOR_MAP,
+    name: 'ROUTE 101',
+    playerStart: { x: 8, y: 5 },
+    exits: [{ position: { x: 8, y: 6 }, targetArea: 'lab', targetPosition: { x: 8, y: 9 } }]
+  },
+  lab: {
+    map: LAB_MAP,
+    name: 'DSPY LAB',
+    playerStart: { x: 8, y: 9 },
+    exits: [{ position: { x: 8, y: 0 }, targetArea: 'outdoor', targetPosition: { x: 8, y: 5 } }]
+  }
+};
+
+// Legacy reference for backward compatibility
+const DUNGEON_MAP = LAB_MAP;
 
 // Convert grid position to pixel position
 const gridToPixel = (gx: number, gy: number) => ({
@@ -152,17 +170,20 @@ const pixelToGrid = (px: number, py: number) => ({
   gy: Math.floor(py / TILE_SIZE)
 });
 
-// Check if a grid position is walkable
-const isWalkable = (gx: number, gy: number) => {
+// Check if a grid position is walkable (pass the current map)
+const isWalkable = (gx: number, gy: number, map: number[][]) => {
   if (gx < 0 || gx >= MAP_WIDTH || gy < 0 || gy >= MAP_HEIGHT) return false;
-  return DUNGEON_MAP[gy][gx] !== 1;
+  const tile = map[gy][gx];
+  // 1=wall, 6=tree are not walkable
+  return tile !== 1 && tile !== 6;
 };
 
 const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Game state
   const [phase, setPhase] = useState<GamePhase>('title');
-  const [playerGridPos, setPlayerGridPos] = useState<Position>({ x: 8, y: 9 }); // Grid position
-  const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('up');
+  const [currentArea, setCurrentArea] = useState<AreaId>('outdoor'); // Start outdoors
+  const [playerGridPos, setPlayerGridPos] = useState<Position>({ x: 8, y: 5 }); // Grid position
+  const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
   const [isWalking, setIsWalking] = useState(false);
   const [isMoving, setIsMoving] = useState(false); // Prevent rapid movement
   
@@ -216,32 +237,54 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Grid-based movement
   const movePlayer = useCallback((dx: number, dy: number, direction: 'up' | 'down' | 'left' | 'right') => {
     if (isMoving || phase !== 'overworld' || currentDialogue.length > 0) return;
-    
+
     setPlayerDirection(direction);
-    
+
     const newX = playerGridPos.x + dx;
     const newY = playerGridPos.y + dy;
-    
-    // Check for stone collision
-    const stoneAtPos = STONES.find(s => s.position.x === newX && s.position.y === newY);
-    if (stoneAtPos) return;
-    
-    // Check for oracle collision
-    if (newX === ORACLE_GRID.x && newY === ORACLE_GRID.y) return;
-    
+    const areaConfig = AREAS[currentArea];
+    const currentMap = areaConfig.map;
+
+    // Check for stone collision (only in lab)
+    if (currentArea === 'lab') {
+      const stoneAtPos = STONES.find(s => s.position.x === newX && s.position.y === newY);
+      if (stoneAtPos) return;
+
+      // Check for oracle collision
+      if (newX === ORACLE_GRID.x && newY === ORACLE_GRID.y) return;
+    }
+
+    // Check for door/exit tiles (tile type 7)
+    const targetTile = currentMap[newY]?.[newX];
+    if (targetTile === 7) {
+      // Find matching exit
+      const exit = areaConfig.exits.find(e => e.position.x === newX && e.position.y === newY);
+      if (exit) {
+        setIsMoving(true);
+        setShowFlash(true);
+        setTimeout(() => {
+          setCurrentArea(exit.targetArea);
+          setPlayerGridPos(exit.targetPosition);
+          setShowFlash(false);
+          setIsMoving(false);
+        }, 300);
+        return;
+      }
+    }
+
     // Check if walkable
-    if (isWalkable(newX, newY)) {
+    if (isWalkable(newX, newY, currentMap)) {
       setIsMoving(true);
       setIsWalking(true);
       setPlayerGridPos({ x: newX, y: newY });
-      
+
       // Reset movement lock after animation
       setTimeout(() => {
         setIsMoving(false);
         setIsWalking(false);
       }, 150);
     }
-  }, [isMoving, phase, playerGridPos, currentDialogue]);
+  }, [isMoving, phase, playerGridPos, currentDialogue, currentArea]);
 
   // Movement key handling
   useEffect(() => {
@@ -282,15 +325,18 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     return () => window.removeEventListener('keydown', handleMovement);
   }, [phase, movePlayer, currentDialogue]);
 
-  // Check proximity to stones/oracle (adjacent tiles)
+  // Check proximity to stones/oracle (adjacent tiles) - only in lab
   const getProximity = useCallback(() => {
+    // Only check for entities in the lab
+    if (currentArea !== 'lab') return null;
+
     const adjacentPositions = [
       { x: playerGridPos.x, y: playerGridPos.y - 1 }, // up
       { x: playerGridPos.x, y: playerGridPos.y + 1 }, // down
       { x: playerGridPos.x - 1, y: playerGridPos.y }, // left
       { x: playerGridPos.x + 1, y: playerGridPos.y }, // right
     ];
-    
+
     // Check stones
     for (const stone of STONES) {
       for (const pos of adjacentPositions) {
@@ -299,16 +345,16 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         }
       }
     }
-    
+
     // Check Oracle
     for (const pos of adjacentPositions) {
       if (ORACLE_GRID.x === pos.x && ORACLE_GRID.y === pos.y) {
         return { type: 'oracle', entity: null };
       }
     }
-    
+
     return null;
-  }, [playerGridPos]);
+  }, [playerGridPos, currentArea]);
 
   // Interaction handler
   const handleInteraction = useCallback(() => {
@@ -400,7 +446,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
 
   // Start game from title screen - defined before useEffect that uses it
   const startGame = useCallback(() => {
-    setDialogueSpeaker('???');
+    setDialogueSpeaker('PROF. DSPY');
     setCurrentDialogue(INTRO_DIALOGUES);
     setDialogueIndex(0);
     setDisplayedText('');
@@ -462,8 +508,9 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     setCollectedWisdoms({ v1: '', v2: '', v3: '' });
     setChallengeText('');
     setPhase('overworld');
-    setPlayerGridPos({ x: 8, y: 9 });
-    setPlayerDirection('up');
+    setCurrentArea('outdoor');
+    setPlayerGridPos({ x: 8, y: 5 });
+    setPlayerDirection('down');
   }, [resetOptimization]);
 
   // Get variant data
@@ -556,24 +603,26 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   const renderOverworld = () => {
     const proximity = getProximity();
     const wisdomCount = Object.values(collectedWisdoms).filter(w => w.length > 0).length;
-    
+    const areaConfig = AREAS[currentArea];
+    const currentMap = areaConfig.map;
+
     // Calculate map dimensions
     const mapPixelWidth = MAP_WIDTH * TILE_SIZE;
     const mapPixelHeight = MAP_HEIGHT * TILE_SIZE;
-    
+
     return (
-      <div className="overworld">
+      <div className={`overworld area-${currentArea}`}>
         {/* Centered dungeon container */}
         <div className="dungeon-viewport">
-          <div 
-            className="dungeon-map"
-            style={{ 
-              width: mapPixelWidth, 
+          <div
+            className={`dungeon-map ${currentArea === 'outdoor' ? 'outdoor-map' : ''}`}
+            style={{
+              width: mapPixelWidth,
               height: mapPixelHeight,
             }}
           >
             {/* Render tiles */}
-            {DUNGEON_MAP.map((row, y) =>
+            {currentMap.map((row, y) =>
               row.map((tile, x) => (
                 <div
                   key={`${x}-${y}`}
@@ -587,9 +636,9 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                 />
               ))
             )}
-            
-            {/* Sacred Stones */}
-            {STONES.map((stone) => {
+
+            {/* Sacred Stones - only in lab */}
+            {currentArea === 'lab' && STONES.map((stone) => {
               const hasWisdom = collectedWisdoms[stone.id].length > 0;
               const pixelPos = gridToPixel(stone.position.x, stone.position.y);
               return (
@@ -607,19 +656,21 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                 </div>
               );
             })}
-            
-            {/* Oracle */}
-            <div
-              className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
-              style={{
-                left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 60,
-                top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
-              }}
-            >
-              <span className="oracle-sprite" aria-label="DSPy Terminal"></span>
-              <span className="oracle-label">{wisdomCount === 3 ? 'READY' : 'TERMINAL'}</span>
-            </div>
-            
+
+            {/* Oracle - only in lab */}
+            {currentArea === 'lab' && (
+              <div
+                className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
+                style={{
+                  left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 60,
+                  top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
+                }}
+              >
+                <span className="oracle-sprite" aria-label="DSPy Terminal"></span>
+                <span className="oracle-label">{wisdomCount === 3 ? 'READY' : 'TERMINAL'}</span>
+              </div>
+            )}
+
             {/* Player */}
             <motion.div
               className={`player ${isWalking ? 'walking' : ''}`}
@@ -637,21 +688,21 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         {/* HUD */}
         <div className="game-hud">
           <div className="quest-box">
-            <div className="quest-title">⚔️ QUEST</div>
+            <div className="quest-title">📍 {areaConfig.name}</div>
             <div className="wisdom-list">
               {STONES.map((stone) => {
                 const hasWisdom = collectedWisdoms[stone.id].length > 0;
                 return (
                   <div key={stone.id} className={`wisdom-item ${hasWisdom ? 'collected' : ''}`}>
                     <span className="wisdom-icon" style={{ color: stone.color }}>{stone.icon}</span>
-                    <span className="wisdom-name">{stone.name}</span>
-                    {hasWisdom && <span className="wisdom-check">✓</span>}
+                    <span className="wisdom-name">{hasWisdom ? '✓' : '○'}</span>
                   </div>
                 );
               })}
             </div>
+            <div className="badge-count">{wisdomCount}/3 BADGES</div>
           </div>
-          
+
           <div className="controls-box">
             <div className="controls-row">
               <span className="key-badge">WASD</span>
