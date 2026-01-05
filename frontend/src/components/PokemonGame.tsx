@@ -596,32 +596,32 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                 <div
                   key={stone.id}
                   className={`sacred-stone ${hasWisdom ? 'consulted' : ''}`}
-                  style={{ 
+                  style={{
                     left: pixelPos.x - 40,
                     top: pixelPos.y - 50,
                     color: stone.color
                   }}
                 >
-                  <span className="stone-sprite">{stone.icon}</span>
+                  <span className="stone-sprite" aria-label={stone.name}></span>
                   <span className="stone-label">{stone.name}</span>
                 </div>
               );
             })}
             
             {/* Oracle */}
-            <div 
+            <div
               className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
-              style={{ 
+              style={{
                 left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 60,
                 top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
               }}
             >
-              <span className="oracle-sprite">🖥️</span>
-              <span className="oracle-label">{wisdomCount === 3 ? '✨ READY ✨' : 'TERMINAL'}</span>
+              <span className="oracle-sprite" aria-label="DSPy Terminal"></span>
+              <span className="oracle-label">{wisdomCount === 3 ? 'READY' : 'TERMINAL'}</span>
             </div>
             
             {/* Player */}
-            <motion.div 
+            <motion.div
               className={`player ${isWalking ? 'walking' : ''}`}
               animate={{
                 left: gridToPixel(playerGridPos.x, playerGridPos.y).x - 24,
@@ -629,7 +629,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               }}
               transition={{ duration: 0.15, ease: 'linear' }}
             >
-              <span className="player-sprite">🧙‍♂️</span>
+              <span className="player-sprite" aria-label="player"></span>
             </motion.div>
           </div>
         </div>
@@ -797,12 +797,11 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span 
-              className="enemy-sprite" 
-              style={{ color: currentStone.color, filter: `drop-shadow(0 0 30px ${currentStone.color})` }}
-            >
-              {currentStone.icon}
-            </span>
+            <span
+              className="enemy-sprite"
+              style={{ color: currentStone.color }}
+              aria-label={currentStone.name}
+            ></span>
             <div className="enemy-name-box" style={{ borderColor: currentStone.color }}>
               <div className="enemy-name">{currentStone.name}</div>
               <div className="enemy-subtitle">{currentStone.teachingTopic}</div>
@@ -816,7 +815,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <span className="player-battle-sprite">🧙</span>
+            <span className="player-battle-sprite" aria-label="Player"></span>
             <div className="player-name-box">
               <div className="player-name">OPTIMIZER</div>
             </div>
