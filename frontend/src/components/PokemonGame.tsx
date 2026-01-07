@@ -15,7 +15,7 @@ interface PokemonGameProps {
 
 type GamePhase = 'title' | 'intro' | 'overworld' | 'battle' | 'input' | 'optimization' | 'results';
 type WisdomId = 'v1' | 'v2' | 'v3';
-type AreaId = 'outdoor' | 'lab';
+type AreaId = 'outdoor' | 'lab' | 'pokecenter' | 'mart';
 
 interface Position {
   x: number;
@@ -28,6 +28,7 @@ interface Stone {
   icon: string;
   color: string;
   position: Position;
+  area: AreaId;
   dialogues: string[];
   inscription: string;
   teachingTopic: string;
@@ -39,7 +40,8 @@ const STONES: Stone[] = [
     name: 'GYM 1: SIGNATURES',
     icon: '📋',
     color: '#60a5fa',
-    position: { x: 2, y: 2 }, // Grid position - top left
+    position: { x: 10, y: 3 }, // Grid position - center of LAB
+    area: 'lab',
     teachingTopic: 'Gym Leader STRUCT',
     inscription: 'Define your inputs and outputs clearly.',
     dialogues: [
@@ -53,7 +55,8 @@ const STONES: Stone[] = [
     name: 'GYM 2: EXAMPLES',
     icon: '📚',
     color: '#f472b6',
-    position: { x: 14, y: 2 }, // Grid position - top right
+    position: { x: 5, y: 5 }, // Grid position - in POKECENTER
+    area: 'pokecenter',
     teachingTopic: 'Gym Leader DEMO',
     inscription: 'Learn from demonstrations and examples.',
     dialogues: [
@@ -67,7 +70,8 @@ const STONES: Stone[] = [
     name: 'GYM 3: OPTIMIZER',
     icon: '⚙️',
     color: '#fbbf24',
-    position: { x: 2, y: 8 }, // Grid position - bottom left corner
+    position: { x: 15, y: 5 }, // Grid position - in MART
+    area: 'mart',
     teachingTopic: 'Gym Leader TUNE',
     inscription: 'Iterate and improve through automated testing.',
     dialogues: [
@@ -78,8 +82,8 @@ const STONES: Stone[] = [
   }
 ];
 
-// Oracle grid position - center of dungeon
-const ORACLE_GRID = { x: 8, y: 5 };
+// Oracle grid position - center of expanded lab
+const ORACLE_GRID = { x: 9, y: 6 };
 
 const INTRO_DIALOGUES = [
   "Hey! You must be the new PROMPT TRAINER!",
@@ -97,39 +101,85 @@ const COMBATANTS = [
 // Oracle position
 const ORACLE_POSITION = { x: 400, y: 280 };
 
-// Dungeon map configuration
-const MAP_WIDTH = 17;
-const MAP_HEIGHT = 11;
-const TILE_SIZE = 48;
+// Dungeon map configuration - Pokemon Pearl style (smaller tiles)
+const MAP_WIDTH = 21;
+const MAP_HEIGHT = 15;
+const TILE_SIZE = 32;
 
-// Map tile types: 0=floor, 1=wall, 2=water/void, 3=special floor, 4=grass, 5=path, 6=tree, 7=door
+// Map tile types: 0=floor, 1=wall, 2=water, 3=special floor, 4=grass, 5=path, 6=tree, 7=door, 8=pokecenter, 9=mart
 const LAB_MAP = [
-  [1,1,1,1,1,1,1,1,7,1,1,1,1,1,1,1,1],
-  [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
-  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-  [1,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,1],
-  [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
-  [1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,7,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
-// Outdoor map - Route 101 style
+// Outdoor map - D/P Route 201 style with winding paths, pond, and multiple buildings
 const OUTDOOR_MAP = [
-  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
-  [6,4,4,4,6,4,4,4,5,4,4,4,6,4,4,4,6],
-  [6,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,6],
-  [6,4,4,6,4,4,4,4,5,4,4,4,4,6,4,4,6],
-  [6,4,4,4,4,4,4,4,5,4,4,4,4,4,4,4,6],
-  [6,4,4,4,4,4,5,5,5,5,5,4,4,4,4,4,6],
-  [6,4,4,4,4,4,5,1,7,1,5,4,4,4,4,4,6],
-  [6,4,4,6,4,4,5,1,1,1,5,4,4,6,4,4,6],
-  [6,4,4,4,4,4,5,1,1,1,5,4,4,4,4,4,6],
-  [6,4,4,4,4,4,5,5,5,5,5,4,4,4,4,4,6],
-  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+  [6,4,4,4,6,4,4,4,4,5,5,5,4,4,4,4,6,4,4,4,6],
+  [6,4,4,4,4,4,4,4,5,5,4,5,5,4,4,4,4,4,4,4,6],
+  [6,4,2,2,4,4,4,5,5,4,4,4,5,5,4,4,4,6,4,4,6],
+  [6,4,2,2,2,4,5,5,4,4,4,4,4,5,5,4,4,4,4,4,6],
+  [6,4,4,2,4,5,5,4,4,1,7,1,4,4,5,5,4,4,4,4,6],
+  [6,4,4,4,5,5,4,4,4,1,1,1,4,4,4,5,5,4,4,4,6],
+  [6,4,4,5,5,4,4,4,4,1,1,1,4,4,4,4,5,5,4,4,6],
+  [6,4,5,5,4,4,4,4,5,5,5,5,5,4,4,4,4,5,4,4,6],
+  [6,5,5,4,4,1,7,1,5,4,4,4,5,1,7,1,4,4,5,4,6],
+  [6,5,4,4,4,1,1,1,5,4,4,4,5,1,1,1,4,4,5,4,6],
+  [6,5,4,4,4,1,1,1,5,5,5,5,5,1,1,1,4,4,5,5,6],
+  [6,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,4,6],
+  [6,4,5,5,5,5,4,4,6,4,4,4,6,4,4,5,5,5,4,4,6],
+  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+];
+
+// Pokemon Center interior - D/P style with healing counter
+const POKECENTER_MAP = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+// Mart interior - D/P style with shop counter
+const MART_MAP = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,3,3,3,3,3,3,3,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
+  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
+  [1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+  [1,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
 // Area configurations
@@ -143,15 +193,31 @@ interface AreaConfig {
 const AREAS: Record<AreaId, AreaConfig> = {
   outdoor: {
     map: OUTDOOR_MAP,
-    name: 'ROUTE 101',
-    playerStart: { x: 8, y: 5 },
-    exits: [{ position: { x: 8, y: 6 }, targetArea: 'lab', targetPosition: { x: 8, y: 9 } }]
+    name: 'ROUTE 201',
+    playerStart: { x: 10, y: 8 },
+    exits: [
+      { position: { x: 10, y: 5 }, targetArea: 'lab', targetPosition: { x: 10, y: 12 } },      // DSPy Lab (center building)
+      { position: { x: 6, y: 9 }, targetArea: 'pokecenter', targetPosition: { x: 10, y: 12 } }, // Pokemon Center (left building)
+      { position: { x: 14, y: 9 }, targetArea: 'mart', targetPosition: { x: 10, y: 12 } }       // Mart (right building)
+    ]
   },
   lab: {
     map: LAB_MAP,
     name: 'DSPY LAB',
-    playerStart: { x: 8, y: 9 },
-    exits: [{ position: { x: 8, y: 0 }, targetArea: 'outdoor', targetPosition: { x: 8, y: 5 } }]
+    playerStart: { x: 10, y: 12 },
+    exits: [{ position: { x: 10, y: 0 }, targetArea: 'outdoor', targetPosition: { x: 10, y: 4 } }]
+  },
+  pokecenter: {
+    map: POKECENTER_MAP,
+    name: 'POKEMON CENTER',
+    playerStart: { x: 10, y: 12 },
+    exits: [{ position: { x: 10, y: 13 }, targetArea: 'outdoor', targetPosition: { x: 6, y: 8 } }]
+  },
+  mart: {
+    map: MART_MAP,
+    name: 'POKE MART',
+    playerStart: { x: 10, y: 12 },
+    exits: [{ position: { x: 10, y: 13 }, targetArea: 'outdoor', targetPosition: { x: 14, y: 8 } }]
   }
 };
 
@@ -182,7 +248,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Game state
   const [phase, setPhase] = useState<GamePhase>('title');
   const [currentArea, setCurrentArea] = useState<AreaId>('outdoor'); // Start outdoors
-  const [playerGridPos, setPlayerGridPos] = useState<Position>({ x: 8, y: 5 }); // Grid position
+  const [playerGridPos, setPlayerGridPos] = useState<Position>({ x: 10, y: 8 }); // Grid position - matches ROUTE 201 playerStart
   const [playerDirection, setPlayerDirection] = useState<'up' | 'down' | 'left' | 'right'>('down');
   const [isWalking, setIsWalking] = useState(false);
   const [isMoving, setIsMoving] = useState(false); // Prevent rapid movement
@@ -193,6 +259,15 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [dialogueSpeaker, setDialogueSpeaker] = useState('');
+  const [dialoguePortrait, setDialoguePortrait] = useState<{ icon: string; colorClass: string } | null>(null);
+
+  // Helper to get portrait class from color
+  const getPortraitClass = (color: string): string => {
+    if (color === '#60a5fa') return 'portrait-blue';
+    if (color === '#f472b6') return 'portrait-pink';
+    if (color === '#fbbf24') return 'portrait-yellow';
+    return 'portrait-prof';
+  };
   
   // Stone/Battle state
   const [collectedWisdoms, setCollectedWisdoms] = useState<Record<WisdomId, string>>({ v1: '', v2: '', v3: '' });
@@ -208,7 +283,11 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   
   // Screen effects
   const [showFlash, setShowFlash] = useState(false);
-  
+
+  // Door transition state
+  const [transitionPhase, setTransitionPhase] = useState<'none' | 'fade-out' | 'fade-in'>('none');
+  const [transitionAreaName, setTransitionAreaName] = useState<string>('');
+
   // Refs
   const gameRef = useRef<HTMLDivElement>(null);
   const keysPressed = useRef<Set<string>>(new Set());
@@ -245,12 +324,12 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     const areaConfig = AREAS[currentArea];
     const currentMap = areaConfig.map;
 
-    // Check for stone collision (only in lab)
-    if (currentArea === 'lab') {
-      const stoneAtPos = STONES.find(s => s.position.x === newX && s.position.y === newY);
-      if (stoneAtPos) return;
+    // Check for stone collision in the current area
+    const stoneAtPos = STONES.find(s => s.area === currentArea && s.position.x === newX && s.position.y === newY);
+    if (stoneAtPos) return;
 
-      // Check for oracle collision
+    // Check for oracle collision (only in lab)
+    if (currentArea === 'lab') {
       if (newX === ORACLE_GRID.x && newY === ORACLE_GRID.y) return;
     }
 
@@ -261,13 +340,24 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       const exit = areaConfig.exits.find(e => e.position.x === newX && e.position.y === newY);
       if (exit) {
         setIsMoving(true);
-        setShowFlash(true);
+        // Start fade-out transition
+        const targetAreaConfig = AREAS[exit.targetArea];
+        setTransitionAreaName(targetAreaConfig.name);
+        setTransitionPhase('fade-out');
+
+        // After fade-out completes (200ms), switch area and start fade-in
         setTimeout(() => {
           setCurrentArea(exit.targetArea);
           setPlayerGridPos(exit.targetPosition);
-          setShowFlash(false);
-          setIsMoving(false);
-        }, 300);
+          setTransitionPhase('fade-in');
+
+          // After fade-in completes (200ms), end transition
+          setTimeout(() => {
+            setTransitionPhase('none');
+            setTransitionAreaName('');
+            setIsMoving(false);
+          }, 200);
+        }, 200);
         return;
       }
     }
@@ -325,11 +415,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     return () => window.removeEventListener('keydown', handleMovement);
   }, [phase, movePlayer, currentDialogue]);
 
-  // Check proximity to stones/oracle (adjacent tiles) - only in lab
+  // Check proximity to stones/oracle (adjacent tiles)
   const getProximity = useCallback(() => {
-    // Only check for entities in the lab
-    if (currentArea !== 'lab') return null;
-
     const adjacentPositions = [
       { x: playerGridPos.x, y: playerGridPos.y - 1 }, // up
       { x: playerGridPos.x, y: playerGridPos.y + 1 }, // down
@@ -337,8 +424,9 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       { x: playerGridPos.x + 1, y: playerGridPos.y }, // right
     ];
 
-    // Check stones
+    // Check stones in the current area
     for (const stone of STONES) {
+      if (stone.area !== currentArea) continue; // Only check stones in current area
       for (const pos of adjacentPositions) {
         if (stone.position.x === pos.x && stone.position.y === pos.y) {
           return { type: 'stone', entity: stone };
@@ -346,10 +434,12 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       }
     }
 
-    // Check Oracle
-    for (const pos of adjacentPositions) {
-      if (ORACLE_GRID.x === pos.x && ORACLE_GRID.y === pos.y) {
-        return { type: 'oracle', entity: null };
+    // Check Oracle (only in lab)
+    if (currentArea === 'lab') {
+      for (const pos of adjacentPositions) {
+        if (ORACLE_GRID.x === pos.x && ORACLE_GRID.y === pos.y) {
+          return { type: 'oracle', entity: null };
+        }
       }
     }
 
@@ -359,11 +449,12 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Interaction handler
   const handleInteraction = useCallback(() => {
     const proximity = getProximity();
-    
+
     if (proximity?.type === 'stone') {
       const stone = proximity.entity as Stone;
       setCurrentStone(stone);
       setDialogueSpeaker(stone.name);
+      setDialoguePortrait({ icon: stone.icon, colorClass: getPortraitClass(stone.color) });
       setCurrentDialogue(stone.dialogues);
       setDialogueIndex(0);
       setDisplayedText('');
@@ -374,6 +465,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       const wisdomCount = Object.values(collectedWisdoms).filter(w => w.length > 0).length;
       if (wisdomCount < 3) {
         setDialogueSpeaker('DSPy Terminal');
+        setDialoguePortrait({ icon: '🖥️', colorClass: 'portrait-terminal' });
         setCurrentDialogue([
           `You have completed ${wisdomCount} of 3 modules.`,
           "Visit all three DSPy modules before running optimization.",
@@ -418,12 +510,14 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       // End of dialogue
       if (phase === 'intro') {
         setCurrentDialogue([]);
+        setDialoguePortrait(null);
         setPhase('overworld');
       } else if (phase === 'battle' && currentStone) {
         // Show input for wisdom
         setPhase('input');
       } else {
         setCurrentDialogue([]);
+        setDialoguePortrait(null);
       }
     }
   }, [isTyping, dialogueIndex, currentDialogue, phase, currentStone]);
@@ -447,6 +541,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
   // Start game from title screen - defined before useEffect that uses it
   const startGame = useCallback(() => {
     setDialogueSpeaker('PROF. DSPY');
+    setDialoguePortrait({ icon: '🧪', colorClass: 'portrait-prof' });
     setCurrentDialogue(INTRO_DIALOGUES);
     setDialogueIndex(0);
     setDisplayedText('');
@@ -509,7 +604,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
     setChallengeText('');
     setPhase('overworld');
     setCurrentArea('outdoor');
-    setPlayerGridPos({ x: 8, y: 5 });
+    setPlayerGridPos({ x: 10, y: 8 });
     setPlayerDirection('down');
   }, [resetOptimization]);
 
@@ -637,8 +732,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               ))
             )}
 
-            {/* Sacred Stones - only in lab */}
-            {currentArea === 'lab' && STONES.map((stone) => {
+            {/* Sacred Stones - render stones in current area */}
+            {STONES.filter(stone => stone.area === currentArea).map((stone) => {
               const hasWisdom = collectedWisdoms[stone.id].length > 0;
               const pixelPos = gridToPixel(stone.position.x, stone.position.y);
               return (
@@ -646,8 +741,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
                   key={stone.id}
                   className={`sacred-stone ${hasWisdom ? 'consulted' : ''}`}
                   style={{
-                    left: pixelPos.x - 40,
-                    top: pixelPos.y - 50,
+                    left: pixelPos.x - 20,
+                    top: pixelPos.y - 30,
                     color: stone.color
                   }}
                 >
@@ -662,8 +757,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
               <div
                 className={`oracle-pedestal ${wisdomCount === 3 ? 'ready' : ''}`}
                 style={{
-                  left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 60,
-                  top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 60
+                  left: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).x - 30,
+                  top: gridToPixel(ORACLE_GRID.x, ORACLE_GRID.y).y - 30
                 }}
               >
                 <span className="oracle-sprite" aria-label="DSPy Terminal"></span>
@@ -675,8 +770,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             <motion.div
               className={`player ${isWalking ? 'walking' : ''}`}
               animate={{
-                left: gridToPixel(playerGridPos.x, playerGridPos.y).x - 24,
-                top: gridToPixel(playerGridPos.x, playerGridPos.y).y - 40,
+                left: gridToPixel(playerGridPos.x, playerGridPos.y).x - 12,
+                top: gridToPixel(playerGridPos.x, playerGridPos.y).y - 28,
               }}
               transition={{ duration: 0.15, ease: 'linear' }}
             >
@@ -752,16 +847,23 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
             >
               <div className="dialogue-box" onClick={advanceDialogue} style={{ cursor: 'pointer' }}>
                 <div className="dialogue-inner">
-                  <div className="dialogue-speaker">
-                    <span className="speaker-name">{dialogueSpeaker}</span>
-                  </div>
-                  <div className="dialogue-text">
-                    {displayedText}
-                    {isTyping && <span className="dialogue-cursor" />}
-                  </div>
-                  {!isTyping && (
-                    <div className="dialogue-continue">▼ CLICK or SPACE</div>
+                  {dialoguePortrait && (
+                    <div className={`dialogue-portrait ${dialoguePortrait.colorClass}`}>
+                      {dialoguePortrait.icon}
+                    </div>
                   )}
+                  <div className="dialogue-content">
+                    <div className="dialogue-speaker">
+                      <span className="speaker-name">{dialogueSpeaker}</span>
+                    </div>
+                    <div className="dialogue-text">
+                      {displayedText}
+                      {isTyping && <span className="dialogue-cursor" />}
+                    </div>
+                    {!isTyping && (
+                      <div className="dialogue-continue"></div>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -773,8 +875,8 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
 
   // Render intro
   const renderIntro = () => (
-    <div 
-      className="overworld" 
+    <div
+      className="overworld"
       style={{ background: '#0f0f23', cursor: 'pointer' }}
       onClick={advanceDialogue}
     >
@@ -791,7 +893,7 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
           />
         ))}
       </div>
-      
+
       <motion.div
         className="dialogue-container"
         initial={{ y: 50, opacity: 0 }}
@@ -800,16 +902,23 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
       >
         <div className="dialogue-box" onClick={advanceDialogue}>
           <div className="dialogue-inner">
-            <div className="dialogue-speaker">
-              <span className="speaker-name">{dialogueSpeaker}</span>
-            </div>
-            <div className="dialogue-text">
-              {displayedText}
-              {isTyping && <span className="dialogue-cursor" />}
-            </div>
-            {!isTyping && (
-              <div className="dialogue-continue">▼ CLICK or SPACE</div>
+            {dialoguePortrait && (
+              <div className={`dialogue-portrait ${dialoguePortrait.colorClass}`}>
+                {dialoguePortrait.icon}
+              </div>
             )}
+            <div className="dialogue-content">
+              <div className="dialogue-speaker">
+                <span className="speaker-name">{dialogueSpeaker}</span>
+              </div>
+              <div className="dialogue-text">
+                {displayedText}
+                {isTyping && <span className="dialogue-cursor" />}
+              </div>
+              {!isTyping && (
+                <div className="dialogue-continue"></div>
+              )}
+            </div>
           </div>
         </div>
         {/* Skip intro button */}
@@ -817,12 +926,13 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
           onClick={(e) => {
             e.stopPropagation();
             setCurrentDialogue([]);
+            setDialoguePortrait(null);
             setPhase('overworld');
           }}
           className="absolute bottom-4 right-4 px-4 py-2 text-[10px] text-indigo-400/60 hover:text-indigo-300 border border-indigo-500/30 rounded-lg hover:border-indigo-400/50 transition-all"
           style={{ fontFamily: "'Press Start 2P', monospace" }}
         >
-          SKIP INTRO →
+          SKIP INTRO
         </button>
       </motion.div>
     </div>
@@ -876,16 +986,23 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
         {/* Battle dialogue */}
         <div className="battle-dialogue" onClick={advanceDialogue} style={{ cursor: 'pointer' }}>
           <div className="battle-dialogue-box">
-            <div className="battle-dialogue-text">
-              {displayedText}
-              {isTyping && <span className="dialogue-cursor" />}
+            {dialoguePortrait && (
+              <div className={`dialogue-portrait ${dialoguePortrait.colorClass}`}>
+                {dialoguePortrait.icon}
+              </div>
+            )}
+            <div className="dialogue-content">
+              <div className="battle-dialogue-text">
+                {displayedText}
+                {isTyping && <span className="dialogue-cursor" />}
+              </div>
+              {!isTyping && dialogueIndex < currentDialogue.length - 1 && (
+                <div className="dialogue-continue"></div>
+              )}
+              {!isTyping && dialogueIndex === currentDialogue.length - 1 && (
+                <div className="dialogue-continue"></div>
+              )}
             </div>
-            {!isTyping && dialogueIndex < currentDialogue.length - 1 && (
-              <div className="dialogue-continue">▼ CLICK to continue</div>
-            )}
-            {!isTyping && dialogueIndex === currentDialogue.length - 1 && (
-              <div className="dialogue-continue">▼ CLICK to respond</div>
-            )}
           </div>
         </div>
       </motion.div>
@@ -1215,11 +1332,20 @@ const PokemonGame: React.FC<PokemonGameProps> = ({ onExit }) => {
 
   return (
     <div className="pokemon-game" ref={gameRef} tabIndex={0}>
-      {/* Screen flash effect */}
+      {/* Screen flash effect (for battle transitions) */}
       <AnimatePresence>
         {showFlash && <div className="screen-flash" />}
       </AnimatePresence>
-      
+
+      {/* Door transition effect - smooth fade to/from black with area name */}
+      {transitionPhase !== 'none' && (
+        <div className={`screen-transition ${transitionPhase}`}>
+          {transitionAreaName && (
+            <span className="transition-area-name">{transitionAreaName}</span>
+          )}
+        </div>
+      )}
+
       {/* Render current phase */}
       {phase === 'title' && renderTitleScreen()}
       {phase === 'intro' && renderIntro()}

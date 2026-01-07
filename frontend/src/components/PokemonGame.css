@@ -3,41 +3,82 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-  /* Classic Pokemon GBC Palette */
-  --poke-white: #f8f8f8;
-  --poke-light: #c8c8c8;
-  --poke-medium: #787878;
-  --poke-dark: #383838;
-  --poke-black: #101010;
+  /* Pokemon Diamond/Pearl Palette - ULTRA VIBRANT */
+  --poke-white: #ffffff;
+  --poke-light: #f0f8ff;
+  --poke-medium: #90a8c0;
+  --poke-dark: #485870;
+  --poke-black: #202830;
 
   /* Pokemon Cave/Dungeon Colors */
-  --cave-floor: #706860;
-  --cave-floor-light: #888078;
-  --cave-wall: #484040;
-  --cave-wall-dark: #302828;
-  --cave-wall-highlight: #585050;
+  --cave-floor: #c0b8a8;
+  --cave-floor-light: #d8d0c0;
+  --cave-wall: #685850;
+  --cave-wall-dark: #403830;
+  --cave-wall-highlight: #887868;
 
-  /* Pokemon UI Colors */
-  --ui-bg: #f8f0e0;
-  --ui-border: #383838;
-  --ui-text: #383838;
-  --ui-shadow: #a89888;
+  /* D/P UI Colors - Clean, bright Pokemon style */
+  --ui-bg: #f8fcff;
+  --ui-bg-gradient-start: #ffffff;
+  --ui-bg-gradient-end: #e8f0f8;
+  --ui-border: #3870a8;
+  --ui-border-light: #78a8d8;
+  --ui-text: #203050;
+  --ui-shadow: rgba(32, 48, 80, 0.2);
+  --ui-shadow-soft: rgba(32, 48, 80, 0.1);
 
-  /* Pokemon Blue/Red accent colors */
-  --poke-blue: #3898f8;
-  --poke-red: #f83800;
-  --poke-gold: #f8b800;
-  --poke-green: #00a800;
+  /* D/P accent colors - SUPER VIBRANT */
+  --poke-blue: #38b0ff;
+  --poke-blue-light: #70d0ff;
+  --poke-red: #ff4848;
+  --poke-gold: #ffd040;
+  --poke-gold-dark: #f0a800;
+  --poke-green: #40e040;
+  --poke-green-light: #80ff80;
 
-  /* Character colors */
-  --player-skin: #f8b888;
-  --player-hair: #583818;
-  --player-clothes: #3898f8;
-  --player-shoes: #f83800;
+  /* D/P Title Screen Colors */
+  --dp-blue-dark: #1050a0;
+  --dp-blue-light: #3090e0;
+  --dp-sky-light: #c0e8ff;
+  --dp-sky-dark: #80c8f8;
 
-  --elder-robe: #7838b8;
-  --elder-robe-light: #a878d8;
-  --elder-beard: #e8e8e8;
+  /* D/P Environment Colors - Sinnoh palette - POKEMON PEARL AUTHENTIC */
+  --dp-grass: #38e038;
+  --dp-grass-light: #60ff60;
+  --dp-grass-dark: #20b020;
+  --dp-path: #f8d898;
+  --dp-path-dark: #e0b868;
+  --dp-water: #40b8ff;
+  --dp-water-light: #80d8ff;
+  --dp-water-dark: #2090e0;
+  --dp-tree-foliage: #18a018;
+  --dp-tree-foliage-light: #40d040;
+  --dp-tree-trunk: #a87848;
+  --dp-rock: #b8b0a0;
+  --dp-snow: #f8ffff;
+
+  /* D/P Building Colors - Vibrant Pokemon Pearl Style */
+  --pokecenter-roof: #ff4040;
+  --pokecenter-body: #fff8f8;
+  --mart-roof: #40a0ff;
+  --mart-body: #f8f8ff;
+  --lab-roof: #8090a0;
+  --lab-body: #f8f8f8;
+
+  /* Building Wall Colors - Bright and Clean */
+  --building-wall: #fffff8;
+  --building-wall-shadow: #e8e0d8;
+  --building-wall-highlight: #ffffff;
+
+  /* Character colors - VIVID */
+  --player-skin: #ffcc98;
+  --player-hair: #483018;
+  --player-clothes: #38a8ff;
+  --player-shoes: #ff3800;
+
+  --elder-robe: #a048ff;
+  --elder-robe-light: #c080ff;
+  --elder-beard: #f8f8f8;
 }
 
 /* ========================================
@@ -47,7 +88,7 @@
 .pokemon-game {
   width: 100vw;
   height: 100vh;
-  background: #101010;
+  background: #181818;
   font-family: 'Press Start 2P', monospace;
   overflow: hidden;
   image-rendering: pixelated;
@@ -57,21 +98,7 @@
   user-select: none;
 }
 
-/* Classic CRT/LCD Scanline overlay */
-.pokemon-game::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 1px,
-    rgba(0, 0, 0, 0.15) 1px,
-    rgba(0, 0, 0, 0.15) 2px
-  );
-  pointer-events: none;
-  z-index: 9998;
-}
+/* Removed scanline effect for cleaner Pokemon Pearl look */
 
 /* ========================================
    OVERWORLD - Pokemon Cave Style
@@ -87,22 +114,20 @@
   justify-content: center;
 }
 
-/* Game Boy-style viewport border */
+/* Pokemon Pearl style viewport */
 .dungeon-viewport {
   position: relative;
-  padding: 8px;
-  background: var(--poke-dark);
-  border: 4px solid var(--poke-black);
-  box-shadow:
-    inset 0 0 0 2px var(--poke-medium),
-    0 8px 0 var(--poke-black);
+  padding: 4px;
+  background: #404040;
+  border: 3px solid #282828;
+  border-radius: 2px;
 }
 
 /* The dungeon map container */
 .dungeon-map {
   position: relative;
-  background: var(--cave-floor);
-  border: 2px solid var(--poke-black);
+  background: #58b858;
+  border: 2px solid #303030;
   overflow: hidden;
 }
 
@@ -115,228 +140,181 @@
   box-sizing: border-box;
 }
 
-/* Floor tile - Cave ground pattern */
+/* Floor tile - Pokemon Pearl flat indoor floor */
 .dungeon-tile.tile-0 {
-  background: var(--cave-floor);
+  background: #f0e8d8;
 }
 
-/* Floor tile texture - subtle rocky pattern */
+/* Floor tile grid pattern */
 .dungeon-tile.tile-0::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 25% 25%, var(--cave-floor-light) 2px, transparent 2px),
-    radial-gradient(circle at 75% 60%, var(--cave-floor-light) 1px, transparent 1px),
-    radial-gradient(circle at 40% 80%, rgba(0,0,0,0.15) 2px, transparent 2px);
-  background-size: 100% 100%;
+    linear-gradient(90deg, #d8d0c0 1px, transparent 1px),
+    linear-gradient(180deg, #d8d0c0 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
-/* Wall tile - Pokemon cave wall style */
+/* Wall tile - Pokemon Pearl flat wall */
 .dungeon-tile.tile-1 {
-  background: var(--cave-wall);
-  border: 2px solid var(--cave-wall-dark);
-  box-shadow:
-    inset 2px 2px 0 var(--cave-wall-highlight),
-    inset -2px -2px 0 var(--cave-wall-dark);
+  background: #a89080;
+  border: 1px solid #887060;
 }
 
 /* Wall brick pattern */
 .dungeon-tile.tile-1::before {
   content: '';
   position: absolute;
-  inset: 2px;
+  inset: 0;
   background-image:
-    linear-gradient(to bottom, var(--cave-wall-highlight) 1px, transparent 1px),
-    linear-gradient(to right, var(--cave-wall-dark) 1px, transparent 1px);
+    linear-gradient(to bottom, #988070 2px, transparent 2px),
+    linear-gradient(to right, #988070 2px, transparent 2px);
   background-size: 16px 8px;
 }
 
-/* Wall top shadow */
-.dungeon-tile.tile-1::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--cave-wall-dark);
-}
-
-/* Water/void tile */
+/* Water tile - Pokemon Pearl flat blue with horizontal lines */
 .dungeon-tile.tile-2 {
-  background: #284060;
-  animation: water-anim 1s steps(2) infinite;
+  background: #68a8d8;
 }
 
-@keyframes water-anim {
-  0%, 50% { background-color: #284060; }
-  51%, 100% { background-color: #304868; }
-}
-
+/* Water horizontal wave stripes */
 .dungeon-tile.tile-2::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.1) 45%, transparent 45%),
-    linear-gradient(135deg, transparent 60%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0.1) 65%, transparent 65%);
-  animation: water-shine 1s steps(2) infinite;
+    repeating-linear-gradient(
+      0deg,
+      #68a8d8 0px,
+      #68a8d8 4px,
+      #88c8e8 4px,
+      #88c8e8 6px
+    );
+  animation: water-scroll 1s linear infinite;
 }
 
-@keyframes water-shine {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(8px); }
+@keyframes water-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 6px; }
 }
 
-/* Special floor tile - Altar/important area */
+/* Special floor tile - marked floor area */
 .dungeon-tile.tile-3 {
-  background: #786860;
-  border: 2px solid #605850;
+  background: #d8c8b0;
 }
 
 .dungeon-tile.tile-3::before {
   content: '';
   position: absolute;
   inset: 4px;
-  border: 2px dashed #a89880;
-}
-
-.dungeon-tile.tile-3::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  background: radial-gradient(circle, #f8b800 0%, transparent 70%);
-  animation: glow-pulse 2s ease-in-out infinite;
-}
-
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.5); }
+  border: 2px solid #b8a890;
 }
 
 /* ========================================
-   OUTDOOR TILES - Pokemon Route Style
+   OUTDOOR TILES - Pokemon Diamond/Pearl Sinnoh Style
    ======================================== */
 
-/* Grass tile (4) - Pokemon tall grass style */
+/* Grass tile (4) - Pokemon Pearl chevron/arrow pattern */
 .dungeon-tile.tile-4 {
-  background: #78c850;
-}
-
-.dungeon-tile.tile-4::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  background: #58a850;
   background-image:
-    linear-gradient(135deg, #68b848 25%, transparent 25%),
-    linear-gradient(225deg, #68b848 25%, transparent 25%),
-    linear-gradient(45deg, #88d860 25%, transparent 25%),
-    linear-gradient(315deg, #88d860 25%, transparent 25%);
-  background-size: 16px 16px;
-  background-position: 0 0, 8px 0, 8px -8px, 0 8px;
+    /* Chevron pattern - V shapes pointing up */
+    linear-gradient(135deg, #78c870 25%, transparent 25%),
+    linear-gradient(225deg, #78c870 25%, transparent 25%),
+    linear-gradient(45deg, #78c870 25%, transparent 25%),
+    linear-gradient(315deg, #78c870 25%, transparent 25%);
+  background-size: 8px 8px;
+  background-position: 4px 0, 4px 0, 0 0, 0 0;
 }
 
-.dungeon-tile.tile-4::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 30% 70%, #58a838 3px, transparent 3px),
-    radial-gradient(circle at 70% 30%, #58a838 2px, transparent 2px);
-  animation: grass-sway 2s ease-in-out infinite;
-}
-
-@keyframes grass-sway {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(1px); }
-}
-
-/* Path tile (5) - Dirt/sand path */
+/* Path tile (5) - Pokemon Pearl flat sandy path */
 .dungeon-tile.tile-5 {
-  background: #d8c078;
+  background: #e8c888;
 }
 
+/* Path speckle texture */
 .dungeon-tile.tile-5::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 30%, #c8b068 4px, transparent 4px),
-    radial-gradient(circle at 80% 60%, #c8b068 3px, transparent 3px),
-    radial-gradient(circle at 50% 80%, #e8d088 3px, transparent 3px);
+    radial-gradient(circle, #d8b870 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0.4;
 }
 
-/* Tree tile (6) - Pokemon tree style */
+/* Tree tile (6) - Pokemon Pearl simple round tree */
 .dungeon-tile.tile-6 {
-  background: #78c850;
+  /* Grass base with chevron pattern */
+  background: #58a850;
+  background-image:
+    linear-gradient(135deg, #78c870 25%, transparent 25%),
+    linear-gradient(225deg, #78c870 25%, transparent 25%),
+    linear-gradient(45deg, #78c870 25%, transparent 25%),
+    linear-gradient(315deg, #78c870 25%, transparent 25%);
+  background-size: 8px 8px;
+  background-position: 4px 0, 4px 0, 0 0, 0 0;
 }
 
 .dungeon-tile.tile-6::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3C!-- Tree trunk --%3E%3Crect x='20' y='32' width='8' height='16' fill='%23785830'/%3E%3C!-- Tree foliage --%3E%3Cellipse cx='24' cy='20' rx='20' ry='18' fill='%23388028'/%3E%3Cellipse cx='24' cy='16' rx='16' ry='14' fill='%2348a038'/%3E%3Cellipse cx='24' cy='12' rx='10' ry='10' fill='%2358b848'/%3E%3C/svg%3E");
-  background-size: contain;
+  /* Simple round tree */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='30' rx='6' ry='2' fill='%23488848'/%3E%3Crect x='14' y='22' width='4' height='8' fill='%23806848'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23486848'/%3E%3Ccircle cx='16' cy='14' r='8' fill='%2368a868'/%3E%3Ccircle cx='16' cy='12' r='5' fill='%2388c888'/%3E%3C/svg%3E");
+  background-size: 28px 28px;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center bottom;
 }
 
-/* Door/entrance tile (7) */
+/* Door/entrance tile (7) - Pokemon Pearl simple door */
 .dungeon-tile.tile-7 {
-  background: #d8c078;
+  background: #e8c888;
 }
 
 .dungeon-tile.tile-7::before {
   content: '';
   position: absolute;
-  inset: 4px;
+  inset: 6px;
   background: #483828;
-  border: 4px solid #785830;
-  box-shadow:
-    inset 2px 2px 0 #604020,
-    inset -2px -2px 0 #906840;
-}
-
-.dungeon-tile.tile-7::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  background: #f8b800;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #f8b800;
-  animation: door-glow 1s ease-in-out infinite;
-}
-
-@keyframes door-glow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  border: 2px solid #685040;
 }
 
 /* Outdoor area styling */
 .area-outdoor .dungeon-viewport {
-  background: #58a038;
+  background: #385838;
 }
 
 .area-outdoor .dungeon-map {
-  background: #78c850;
+  background: #58a850;
 }
 
 /* Lab area styling */
 .area-lab .dungeon-viewport {
-  background: var(--poke-dark);
+  background: #606870;
 }
 
 .area-lab .dungeon-map {
-  background: var(--cave-floor);
+  background: #f0e8d8;
+}
+
+/* Pokemon Center styling */
+.area-pokecenter .dungeon-viewport {
+  background: #c83030;
+}
+
+.area-pokecenter .dungeon-map {
+  background: #f0e8d8;
+}
+
+/* Mart styling */
+.area-mart .dungeon-viewport {
+  background: #3080c0;
+}
+
+.area-mart .dungeon-map {
+  background: #f0e8d8;
 }
 
 /* Badge count display */
@@ -350,16 +328,17 @@
 }
 
 /* ========================================
-   PLAYER SPRITE - Classic Pokemon Style
+   PLAYER SPRITE - Pokemon Diamond/Pearl Lucas Style
+   Red cap, blue jacket, dark pants, light shoes
    ======================================== */
 
 .player {
   position: absolute;
   z-index: 100;
-  transition: left 0.15s steps(4), top 0.15s steps(4);
+  transition: left 0.15s linear, top 0.15s linear;
 }
 
-/* Player sprite using CSS pixel art */
+/* D/P style player sprite - taller proportions */
 .player-sprite {
   width: 100%;
   height: 100%;
@@ -367,45 +346,47 @@
   image-rendering: pixelated;
 }
 
-/* Replace emoji with pixel art character */
+/* Pokemon Pearl player - small chunky sprite */
 .player-sprite::before {
   content: '';
   position: absolute;
-  top: 2px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 32px;
-  height: 44px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='44' viewBox='0 0 32 44'%3E%3C!-- Head --%3E%3Crect x='10' y='0' width='12' height='12' fill='%23f8b888'/%3E%3Crect x='8' y='2' width='4' height='8' fill='%23f8b888'/%3E%3Crect x='20' y='2' width='4' height='8' fill='%23f8b888'/%3E%3C!-- Hair --%3E%3Crect x='10' y='0' width='12' height='4' fill='%23583818'/%3E%3Crect x='8' y='2' width='4' height='4' fill='%23583818'/%3E%3Crect x='20' y='2' width='4' height='4' fill='%23583818'/%3E%3C!-- Eyes --%3E%3Crect x='12' y='6' width='2' height='2' fill='%23101010'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23101010'/%3E%3C!-- Body/Shirt --%3E%3Crect x='8' y='12' width='16' height='16' fill='%233898f8'/%3E%3Crect x='6' y='14' width='4' height='10' fill='%233898f8'/%3E%3Crect x='22' y='14' width='4' height='10' fill='%233898f8'/%3E%3C!-- Hands --%3E%3Crect x='4' y='22' width='4' height='4' fill='%23f8b888'/%3E%3Crect x='24' y='22' width='4' height='4' fill='%23f8b888'/%3E%3C!-- Pants --%3E%3Crect x='10' y='28' width='12' height='8' fill='%23383838'/%3E%3C!-- Shoes --%3E%3Crect x='8' y='36' width='6' height='6' fill='%23f83800'/%3E%3Crect x='18' y='36' width='6' height='6' fill='%23f83800'/%3E%3C/svg%3E");
+  width: 24px;
+  height: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24'%3E%3Crect x='4' y='0' width='8' height='4' fill='%23c83030'/%3E%3Crect x='3' y='3' width='10' height='2' fill='%23c83030'/%3E%3Crect x='5' y='1' width='4' height='1' fill='%23e85050'/%3E%3Crect x='4' y='5' width='8' height='6' fill='%23f8c890'/%3E%3Crect x='5' y='7' width='2' height='2' fill='%23302020'/%3E%3Crect x='9' y='7' width='2' height='2' fill='%23302020'/%3E%3Crect x='4' y='11' width='8' height='2' fill='%23f8d848'/%3E%3Crect x='3' y='13' width='10' height='5' fill='%233888c8'/%3E%3Crect x='6' y='13' width='4' height='4' fill='%23f0f0f0'/%3E%3Crect x='4' y='18' width='8' height='4' fill='%23484858'/%3E%3Crect x='4' y='22' width='3' height='2' fill='%23e8e8e8'/%3E%3Crect x='9' y='22' width='3' height='2' fill='%23e8e8e8'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
+  image-rendering: pixelated;
 }
 
 /* Player shadow */
 .player::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
-  width: 28px;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.3);
+  width: 16px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 50%;
 }
 
-/* Walking animation */
+/* Smooth D/P walking animation */
 .player.walking .player-sprite::before {
-  animation: walk-anim 0.3s steps(2) infinite;
+  animation: walk-anim 0.25s ease-in-out infinite;
 }
 
 @keyframes walk-anim {
-  0%, 50% { transform: translateX(-50%) translateY(0); }
-  51%, 100% { transform: translateX(-50%) translateY(-2px); }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-2px); }
 }
 
 /* ========================================
    SACRED STONES (NPCs) - Pokemon NPC Style
+   Enhanced with unique animations per stone type
    ======================================== */
 
 .sacred-stone {
@@ -415,6 +396,7 @@
   align-items: center;
   justify-content: flex-end;
   z-index: 50;
+  transition: transform 0.2s ease-out;
 }
 
 /* Stone/NPC sprite using pixel art */
@@ -427,26 +409,29 @@
   align-items: center;
   justify-content: center;
   font-size: 0; /* Hide emoji */
+  transition: filter 0.3s ease-out, transform 0.2s ease-out;
 }
 
-/* Pixel art NPC base */
+/* Pokemon Pearl NPC - small chunky trainer sprite */
 .stone-sprite::before {
   content: '';
   position: absolute;
-  width: 36px;
-  height: 44px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='44' viewBox='0 0 36 44'%3E%3C!-- Wizard Hat --%3E%3Cpolygon points='18,0 8,16 28,16' fill='%237838b8'/%3E%3Crect x='6' y='14' width='24' height='4' fill='%237838b8'/%3E%3C!-- Face --%3E%3Crect x='10' y='16' width='16' height='10' fill='%23f8b888'/%3E%3C!-- Eyes --%3E%3Crect x='12' y='18' width='3' height='3' fill='%23101010'/%3E%3Crect x='21' y='18' width='3' height='3' fill='%23101010'/%3E%3C!-- Beard --%3E%3Crect x='10' y='24' width='16' height='8' fill='%23e8e8e8'/%3E%3Crect x='14' y='32' width='8' height='4' fill='%23e8e8e8'/%3E%3C!-- Robe --%3E%3Crect x='6' y='26' width='24' height='14' fill='%237838b8'/%3E%3Crect x='4' y='28' width='4' height='10' fill='%23a878d8'/%3E%3Crect x='28' y='28' width='4' height='10' fill='%23a878d8'/%3E%3C!-- Staff --%3E%3Crect x='30' y='8' width='3' height='36' fill='%23785830'/%3E%3Ccircle cx='31' cy='6' r='4' fill='%23f8b800'/%3E%3C/svg%3E");
+  width: 24px;
+  height: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24'%3E%3Crect x='4' y='0' width='8' height='5' fill='%23587858'/%3E%3Crect x='3' y='3' width='2' height='3' fill='%23587858'/%3E%3Crect x='11' y='3' width='2' height='3' fill='%23587858'/%3E%3Crect x='4' y='5' width='8' height='6' fill='%23f8c890'/%3E%3Crect x='5' y='7' width='2' height='2' fill='%23302020'/%3E%3Crect x='9' y='7' width='2' height='2' fill='%23302020'/%3E%3Crect x='3' y='11' width='10' height='7' fill='%2358a858'/%3E%3Crect x='6' y='11' width='4' height='5' fill='%2378c878'/%3E%3Crect x='4' y='18' width='8' height='4' fill='%23886850'/%3E%3Crect x='4' y='22' width='3' height='2' fill='%23483830'/%3E%3Crect x='9' y='22' width='3' height='2' fill='%23483830'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
-  animation: npc-idle 1s steps(2) infinite;
+  image-rendering: pixelated;
+  animation: npc-idle 1.5s steps(2) infinite;
 }
 
+/* Default idle animation */
 @keyframes npc-idle {
   0%, 50% { transform: translateY(0); }
   51%, 100% { transform: translateY(-1px); }
 }
 
-/* Stone pedestal */
+/* Stone pedestal with subtle glow */
 .sacred-stone::after {
   content: '';
   position: absolute;
@@ -455,32 +440,441 @@
   height: 8px;
   background: var(--cave-wall-dark);
   border-radius: 2px;
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 8px rgba(255,255,255,0.1);
+  transition: box-shadow 0.3s ease-out;
 }
 
-/* Consulted state - greyed out */
-.sacred-stone.consulted .stone-sprite::before {
-  filter: brightness(0.6) saturate(0.3);
+/* ========================================
+   STONE TYPE 1 (Blue/V1) - Floating/Hovering Effect
+   ======================================== */
+.sacred-stone[style*="color: rgb(96, 165, 250)"] .stone-sprite::before,
+.sacred-stone[style*="color: #60a5fa"] .stone-sprite::before {
+  filter: hue-rotate(-30deg);
+  animation: stone-v1-float 3s ease-in-out infinite;
 }
 
-.sacred-stone.consulted::before {
-  content: '✓';
+@keyframes stone-v1-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-4px) scale(1.01);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.02);
+  }
+  75% {
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+/* Blue stone aura */
+.sacred-stone[style*="color: rgb(96, 165, 250)"]::after,
+.sacred-stone[style*="color: #60a5fa"]::after {
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 12px rgba(96, 165, 250, 0.3);
+  animation: stone-v1-pedestal-glow 3s ease-in-out infinite;
+}
+
+@keyframes stone-v1-pedestal-glow {
+  0%, 100% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 8px rgba(96, 165, 250, 0.2); }
+  50% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 16px rgba(96, 165, 250, 0.5); }
+}
+
+/* ========================================
+   STONE TYPE 2 (Pink/V2) - Swaying Left-Right
+   ======================================== */
+.sacred-stone[style*="color: rgb(244, 114, 182)"] .stone-sprite::before,
+.sacred-stone[style*="color: #f472b6"] .stone-sprite::before {
+  filter: hue-rotate(120deg);
+  animation: stone-v2-sway 2.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes stone-v2-sway {
+  0%, 100% {
+    transform: rotate(0deg) translateX(0);
+  }
+  25% {
+    transform: rotate(2deg) translateX(2px);
+  }
+  75% {
+    transform: rotate(-2deg) translateX(-2px);
+  }
+}
+
+/* Pink stone aura */
+.sacred-stone[style*="color: rgb(244, 114, 182)"]::after,
+.sacred-stone[style*="color: #f472b6"]::after {
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 12px rgba(244, 114, 182, 0.3);
+  animation: stone-v2-pedestal-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes stone-v2-pedestal-glow {
+  0%, 100% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 8px rgba(244, 114, 182, 0.2); }
+  50% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 14px rgba(244, 114, 182, 0.45); }
+}
+
+/* ========================================
+   STONE TYPE 3 (Gold/V3) - Pulsing/Glowing
+   ======================================== */
+.sacred-stone[style*="color: rgb(251, 191, 36)"] .stone-sprite::before,
+.sacred-stone[style*="color: #fbbf24"] .stone-sprite::before {
+  filter: hue-rotate(-80deg) saturate(1.5);
+  animation: stone-v3-pulse 2s ease-in-out infinite;
+}
+
+@keyframes stone-v3-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: hue-rotate(-80deg) saturate(1.5) brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: hue-rotate(-80deg) saturate(1.8) brightness(1.15);
+  }
+}
+
+/* Gold stone intense aura */
+.sacred-stone[style*="color: rgb(251, 191, 36)"]::after,
+.sacred-stone[style*="color: #fbbf24"]::after {
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(251, 191, 36, 0.4);
+  animation: stone-v3-pedestal-glow 2s ease-in-out infinite;
+}
+
+@keyframes stone-v3-pedestal-glow {
+  0%, 100% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 10px rgba(251, 191, 36, 0.3); }
+  50% { box-shadow: inset 0 -2px 0 rgba(0,0,0,0.3), 0 0 20px rgba(251, 191, 36, 0.6); }
+}
+
+/* ========================================
+   NEAR PLAYER STATE - Interactive Highlight
+   ======================================== */
+.sacred-stone.near-player {
+  transform: scale(1.05);
+}
+
+.sacred-stone.near-player .stone-sprite {
+  filter: brightness(1.15);
+}
+
+.sacred-stone.near-player .stone-sprite::after {
+  content: '!';
   position: absolute;
-  top: -8px;
-  right: -4px;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 16px;
-  height: 16px;
-  background: var(--poke-green);
-  color: white;
+  height: 18px;
+  background: var(--poke-gold);
+  color: var(--poke-black);
+  font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   border: 2px solid var(--poke-black);
-  z-index: 10;
+  border-radius: 3px;
+  animation: attention-bounce 0.6s ease-in-out infinite;
+  z-index: 20;
 }
 
+@keyframes attention-bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+    opacity: 0.9;
+  }
+}
+
+/* Near player aura intensifies */
+.sacred-stone.near-player::after {
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================
+   CONSULTED STATE - Achievement/Completion Visual
+   ======================================== */
+.sacred-stone.consulted {
+  transform: scale(0.98);
+}
+
+.sacred-stone.consulted .stone-sprite::before {
+  filter: brightness(0.85) saturate(0.6);
+  animation: consulted-idle 2s ease-in-out infinite;
+}
+
+@keyframes consulted-idle {
+  0%, 100% {
+    transform: translateY(0);
+    filter: brightness(0.85) saturate(0.6);
+  }
+  50% {
+    transform: translateY(-1px);
+    filter: brightness(0.9) saturate(0.65);
+  }
+}
+
+/* Golden completion badge */
+.sacred-stone.consulted::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  background:
+    radial-gradient(circle at 30% 30%, #fff8e0 0%, var(--poke-gold) 40%, var(--poke-gold-dark) 100%);
+  border: 2px solid var(--poke-black);
+  border-radius: 50%;
+  z-index: 15;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.3),
+    0 0 10px rgba(251, 191, 36, 0.5);
+  animation: badge-shine 3s ease-in-out infinite;
+}
+
+/* Checkmark inside the badge */
+.sacred-stone.consulted .stone-sprite::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  width: 10px;
+  height: 6px;
+  border-left: 3px solid var(--poke-black);
+  border-bottom: 3px solid var(--poke-black);
+  transform: rotate(-45deg);
+  z-index: 16;
+}
+
+@keyframes badge-shine {
+  0%, 100% {
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      0 0 8px rgba(251, 191, 36, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.3),
+      0 0 16px rgba(251, 191, 36, 0.7);
+  }
+}
+
+/* Consulted pedestal with golden glow */
+.sacred-stone.consulted::after {
+  background: linear-gradient(180deg, var(--cave-wall-dark) 0%, #5a4a38 100%);
+  box-shadow:
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 0 12px rgba(251, 191, 36, 0.3);
+}
+
+/* Sparkle particles for consulted stones */
+.sacred-stone.consulted .stone-label::before,
+.sacred-stone.consulted .stone-label::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--poke-gold);
+  border-radius: 50%;
+  animation: sparkle-float-consulted 2s ease-in-out infinite;
+}
+
+.sacred-stone.consulted .stone-label::before {
+  top: -30px;
+  left: -8px;
+  animation-delay: 0s;
+}
+
+.sacred-stone.consulted .stone-label::after {
+  top: -25px;
+  right: -8px;
+  animation-delay: 1s;
+}
+
+@keyframes sparkle-float-consulted {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translateY(-15px) scale(0.8);
+  }
+}
+
+/* ========================================
+   TALKING/DIALOGUE ACTIVE STATE
+   ======================================== */
+.sacred-stone.talking .stone-sprite::before {
+  animation: talking-bounce 0.4s ease-in-out infinite;
+}
+
+@keyframes talking-bounce {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+  }
+  25% {
+    transform: translateY(-3px) scaleY(1.02);
+  }
+  50% {
+    transform: translateY(-1px) scaleY(0.98);
+  }
+  75% {
+    transform: translateY(-2px) scaleY(1.01);
+  }
+}
+
+/* Speech bubble indicator when talking */
+.sacred-stone.talking::before {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 14px;
+  background: white;
+  border: 2px solid var(--poke-black);
+  border-radius: 6px;
+  z-index: 20;
+  animation: speech-bubble-pulse 0.8s ease-in-out infinite;
+}
+
+/* Speech dots */
+.sacred-stone.talking .stone-sprite::after {
+  content: '...';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: var(--poke-black);
+  z-index: 21;
+  animation: speech-dots 1s steps(3) infinite;
+  letter-spacing: 1px;
+}
+
+@keyframes speech-bubble-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.05); }
+}
+
+@keyframes speech-dots {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+/* ========================================
+   WISDOM COLLECTED - Celebration Effect
+   ======================================== */
+.sacred-stone.wisdom-collected .stone-sprite::before {
+  animation: celebration-bounce 0.6s ease-out forwards;
+}
+
+@keyframes celebration-bounce {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  30% {
+    transform: scale(1.1) translateY(-8px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-4px);
+  }
+  70% {
+    transform: scale(1.08) translateY(-6px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Radial burst effect on wisdom collection */
+.sacred-stone.wisdom-collected::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, rgba(251, 191, 36, 0) 70%);
+  border-radius: 50%;
+  animation: wisdom-burst 0.8s ease-out forwards;
+  z-index: 5;
+}
+
+@keyframes wisdom-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Floating stars on wisdom collection */
+.sacred-stone.wisdom-collected .stone-label::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--poke-gold);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: star-rise 1s ease-out forwards;
+}
+
+.sacred-stone.wisdom-collected .stone-label::after {
+  content: '';
+  position: absolute;
+  top: -35px;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--poke-gold-dark);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: star-rise 1s ease-out 0.2s forwards;
+}
+
+@keyframes star-rise {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) rotate(180deg);
+  }
+}
+
+/* ========================================
+   STONE LABEL - Enhanced
+   ======================================== */
 .stone-label {
   font-size: 6px;
   color: var(--poke-white);
@@ -491,22 +885,17 @@
   border-radius: 2px;
   position: relative;
   z-index: 5;
+  transition: background 0.3s ease-out, transform 0.2s ease-out;
 }
 
-/* Different colored wizards */
-.sacred-stone[style*="color: rgb(96, 165, 250)"] .stone-sprite::before,
-.sacred-stone[style*="color: #60a5fa"] .stone-sprite::before {
-  filter: hue-rotate(-30deg);
+.sacred-stone.near-player .stone-label {
+  background: rgba(0,0,0,0.85);
+  transform: scale(1.05);
 }
 
-.sacred-stone[style*="color: rgb(244, 114, 182)"] .stone-sprite::before,
-.sacred-stone[style*="color: #f472b6"] .stone-sprite::before {
-  filter: hue-rotate(120deg);
-}
-
-.sacred-stone[style*="color: rgb(251, 191, 36)"] .stone-sprite::before,
-.sacred-stone[style*="color: #fbbf24"] .stone-sprite::before {
-  filter: hue-rotate(-80deg) saturate(1.5);
+.sacred-stone.consulted .stone-label {
+  background: linear-gradient(180deg, rgba(80, 60, 30, 0.9) 0%, rgba(50, 40, 20, 0.9) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
 /* ========================================
@@ -608,23 +997,24 @@
   pointer-events: auto;
 }
 
-/* Pokemon-style quest box */
+/* D/P style quest box - rounded, gradient, soft shadows */
 .quest-box {
-  background: var(--ui-bg);
-  border: 4px solid var(--ui-border);
+  background: linear-gradient(180deg, var(--ui-bg-gradient-start) 0%, var(--ui-bg-gradient-end) 100%);
+  border: 2px solid var(--ui-border);
+  border-radius: 10px;
   box-shadow:
-    4px 4px 0 var(--poke-black),
-    inset -4px -4px 0 var(--ui-shadow);
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   padding: 12px 16px;
   min-width: 180px;
 }
 
 .quest-title {
   font-size: 8px;
-  color: var(--ui-text);
+  color: var(--poke-blue);
   margin-bottom: 10px;
   padding-bottom: 6px;
-  border-bottom: 2px solid var(--ui-border);
+  border-bottom: 1px solid var(--ui-border-light);
 }
 
 .wisdom-list {
@@ -666,11 +1056,12 @@
   font-weight: bold;
 }
 
-/* Controls box */
+/* D/P style controls box */
 .controls-box {
-  background: var(--ui-bg);
-  border: 3px solid var(--ui-border);
-  box-shadow: 3px 3px 0 var(--poke-black);
+  background: linear-gradient(180deg, rgba(248,248,248,0.95) 0%, rgba(232,232,232,0.95) 100%);
+  border: 2px solid var(--ui-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   padding: 6px 10px;
 }
 
@@ -690,7 +1081,8 @@
 }
 
 /* ========================================
-   DIALOGUE BOX - Pokemon Text Box Style
+   DIALOGUE BOX - Pokemon Diamond/Pearl Style
+   Authentic 3D beveled borders, depth, and polish
    ======================================== */
 
 .dialogue-container {
@@ -698,84 +1090,276 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 16px;
+  padding: 20px;
   z-index: 300;
 }
 
 .dialogue-box {
-  background: var(--ui-bg);
-  border: 4px solid var(--ui-border);
+  /* D/P style gradient background */
+  background: linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 50%, #d8d8d8 100%);
+  /* 3D Beveled Border Effect - layered borders */
+  border: 4px solid #303848;
+  border-radius: 14px;
+  /* Multiple shadows for depth */
   box-shadow:
-    4px 4px 0 var(--poke-black),
-    inset -4px -4px 0 var(--ui-shadow);
-  padding: 4px;
+    /* Outer dark shadow for depth */
+    0 6px 12px rgba(0, 0, 0, 0.35),
+    0 3px 6px rgba(0, 0, 0, 0.25),
+    /* Inner highlight on top-left */
+    inset 2px 2px 0 rgba(255, 255, 255, 0.9),
+    inset 3px 3px 0 rgba(200, 220, 255, 0.5),
+    /* Inner shadow on bottom-right */
+    inset -2px -2px 0 rgba(0, 0, 0, 0.15),
+    inset -3px -3px 0 rgba(48, 56, 72, 0.2);
+  padding: 5px;
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Secondary border layer for 3D effect */
+.dialogue-box::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 2px solid rgba(72, 88, 120, 0.4);
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 .dialogue-inner {
-  border: 2px solid var(--ui-border);
-  padding: 16px 20px;
-  min-height: 100px;
+  /* Inner panel with subtle gradient */
+  background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 40%, #e8e8e8 100%);
+  border: 3px solid #586880;
+  border-radius: 10px;
+  padding: 20px 24px;
+  min-height: 110px;
   position: relative;
-  background: var(--ui-bg);
+  /* Inner panel 3D effect */
+  box-shadow:
+    /* Inner highlight */
+    inset 2px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 1px 1px 4px rgba(255, 255, 255, 0.5),
+    /* Inner shadow for recessed look */
+    inset -1px -1px 0 rgba(88, 104, 128, 0.3),
+    inset 0 0 8px rgba(0, 0, 0, 0.05);
+  /* Flexbox layout for portrait + text */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* ========================================
+   CHARACTER PORTRAIT - Pokemon D/P Style
+   ======================================== */
+
+.dialogue-portrait {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border: 3px solid #1a365d;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow:
+    inset 2px 2px 0 rgba(255,255,255,0.5),
+    inset -2px -2px 0 rgba(0,0,0,0.1),
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Portrait color variants for different speakers */
+.dialogue-portrait.portrait-blue {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, #dbeafe, #93c5fd);
+}
+
+.dialogue-portrait.portrait-pink {
+  border-color: #f472b6;
+  background: linear-gradient(135deg, #fce7f3, #f9a8d4);
+}
+
+.dialogue-portrait.portrait-yellow {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, #fef3c7, #fcd34d);
+}
+
+.dialogue-portrait.portrait-green {
+  border-color: #34d399;
+  background: linear-gradient(135deg, #d1fae5, #6ee7b7);
+}
+
+.dialogue-portrait.portrait-terminal {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  box-shadow:
+    inset 0 0 10px rgba(16, 185, 129, 0.3),
+    inset 2px 2px 0 rgba(255,255,255,0.1),
+    2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Terminal screen scan effect */
+.dialogue-portrait.portrait-terminal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 0%, rgba(16, 185, 129, 0.1) 50%, transparent 100%);
+  animation: portrait-screen-scan 2s linear infinite;
+}
+
+@keyframes portrait-screen-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.dialogue-portrait.portrait-prof {
+  border-color: #8b5cf6;
+  background: linear-gradient(135deg, #ede9fe, #c4b5fd);
+}
+
+/* Dialogue content wrapper for portrait layout */
+.dialogue-content {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+/* Light border highlight on inner panel */
+.dialogue-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 20%, rgba(255, 255, 255, 0.8) 80%, transparent 100%);
+  border-radius: 10px 10px 0 0;
 }
 
 .dialogue-speaker {
   position: absolute;
-  top: -12px;
-  left: 16px;
-  background: var(--ui-bg);
-  padding: 2px 8px;
-  border: 3px solid var(--ui-border);
+  top: -16px;
+  left: 20px;
+  /* D/P style blue gradient badge */
+  background: linear-gradient(180deg, #58a0e0 0%, #3080c8 40%, #2868a8 100%);
+  padding: 6px 16px;
+  /* 3D beveled border for badge */
+  border: 3px solid #1850a0;
+  border-radius: 8px;
+  /* Badge depth */
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.35),
+    0 2px 3px rgba(0, 0, 0, 0.2),
+    inset 1px 1px 0 rgba(136, 200, 255, 0.6),
+    inset -1px -1px 0 rgba(24, 64, 128, 0.4);
+  z-index: 10;
+}
+
+/* Badge highlight */
+.dialogue-speaker::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  right: 4px;
+  height: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
 }
 
 .speaker-name {
-  font-size: 9px;
-  color: var(--ui-text);
+  font-size: 11px;
+  color: #ffffff;
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.5),
+    0 0 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
 }
 
 .dialogue-text {
-  font-size: 11px;
-  color: var(--ui-text);
-  line-height: 2;
-  margin-top: 8px;
+  font-size: 13px;
+  color: #282828;
+  line-height: 1.7;
+  margin-top: 12px;
+  /* Text shadow for better readability */
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 1px rgba(0, 0, 0, 0.05);
+  letter-spacing: 0.3px;
 }
 
 .dialogue-cursor {
   display: inline-block;
-  width: 8px;
-  height: 14px;
-  background: var(--ui-text);
+  width: 3px;
+  height: 16px;
+  background: linear-gradient(180deg, #404040 0%, #282828 100%);
   margin-left: 4px;
-  animation: cursor-blink 0.4s steps(2) infinite;
+  border-radius: 1px;
+  animation: cursor-blink 0.6s ease-in-out infinite;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes cursor-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
+/* Pokemon-style triangular bouncing arrow */
 .dialogue-continue {
   position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 8px;
-  color: var(--ui-text);
-  animation: arrow-bounce 0.5s steps(2) infinite;
+  bottom: 14px;
+  right: 22px;
+  width: 0;
+  height: 0;
+  /* Triangular arrow shape */
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid #3080c8;
+  /* Arrow glow/shadow */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  animation: arrow-bounce 0.7s ease-in-out infinite;
 }
 
+/* Arrow highlight effect */
 .dialogue-continue::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid rgba(136, 200, 255, 0.6);
+}
+
+/* Remove the text content - we use CSS triangle now */
+.dialogue-continue::after {
   content: '';
 }
 
 @keyframes arrow-bounce {
-  0%, 50% { transform: translateY(0); }
-  51%, 100% { transform: translateY(-3px); }
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.85;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+    filter: drop-shadow(0 2px 4px rgba(48, 128, 200, 0.4));
+  }
 }
 
 /* ========================================
-   BATTLE SCREEN - Pokemon Battle Style
+   BATTLE SCREEN - Pokemon Diamond/Pearl Style
+   Softer gradients, more sophisticated colors
    ======================================== */
 
 .battle-screen {
@@ -788,15 +1372,17 @@
 }
 
 .battle-transition {
-  animation: battle-wipe 0.5s steps(8);
+  animation: battle-wipe 0.4s ease-out;
 }
 
 @keyframes battle-wipe {
   0% {
     clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    opacity: 0;
   }
   100% {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 1;
   }
 }
 
@@ -804,11 +1390,15 @@
   flex: 1;
   position: relative;
   background:
-    linear-gradient(to bottom, #88c8e8 0%, #88c8e8 50%, #98d070 50%, #98d070 100%);
+    linear-gradient(180deg,
+      var(--dp-sky-light) 0%,
+      var(--dp-sky-dark) 45%,
+      var(--dp-grass-light) 50%,
+      var(--dp-grass) 100%);
   overflow: hidden;
 }
 
-/* Pokemon-style battle ground */
+/* D/P style battle ground - softer, more natural */
 .battle-arena {
   position: absolute;
   inset: 0;
@@ -824,11 +1414,12 @@
   background:
     repeating-linear-gradient(
       90deg,
-      #78b858 0px,
-      #78b858 16px,
-      #98d070 16px,
-      #98d070 32px
+      var(--dp-grass) 0px,
+      var(--dp-grass) 20px,
+      var(--dp-grass-light) 20px,
+      var(--dp-grass-light) 40px
     );
+  opacity: 0.7;
 }
 
 /* Enemy platform */
@@ -858,12 +1449,12 @@
   position: relative;
 }
 
-/* Enemy wizard sprite */
+/* Enemy wizard sprite - Vibrant Pokemon Professor/Elder style (larger version) */
 .enemy-sprite::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3C!-- Large Wizard --%3E%3Cpolygon points='40,4 20,32 60,32' fill='%237838b8'/%3E%3Crect x='16' y='28' width='48' height='8' fill='%237838b8'/%3E%3Crect x='24' y='32' width='32' height='20' fill='%23f8b888'/%3E%3Crect x='28' y='38' width='6' height='6' fill='%23101010'/%3E%3Crect x='46' y='38' width='6' height='6' fill='%23101010'/%3E%3Crect x='24' y='48' width='32' height='16' fill='%23e8e8e8'/%3E%3Crect x='32' y='64' width='16' height='8' fill='%23e8e8e8'/%3E%3Crect x='16' y='52' width='48' height='24' fill='%237838b8'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3C!-- Large Wizard - Vibrant Pokemon Professor --%3E%3C!-- Wizard Hat - bright purple with highlight --%3E%3Cpolygon points='40,4 20,32 60,32' fill='%239848e8'/%3E%3Cpolygon points='40,8 28,26 52,26' fill='%23b868ff' opacity='0.6'/%3E%3Crect x='16' y='28' width='48' height='8' fill='%238038d0'/%3E%3C!-- Face - warm skin tone --%3E%3Crect x='24' y='32' width='32' height='20' fill='%23ffc8a0'/%3E%3C!-- Eyes --%3E%3Crect x='28' y='38' width='6' height='6' fill='%23202020'/%3E%3Crect x='46' y='38' width='6' height='6' fill='%23202020'/%3E%3C!-- Beard - pure white --%3E%3Crect x='24' y='48' width='32' height='16' fill='%23f8f8f8'/%3E%3Crect x='32' y='64' width='16' height='8' fill='%23f8f8f8'/%3E%3C!-- Robe body - bright purple with shadow --%3E%3Crect x='16' y='52' width='48' height='24' fill='%239848e8'/%3E%3Crect x='16' y='68' width='48' height='8' fill='%237030b0'/%3E%3C!-- Robe sleeves - light purple --%3E%3Crect x='8' y='54' width='10' height='16' fill='%23c088ff'/%3E%3Crect x='62' y='54' width='10' height='16' fill='%23c088ff'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   animation: enemy-idle 1s steps(2) infinite;
@@ -959,6 +1550,10 @@
   padding: 16px 20px;
   min-height: 80px;
   position: relative;
+  /* Flexbox layout for portrait + text */
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .battle-dialogue-text {
@@ -1232,37 +1827,41 @@
 }
 
 /* ========================================
-   TITLE SCREEN - Pokemon Title Style
+   TITLE SCREEN - Pokemon Diamond/Pearl Style
+   Deep blue gradient with crystalline sparkles
    ======================================== */
 
 .title-screen {
   position: absolute;
   inset: 0;
-  background: #1878c8;
+  background: linear-gradient(180deg, var(--dp-blue-dark) 0%, var(--dp-blue-light) 50%, #5098d8 100%);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-/* Animated background pattern */
+/* D/P style sparkle/crystal effects */
 .title-screen::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 20%),
-    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 15%),
-    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05) 0%, transparent 25%);
-  animation: bg-shift 4s steps(4) infinite;
+    radial-gradient(circle at 25% 15%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 3%, transparent 6%),
+    radial-gradient(circle at 75% 25%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 2%, transparent 5%),
+    radial-gradient(circle at 15% 60%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.1) 2%, transparent 4%),
+    radial-gradient(circle at 85% 70%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 3%, transparent 5%),
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,0.2) 0%, transparent 3%),
+    radial-gradient(circle at 35% 85%, rgba(255,255,255,0.3) 0%, transparent 4%),
+    radial-gradient(circle at 65% 90%, rgba(255,255,255,0.25) 0%, transparent 3%);
+  animation: sparkle-float 3s ease-in-out infinite;
 }
 
-@keyframes bg-shift {
-  0%, 25% { opacity: 1; }
-  26%, 50% { opacity: 0.8; }
-  51%, 75% { opacity: 1; }
-  76%, 100% { opacity: 0.9; }
+@keyframes sparkle-float {
+  0%, 100% { opacity: 0.8; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-5px); }
 }
 
 .title-logo {
@@ -1270,56 +1869,60 @@
   margin-bottom: 16px;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.5));
-  animation: logo-pulse 1s steps(2) infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  animation: logo-pulse 2s ease-in-out infinite;
 }
 
 @keyframes logo-pulse {
-  0%, 50% { transform: scale(1); }
-  51%, 100% { transform: scale(1.05); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+  50% { transform: scale(1.03); filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
 }
 
 .title-text {
-  font-size: 28px;
-  color: var(--poke-gold);
+  font-size: 32px;
+  color: #ffffff;
   text-shadow:
-    4px 4px 0 var(--poke-black),
-    -2px -2px 0 #fff8;
+    0 2px 4px rgba(0,0,0,0.4),
+    0 0 20px rgba(104, 200, 248, 0.5),
+    0 0 40px rgba(104, 200, 248, 0.3);
   margin-bottom: 8px;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
   position: relative;
   z-index: 1;
 }
 
 .title-subtitle {
-  font-size: 10px;
-  color: var(--poke-white);
-  text-shadow: 2px 2px 0 var(--poke-black);
+  font-size: 11px;
+  color: var(--dp-sky-light);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
   margin-bottom: 48px;
   position: relative;
   z-index: 1;
+  letter-spacing: 2px;
 }
 
 .title-prompt {
-  font-size: 11px;
-  color: var(--poke-white);
-  text-shadow: 2px 2px 0 var(--poke-black);
-  animation: prompt-flash 0.8s steps(2) infinite;
+  font-size: 12px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  animation: prompt-flash 1.5s ease-in-out infinite;
   position: relative;
   z-index: 1;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 12px 24px;
+  letter-spacing: 1px;
 }
 
 .title-prompt:hover {
-  color: var(--poke-gold);
+  color: var(--diamond-blue);
+  text-shadow: 0 0 15px rgba(104, 200, 248, 0.8);
 }
 
 @keyframes prompt-flash {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 /* ========================================
@@ -1504,9 +2107,63 @@
 }
 
 /* ========================================
-   SCREEN FLASH EFFECT
+   SCREEN TRANSITION EFFECT - Smooth Pokemon-style fade
    ======================================== */
 
+.screen-transition {
+  position: absolute;
+  inset: 0;
+  background: black;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fade out (scene disappears) */
+.screen-transition.fade-out {
+  animation: fade-to-black 0.2s ease-out forwards;
+}
+
+/* Fade in (new scene appears) */
+.screen-transition.fade-in {
+  animation: fade-from-black 0.2s ease-in forwards;
+}
+
+@keyframes fade-to-black {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-from-black {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Area name display during transition */
+.transition-area-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #ffffff;
+  text-shadow:
+    2px 2px 0 #000000,
+    -2px -2px 0 #000000,
+    2px -2px 0 #000000,
+    -2px 2px 0 #000000;
+  letter-spacing: 4px;
+  animation: area-name-fade 0.4s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes area-name-fade {
+  0% { opacity: 0; transform: translateY(10px); }
+  30% { opacity: 1; transform: translateY(0); }
+  70% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Legacy flash for battle transitions (kept for non-door transitions) */
 .screen-flash {
   position: absolute;
   inset: 0;
