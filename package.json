@@ -1,0 +1,10 @@
+{
+  "name": "dspies-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend start",
+    "start": "npm --prefix frontend start",
+    "build": "npm --prefix frontend run build",
+    "test": "npm --prefix frontend test"
+  }
+}

@@ -42,7 +42,6 @@ export function Sign({ position, text }: SignProps) {
       <Html
         position={[0, postHeight - 0.1, 0.15]}
         center
-        distanceFactor={10}
         style={{
           pointerEvents: 'none',
           userSelect: 'none',

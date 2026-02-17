@@ -1,3 +1,6 @@
+import { useRef, useMemo } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 import { Building } from './entities/Building';
 import { Tree } from './entities/Tree';
 import { Fence } from './entities/Fence';
@@ -149,15 +152,6 @@ export function World() {
       {/* Right section: x from 2 to 10 (8 segments) */}
       <Fence position={[2, 0, 9]} length={8} rotation={0} />
 
-      {/* Western fence (along x=-10), from z=-10 to z=10 */}
-      <Fence position={[-10, 0, -10]} length={20} rotation={Math.PI / 2} />
-
-      {/* Eastern fence (along x=10), from z=-10 to z=10 */}
-      <Fence position={[10, 0, -10]} length={20} rotation={Math.PI / 2} />
-
-      {/* Northern fence (along z=-10) */}
-      <Fence position={[-10, 0, -10]} length={20} rotation={0} />
-
       {/* ===== TOWN ENTRANCE SIGN ===== */}
       <Sign position={[1, 0, 8]} text="Welcome to DSPyville!" />
 
@@ -179,12 +173,28 @@ export function World() {
 
       {/* Pond near the eastern side */}
       <Pond position={[8, 0.01, 0]} />
+
+      {/* ===== AMBIENT LIFE ===== */}
+
+      {/* Floating pollen/dust particles */}
+      <AmbientParticles />
+
+      {/* Grass tufts scattered on grassy areas */}
+      <GrassTuft position={[-5, 0, -2]} />
+      <GrassTuft position={[-7, 0, 2]} />
+      <GrassTuft position={[-6, 0, -5]} />
+      <GrassTuft position={[-3, 0, 7]} />
+      <GrassTuft position={[7, 0, -3]} />
+      <GrassTuft position={[9, 0, 2]} />
+      <GrassTuft position={[4, 0, 7]} />
+      <GrassTuft position={[-9, 0, -3]} />
     </group>
   );
 }
 
 /**
  * Small decorative flower patch - a few colored dots on the ground.
+ * Flowers gently bob up and down.
  */
 function FlowerPatch({
   position,
@@ -193,17 +203,40 @@ function FlowerPatch({
   position: [number, number, number];
   color: string;
 }) {
+  const flower1Ref = useRef<THREE.Mesh>(null);
+  const flower2Ref = useRef<THREE.Mesh>(null);
+  const flower3Ref = useRef<THREE.Mesh>(null);
+
+  // Deterministic phase offsets based on position
+  const phases = useMemo(() => {
+    const seed = position[0] * 53.7 + position[2] * 97.3;
+    return [seed % (Math.PI * 2), (seed * 1.7) % (Math.PI * 2), (seed * 2.3) % (Math.PI * 2)];
+  }, [position]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (flower1Ref.current) {
+      flower1Ref.current.position.y = Math.sin(t * 1.2 + phases[0]) * 0.03;
+    }
+    if (flower2Ref.current) {
+      flower2Ref.current.position.y = Math.sin(t * 1.0 + phases[1]) * 0.03;
+    }
+    if (flower3Ref.current) {
+      flower3Ref.current.position.y = Math.sin(t * 1.4 + phases[2]) * 0.03;
+    }
+  });
+
   return (
     <group position={position}>
-      <mesh receiveShadow>
+      <mesh ref={flower1Ref} receiveShadow>
         <sphereGeometry args={[0.1, 5, 4]} />
         <meshStandardMaterial color={color} flatShading roughness={0.7} />
       </mesh>
-      <mesh receiveShadow position={[0.2, 0, 0.15]}>
+      <mesh ref={flower2Ref} receiveShadow position={[0.2, 0, 0.15]}>
         <sphereGeometry args={[0.08, 5, 4]} />
         <meshStandardMaterial color={color} flatShading roughness={0.7} />
       </mesh>
-      <mesh receiveShadow position={[-0.15, 0, 0.1]}>
+      <mesh ref={flower3Ref} receiveShadow position={[-0.15, 0, 0.1]}>
         <sphereGeometry args={[0.09, 5, 4]} />
         <meshStandardMaterial color={color} flatShading roughness={0.7} />
       </mesh>
@@ -240,15 +273,42 @@ function Rock({
 }
 
 /**
- * Small decorative pond.
+ * Small decorative pond with animated water surface.
  */
 function Pond({ position }: { position: [number, number, number] }) {
+  const innerWaterRef = useRef<THREE.Mesh>(null);
+  const waterMatRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  // Two blue colors to lerp between
+  const colorA = useMemo(() => new THREE.Color('#4a90b8'), []);
+  const colorB = useMemo(() => new THREE.Color('#3a78a8'), []);
+  const lerpColor = useMemo(() => new THREE.Color(), []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+
+    if (innerWaterRef.current) {
+      // Gentle bob up and down
+      innerWaterRef.current.position.y = Math.sin(t * 0.8) * 0.02 + 0.01;
+      // Slow rotation for ripple illusion
+      innerWaterRef.current.rotation.z = t * 0.15;
+    }
+
+    if (waterMatRef.current) {
+      // Subtle color shift between two blues
+      const blend = (Math.sin(t * 0.5) + 1) * 0.5;
+      lerpColor.copy(colorA).lerp(colorB, blend);
+      waterMatRef.current.color.copy(lerpColor);
+    }
+  });
+
   return (
     <group position={position}>
       {/* Water surface */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[1.2, 8]} />
         <meshStandardMaterial
+          ref={waterMatRef}
           color="#4a90b8"
           roughness={0.2}
           metalness={0.1}
@@ -256,10 +316,144 @@ function Pond({ position }: { position: [number, number, number] }) {
           opacity={0.85}
         />
       </mesh>
+      {/* Inner water circle for ripple effect */}
+      <mesh ref={innerWaterRef} receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <circleGeometry args={[0.85, 6]} />
+        <meshStandardMaterial
+          color="#5ca8d0"
+          roughness={0.15}
+          metalness={0.15}
+          transparent
+          opacity={0.5}
+        />
+      </mesh>
       {/* Pond border (dirt rim) */}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.005, 0]}>
         <ringGeometry args={[1.1, 1.4, 8]} />
         <meshStandardMaterial color="#7a6840" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Floating pollen/dust mote particles drifting around the town.
+ * Uses a single instanced mesh for performance.
+ */
+function AmbientParticles() {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const count = 10;
+
+  // Generate deterministic initial positions and velocities
+  const particleData = useMemo(() => {
+    const data: Array<{ x: number; y: number; z: number; speedY: number; speedX: number; phase: number }> = [];
+    for (let i = 0; i < count; i++) {
+      // Deterministic pseudo-random using index as seed
+      const seed1 = ((i * 127 + 53) % 100) / 100;
+      const seed2 = ((i * 89 + 17) % 100) / 100;
+      const seed3 = ((i * 61 + 37) % 100) / 100;
+      const seed4 = ((i * 43 + 71) % 100) / 100;
+      data.push({
+        x: (seed1 - 0.5) * 18,
+        y: seed2 * 3 + 0.5,
+        z: (seed3 - 0.5) * 18,
+        speedY: 0.15 + seed4 * 0.2,
+        speedX: (seed1 - 0.5) * 0.3,
+        phase: seed2 * Math.PI * 2,
+      });
+    }
+    return data;
+  }, []);
+
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    const t = state.clock.elapsedTime;
+
+    for (let i = 0; i < count; i++) {
+      const p = particleData[i];
+
+      // Drift upward and sideways
+      let y = ((p.y + t * p.speedY) % 5) + 0.3;
+      let x = p.x + Math.sin(t * 0.3 + p.phase) * 1.5;
+      let z = p.z + Math.cos(t * 0.2 + p.phase) * 1.0;
+
+      dummy.position.set(x, y, z);
+      // Slight scale pulse
+      const s = 0.04 + Math.sin(t * 0.8 + p.phase) * 0.015;
+      dummy.scale.set(s, s, s);
+      dummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, dummy.matrix);
+    }
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
+      <sphereGeometry args={[1, 4, 3]} />
+      <meshStandardMaterial
+        color="#f5f0d0"
+        transparent
+        opacity={0.4}
+        roughness={1}
+        flatShading
+      />
+    </instancedMesh>
+  );
+}
+
+/**
+ * Small grass tuft that sways gently in the wind.
+ * Made of small wedge/blade shapes at ground level.
+ */
+function GrassTuft({ position }: { position: [number, number, number] }) {
+  const blade1Ref = useRef<THREE.Mesh>(null);
+  const blade2Ref = useRef<THREE.Mesh>(null);
+  const blade3Ref = useRef<THREE.Mesh>(null);
+
+  // Deterministic phase offset and slight rotation variety
+  const params = useMemo(() => {
+    const seed = position[0] * 41.3 + position[2] * 67.9;
+    return {
+      phase: seed % (Math.PI * 2),
+      baseRotY: (seed * 1.3) % (Math.PI * 2),
+    };
+  }, [position]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const sway = Math.sin(t * 1.0 + params.phase) * 0.15;
+    const sway2 = Math.sin(t * 1.2 + params.phase + 1.5) * 0.12;
+    const sway3 = Math.sin(t * 0.9 + params.phase + 3.0) * 0.18;
+
+    if (blade1Ref.current) {
+      blade1Ref.current.rotation.z = sway;
+    }
+    if (blade2Ref.current) {
+      blade2Ref.current.rotation.z = sway2;
+    }
+    if (blade3Ref.current) {
+      blade3Ref.current.rotation.z = sway3;
+    }
+  });
+
+  return (
+    <group position={position} rotation={[0, params.baseRotY, 0]}>
+      {/* Blade 1 - center tall */}
+      <mesh ref={blade1Ref} position={[0, 0.15, 0]}>
+        <coneGeometry args={[0.04, 0.3, 3]} />
+        <meshStandardMaterial color="#5a9a3a" flatShading roughness={0.9} />
+      </mesh>
+      {/* Blade 2 - left short */}
+      <mesh ref={blade2Ref} position={[-0.06, 0.1, 0.03]} rotation={[0, 0.5, -0.2]}>
+        <coneGeometry args={[0.03, 0.22, 3]} />
+        <meshStandardMaterial color="#4a8a2e" flatShading roughness={0.9} />
+      </mesh>
+      {/* Blade 3 - right medium */}
+      <mesh ref={blade3Ref} position={[0.05, 0.12, -0.02]} rotation={[0, -0.4, 0.15]}>
+        <coneGeometry args={[0.035, 0.26, 3]} />
+        <meshStandardMaterial color="#6aaa44" flatShading roughness={0.9} />
       </mesh>
     </group>
   );

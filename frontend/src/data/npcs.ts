@@ -37,7 +37,7 @@ export const npcs: NPCDef[] = [
   {
     id: 'signatures',
     name: 'Signature Sam',
-    position: { x: -4, z: 4 },
+    position: { x: -3, z: 5 },
     bodyColor: '#3b82f6',
     accentColor: '#1e40af',
     accessory: 'notebook',
@@ -104,7 +104,7 @@ export const npcs: NPCDef[] = [
   {
     id: 'metrics',
     name: 'Metric Mia',
-    position: { x: 4, z: 4 },
+    position: { x: 3, z: 5 },
     bodyColor: '#22c55e',
     accentColor: '#15803d',
     accessory: 'clipboard',

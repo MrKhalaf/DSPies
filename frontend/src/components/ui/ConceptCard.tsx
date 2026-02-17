@@ -1,8 +1,44 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useGameStore } from '../../store/gameStore';
 
 const DISPLAY_DURATION_MS = 3000;
 const FADE_OUT_MS = 500;
+
+const CONFETTI_COLORS = [
+  '#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4',
+  '#ff9ff3', '#feca57', '#ff6348', '#7bed9f', '#70a1ff',
+  '#5352ed', '#ff4757', '#2ed573', '#1e90ff', '#ff6b81',
+];
+
+const CONFETTI_COUNT = 25;
+
+interface ConfettiParticle {
+  id: number;
+  x: number;
+  y: number;
+  color: string;
+  rotation: number;
+  width: number;
+  height: number;
+  delay: number;
+  duration: number;
+  driftX: number;
+}
+
+function generateConfetti(): ConfettiParticle[] {
+  return Array.from({ length: CONFETTI_COUNT }, (_, i) => ({
+    id: i,
+    x: 50 + (Math.random() - 0.5) * 20,
+    y: 50,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    rotation: Math.random() * 360,
+    width: Math.random() * 4 + 4,
+    height: Math.random() * 4 + 4,
+    delay: Math.random() * 0.3,
+    duration: Math.random() * 1.5 + 1.5,
+    driftX: (Math.random() - 0.5) * 200,
+  }));
+}
 
 export function ConceptCard() {
   const showConceptCard = useGameStore((s) => s.showConceptCard);
@@ -19,6 +55,8 @@ export function ConceptCard() {
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fadeOutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
+
+  const confettiParticles = useMemo(() => generateConfetti(), [visible]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const cleanup = useCallback(() => {
     if (hideTimerRef.current) {
@@ -88,9 +126,59 @@ export function ConceptCard() {
           opacity: 0,
         };
 
+  // Build confetti keyframes dynamically
+  const confettiKeyframes = confettiParticles.map((p) => `
+    @keyframes confettiFall_${p.id} {
+      0% {
+        transform: translate(0, 0) rotate(${p.rotation}deg) scale(1);
+        opacity: 1;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(${p.driftX}px, ${300 + Math.random() * 100}px) rotate(${p.rotation + 720}deg) scale(0.3);
+        opacity: 0;
+      }
+    }
+  `).join('\n');
+
   return (
     <div style={styles.overlay}>
-      <div style={{ ...styles.container, ...containerAnimStyle }}>
+      {/* Confetti and glow keyframes */}
+      <style>{`
+        ${confettiKeyframes}
+        @keyframes glowRotate {
+          0% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2), 0 0 80px rgba(255, 215, 0, 0.1); }
+          50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 0 80px rgba(255, 215, 0, 0.3), 0 0 100px rgba(255, 215, 0, 0.15); }
+          100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2), 0 0 80px rgba(255, 215, 0, 0.1); }
+        }
+      `}</style>
+
+      {/* Confetti particles */}
+      {animateIn && confettiParticles.map((p) => (
+        <div
+          key={p.id}
+          style={{
+            position: 'absolute',
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: `${p.width}px`,
+            height: `${p.height}px`,
+            backgroundColor: p.color,
+            borderRadius: Math.random() > 0.5 ? '50%' : '1px',
+            animation: `confettiFall_${p.id} ${p.duration}s ease-out ${p.delay}s forwards`,
+            pointerEvents: 'none',
+            zIndex: 2001,
+          }}
+        />
+      ))}
+
+      <div style={{
+        ...styles.container,
+        ...containerAnimStyle,
+        animation: animateIn ? 'glowRotate 2s ease-in-out infinite' : 'none',
+      }}>
         {/* Star decorations */}
         <div style={{ ...styles.star, top: '12px', left: '16px' }}>
           {'\u2726'}
@@ -143,7 +231,7 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow:
       '0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2), 0 12px 40px rgba(0, 0, 0, 0.6)',
     textAlign: 'center' as const,
-    overflow: 'hidden',
+    overflow: 'visible',
   },
   star: {
     position: 'absolute' as const,
